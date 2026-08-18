@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://plugins.dsh.works"),
-  title: { default: "dsh plugins — the install decision", template: "%s — dsh plugins" },
+  metadataBase: new URL("https://dsh.works"),
+  title: { default: "dsh.works — should you install it?", template: "%s — dsh.works" },
   description:
-    "Not another list. For any DeepSeek Harness plugin: the file that proves it installs, whether anyone still maintains it, and what else does the same job. Not affiliated with DeepSeek.",
+    "Not another list. For each of 6,290 DeepSeek Harness plugins: the file that proves it installs, whether anyone still maintains it, and how crowded the shelf is. Community-run, not affiliated with DeepSeek.",
   openGraph: { type: "website", siteName: "dsh.works" },
   twitter: { card: "summary" },
 };
@@ -34,8 +34,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </a>
           <span className="sitebar-links">
             <a href="/" aria-current="page">plugins</a>
-            <a href="https://dsh.works/awesome-dsh-themes/">themes</a>
+            <a href="/awesome-dsh-themes/">themes</a>
             <a href="https://github.com/dshworks/howto-dsh">notes</a>
+            <a href="#ours">ours</a>
             <a href="/api/plugins">api</a>
             <a href="https://github.com/dshworks">github</a>
           </span>

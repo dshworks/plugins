@@ -199,6 +199,13 @@ const indexBytes = write("index.json", {
 
 const metaBytes = write("meta.json", meta);
 
+// The sitemap needs 6,290 slugs and nothing else. Reading them out of the
+// 1 MB search index means parsing a megabyte of names, descriptions and star
+// counts inside the Worker to throw all but one field away — and at the apex
+// that read came back empty, which is exactly the kind of failure that ships
+// looking like it worked (a valid sitemap, 18 URLs, no error anywhere).
+const slugBytes = write("slugs.json", { built: TODAY, slugs: entries.map((e) => e.slug) });
+
 let detailBytes = 0;
 for (const e of entries) detailBytes += write(`p/${e.slug}.json`, e);
 
@@ -213,6 +220,6 @@ for (const t of tags) {
 
 const kb = (n) => `${(n / 1024).toFixed(0)} KB`;
 console.log(`data: ${entries.length} plugins, ${tags.length} tags, ${themes.length} themes`);
-console.log(`data: index ${kb(indexBytes)}, meta ${kb(metaBytes)}, ${entries.length} detail ${kb(detailBytes)}, ${tags.length} tag ${kb(tagBytes)}`);
+console.log(`data: index ${kb(indexBytes)}, meta ${kb(metaBytes)}, slugs ${kb(slugBytes)}, ${entries.length} detail ${kb(detailBytes)}, ${tags.length} tag ${kb(tagBytes)}`);
 const noProof = entries.filter((e) => !e.proof).length;
 if (noProof) console.log(`data: ${noProof} entries carry no proof and will say so on their page`);

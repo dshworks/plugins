@@ -7,14 +7,15 @@ export async function GET() {
   const meta = await getMeta();
   const c = meta?.counts;
   const n = (v?: number) => (v === undefined ? "?" : v.toLocaleString());
-  const body = `# plugins.dsh.works
+  const body = `# dsh.works
 
 > The install decision for DeepSeek Harness (dsh) plugins. Not a list of what
 > exists — there are more than twenty of those and they all scrape the same
 > GitHub topic. For each of ${n(c?.plugins)} plugins this site answers three things:
 > which file proves it installs, whether anyone still maintains it, and how
-> crowded the shelf is that it sits on. Community-run, MIT, not affiliated with
-> DeepSeek.
+> crowded the shelf is that it sits on. Also the front door for the dshworks
+> registries (plugins, themes), the field notes, and the three plugins this org
+> publishes. Community-run, MIT, not affiliated with DeepSeek.
 
 Built ${meta?.built ?? "?"} from the open registry at
 https://github.com/dshworks/awesome-dsh-plugins, checked against dsh
@@ -30,7 +31,19 @@ dropped or quietly badged.
 - /api/tags/{tag} — every plugin carrying a tag, ordered by last push
 - /_data/index.json — every entry as a compact tuple, for search
 - /sitemap.xml — every page on this site
-- https://dsh.works/awesome-dsh-plugins/plugins.json — the upstream registry
+- /awesome-dsh-plugins/plugins.json — the upstream registry, unprojected
+- /awesome-dsh-themes/themes.json — every theme, with preview and CSS pointers
+- /awesome-dsh-plugins/stats.json — counts only, ~150 bytes, for a badge
+
+## Human surfaces
+
+- / — this page: search, the crowded shelves, what we ship
+- /p/{slug} — the decision page for one plugin
+- /tag/{tag} — everything on one shelf, freshest first
+- /awesome-dsh-plugins/ — the same registry as a filterable gallery
+- /awesome-dsh-themes/ — the theme gallery, with live in-browser previews
+- /dsh-meter/ , /dsh-crew/ — plugins this org publishes
+- https://github.com/dshworks/howto-dsh — verified field notes on the harness itself
 
 ## Fields that are not obvious
 

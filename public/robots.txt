@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://plugins.dsh.works/sitemap.xml
+Sitemap: https://dsh.works/sitemap.xml

@@ -1,4 +1,4 @@
-# plugins.dsh.works
+# dsh.works
 
 **The install decision for DeepSeek Harness plugins.** Not another list.
 
@@ -44,6 +44,13 @@ truth: `npm run data` fetches it and derives, it never edits.
 - **Next 16 App Router on Vite (`vinext`), deployed to Cloudflare Workers.**
   Every HTML route is server-rendered, so all 6,290 plugin URLs are real,
   crawlable pages — the single-page galleries have exactly one.
+- **The Worker owns paths, not the hostname.** `dsh.works/`, `/p/*`, `/tag/*`,
+  `/api/*`, `/assets/*`, `/_data/*`, `/llms.txt`, `/sitemap.xml`. Everything
+  else falls through to GitHub Pages exactly as before, so
+  `/awesome-dsh-plugins/`, `/awesome-dsh-themes/`, `/dsh-meter/` and
+  `/dsh-crew/` are untouched. It is not timidity: `dshworks.github.io/*`
+  301-redirects to `dsh.works/*`, so a Worker holding every path could not
+  proxy those project sites without looping into itself.
 - **The registry ships as static assets, not in the bundle.** It is ~4 MB
   against a 3 MB script limit. The Worker reads it through the `ASSETS`
   binding: an internal lookup, no egress, and no second store that can

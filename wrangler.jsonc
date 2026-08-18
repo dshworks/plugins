@@ -14,5 +14,32 @@
     "not_found_handling": "none",
     "binding": "ASSETS"
   },
+  // The Worker owns the apex front door and its own paths. It does NOT own the
+  // whole hostname, and that is not timidity — dshworks.github.io/* 301s to
+  // dsh.works/*, so a Worker holding every path could not proxy the GitHub
+  // Pages project sites without looping into itself. Verified, not assumed.
+  //
+  // Unlisted paths never reach the Worker and go straight to the Pages origin
+  // through the proxied A records, so /awesome-dsh-plugins/, /awesome-dsh-themes/,
+  // /dsh-meter/ and /dsh-crew/ keep serving exactly what they served before.
+  //
+  // /assets/* and /_data/* are the Worker's own bundles and data; both were 404
+  // at the apex before this, so nothing is taken.
+  // A pattern is matched against the WHOLE url, query string included, so
+  // "dsh.works/" matches only the bare root — dsh.works/?utm_source=x fell
+  // through to the Pages 404 page. Anything not already ending in * gets a
+  // query-tolerant twin. Found by cache-busting a request and getting the old
+  // site back, which is the polite version of finding it in production.
+  "routes": [
+    { "pattern": "dsh.works/", "zone_name": "dsh.works" },
+    { "pattern": "dsh.works/?*", "zone_name": "dsh.works" },
+    { "pattern": "dsh.works/p/*", "zone_name": "dsh.works" },
+    { "pattern": "dsh.works/tag/*", "zone_name": "dsh.works" },
+    { "pattern": "dsh.works/api/*", "zone_name": "dsh.works" },
+    { "pattern": "dsh.works/assets/*", "zone_name": "dsh.works" },
+    { "pattern": "dsh.works/_data/*", "zone_name": "dsh.works" },
+    { "pattern": "dsh.works/llms.txt*", "zone_name": "dsh.works" },
+    { "pattern": "dsh.works/sitemap.xml*", "zone_name": "dsh.works" }
+  ],
   "observability": { "enabled": true }
 }

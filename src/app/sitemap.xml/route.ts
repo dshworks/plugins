@@ -1,4 +1,4 @@
-import { getMeta } from "@/lib/data";
+import { getMeta, getSlugs } from "@/lib/data";
 
 // A crawlable URL per plugin is the thing this site has and the single-page
 // galleries do not. The sitemap is how a crawler learns those 6,290 URLs exist
@@ -12,13 +12,17 @@ export async function GET(req: Request) {
   const meta = await getMeta();
   if (!meta) return new Response("data not built", { status: 503 });
 
-  const index = await fetch(`${base}/_data/index.json`).catch(() => null);
-  const rows: [string][] = index?.ok ? ((await index.json()) as { plugins: [string][] }).plugins : [];
+  // Read through the binding, not by fetching our own origin. /_data/* is a
+  // Worker route at the apex, so the origin fetch resolved to this same Worker
+  // and quietly returned nothing — the sitemap shipped 18 URLs instead of
+  // 6,308 and looked like it had worked.
+  const index = await getSlugs();
+  const slugs = index?.slugs ?? [];
 
   const urls = [
     { loc: base, priority: "1.0" },
     ...meta.tags.map((t) => ({ loc: `${base}/tag/${t.tag}`, priority: "0.8" })),
-    ...rows.map((r) => ({ loc: `${base}/p/${encodeURIComponent(r[0])}`, priority: "0.5" })),
+    ...slugs.map((slug) => ({ loc: `${base}/p/${encodeURIComponent(slug)}`, priority: "0.5" })),
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

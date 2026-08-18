@@ -4,7 +4,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ slug: s
   const { slug } = await params;
   const p = await getPlugin(slug);
   if (!p) return respond({ error: "not found", slug }, 404);
-  return respond({ ...p, install: installCommand(p), page: `https://plugins.dsh.works/p/${p.slug}` });
+  return respond({ ...p, install: installCommand(p), page: `https://dsh.works/p/${p.slug}` });
 }
 
 function respond(body: unknown, status = 200) {

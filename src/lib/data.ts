@@ -68,6 +68,11 @@ export const getMeta = () => asset<Meta>("meta.json");
 export const getPlugin = (slug: string) => asset<Plugin>(`p/${encodeURIComponent(slug)}.json`);
 export const getTag = (tag: string) => asset<TagFile>(`tags/${encodeURIComponent(tag)}.json`);
 
+// Just the slugs, for the sitemap. The search index carries the same list
+// wrapped in a megabyte of fields the sitemap discards; a purpose-built file
+// is one field per row and costs the Worker nothing to parse.
+export const getSlugs = () => asset<{ built: string; slugs: string[] }>("slugs.json");
+
 // The install command the registry's README derives, reproduced so the reader
 // can copy it without leaving the page.
 export function installCommand(p: Plugin): string {

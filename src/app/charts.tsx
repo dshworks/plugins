@@ -60,7 +60,11 @@ export function AgeChart({
   // row of single days would read as a day.
   const cols = [{ date: "before", created: before, pre: true }, ...series.map((d) => ({ ...d, pre: false }))];
   const max = Math.max(...cols.map((c) => c.created), 1);
-  const slot = W / cols.length;
+  // The y-axis labels own the first 28px and the pre/daily split nudges bars
+  // ±6, so the columns get what is left. Dividing the full width instead put
+  // today's bar half outside the frame.
+  const GUTTER = 28;
+  const slot = (W - GUTTER - 8) / cols.length;
   const bw = Math.min(slot * 0.62, 40);
   const h = (v: number) => Math.max(1, ((BASE - TOP) * v) / max);
 
@@ -74,14 +78,14 @@ export function AgeChart({
     <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Repositories created per day in the dsh-plugin topic. ${fmt(before)} existed before ${firstDay}; the count jumps from double digits to ${fmt(Math.max(...series.map((s) => s.created)))} in a day after dsh shipped on ${launch}.`}>
       {gridlines.map((g) => (
         <g key={g.y}>
-          <line className="ch-grid" x1="28" x2={W} y1={g.y} y2={g.y} />
+          <line className="ch-grid" x1={GUTTER} x2={W} y1={g.y} y2={g.y} />
           <text className="ch-axis" x="0" y={g.y + 3}>{fmt(g.v)}</text>
         </g>
       ))}
       {cols.map((c, i) => {
         // The pre-history bar is pushed left, away from the daily run, so the
         // eye does not read "everything before" as another Tuesday.
-        const x = i * slot + (slot - bw) / 2 + 28 + (c.pre ? -6 : 6);
+        const x = i * slot + (slot - bw) / 2 + GUTTER + (c.pre ? -6 : 6);
         const bh = h(c.created);
         const isLaunch = c.date === launch;
         return (
@@ -112,7 +116,7 @@ export function AgeChart({
           </g>
         );
       })}
-      <line className="ch-grid" x1="28" x2={W} y1={BASE} y2={BASE} strokeDasharray="0" />
+      <line className="ch-grid" x1={GUTTER} x2={W} y1={BASE} y2={BASE} strokeDasharray="0" />
     </svg>
     </Plot>
   );

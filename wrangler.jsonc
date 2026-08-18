@@ -1,0 +1,18 @@
+// Cloudflare Workers config. There is no database, no KV, and no auth binding:
+// the registry JSON is the source of truth, it lives in git, and it ships as
+// static assets on the same deploy as the code — so there is no second store
+// that can disagree with the version that rendered the page.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dsh-works-plugins",
+  "compatibility_date": "2026-02-12",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "vinext/server/app-router-entry",
+  "assets": {
+    // The Worker renders every HTML route, so an unmatched asset path must
+    // fall through to it rather than 404 at the edge.
+    "not_found_handling": "none",
+    "binding": "ASSETS"
+  },
+  "observability": { "enabled": true }
+}

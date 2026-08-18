@@ -1,0 +1,140 @@
+/* The house material, same contract as dsh.works: every colour is a custom
+ * property declared twice — the dark value alone, then the light-dark() pair,
+ * so a browser without light-dark() keeps the dark value and the page still
+ * works. No colour literal anywhere below this block. */
+:root {
+  color-scheme: light dark;
+
+  --bg: #000000;
+  --bg: light-dark(#fbfaf7, #000000);
+  --surface: #0d0d0d;
+  --surface: light-dark(#f2f1ec, #0d0d0d);
+  --surface-2: #141414;
+  --surface-2: light-dark(#e8e7e0, #141414);
+  --line: #262626;
+  --line: light-dark(#d4d1c7, #262626);
+  --text: #e8e8e8;
+  --text: light-dark(#17171a, #e8e8e8);
+  --muted: #9a9a9a;
+  --muted: light-dark(#5a5a60, #9a9a9a);
+  --strong: #ffffff;
+  --strong: light-dark(#000000, #ffffff);
+
+  --cyan: #00c2e9;
+  --cyan: light-dark(#0a6e85, #00c2e9);
+  --pink: #e41478;
+  --pink: light-dark(#bd0e60, #e41478);
+  --yellow: #ffd53d;
+  --yellow: light-dark(#7a5200, #ffd53d);
+
+  --masthead-bg: rgba(0, 0, 0, 0.9);
+  --masthead-bg: light-dark(rgba(251, 250, 247, 0.9), rgba(0, 0, 0, 0.9));
+
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --measure: 68ch;
+  --dur-fast: 140ms;
+  --ease: cubic-bezier(0.25, 0, 0.2, 1);
+}
+:root[data-theme="light"] { color-scheme: only light; }
+:root[data-theme="dark"] { color-scheme: only dark; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; animation: none !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 300 15px/1.65 var(--mono);
+  letter-spacing: -0.01em;
+}
+
+a { color: var(--cyan); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1, h2, h3 { font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
+h1 { font-size: 1.6rem; margin: 0 0 0.4rem; }
+h2 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em;
+     color: var(--muted); font-weight: 400; margin: 2.2rem 0 0.8rem;
+     padding-bottom: 0.4rem; border-bottom: 1px solid var(--line); }
+h3 { font-size: 0.95rem; margin: 0 0 0.35rem; }
+p { margin: 0 0 0.9rem; max-width: var(--measure); }
+
+code {
+  background: var(--surface-2); border-radius: 3px;
+  padding: 0 4px; font-size: 0.95em;
+  /* A path#key receipt is longer than a card is wide. Let it break rather
+   * than run off the edge — a proof you cannot read is not one. */
+  overflow-wrap: anywhere;
+}
+
+.wrap { max-width: 62rem; margin: 0 auto; padding: 0 1.5rem 5rem; }
+
+/* --- site bar: the same one every dsh.works surface wears ---------------- */
+.sitebar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 1.2rem;
+  padding: 0.7rem 1.5rem;
+  background: var(--masthead-bg); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+  font-size: 0.82rem;
+}
+.sitebar-brand { color: var(--text); font-weight: 700; }
+.sitebar-brand i { font-style: normal; color: var(--muted); font-weight: 300; }
+.sitebar .caret { color: var(--pink); }
+.sitebar-links { margin-left: auto; display: flex; gap: 1rem; flex-wrap: wrap; }
+.sitebar-links a { color: var(--muted); }
+.sitebar-links a[aria-current="page"] { color: var(--text); }
+
+/* --- the decision panel -------------------------------------------------- */
+/* Four questions, four rows, in the order a reader asks them. The label
+ * column is fixed so the eye can skip to the one it wants without reading
+ * the others — this is a reference surface, not a story. */
+.panel { border: 1px solid var(--line); border-radius: 3px; margin: 0 0 1.4rem; }
+.row { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 1rem;
+       padding: 0.9rem 1.1rem; border-bottom: 1px solid var(--line); }
+.row:last-child { border-bottom: none; }
+.row > .label { color: var(--pink); font-size: 0.72rem; letter-spacing: 0.1em;
+                text-transform: uppercase; padding-top: 0.2rem; }
+.row > .body { min-width: 0; }
+.row p:last-child { margin-bottom: 0; }
+@media (max-width: 34rem) {
+  .row { grid-template-columns: 1fr; gap: 0.3rem; }
+}
+
+.cmd { display: block; background: var(--surface); border: 1px solid var(--line);
+       border-radius: 3px; padding: 0.55rem 0.7rem; overflow-x: auto;
+       white-space: pre; font-size: 0.85rem; color: var(--text); }
+
+.meta { color: var(--muted); font-size: 0.8rem; }
+.dot { color: var(--line); padding: 0 0.4rem; }
+.pill { display: inline-block; border: 1px solid var(--line); border-radius: 3px;
+        padding: 0 0.4rem; font-size: 0.72rem; color: var(--muted); }
+.pill.warn { border-color: var(--yellow); color: var(--yellow); }
+
+/* --- lists --------------------------------------------------------------- */
+.rows { list-style: none; margin: 0; padding: 0; }
+.rows li { border-bottom: 1px solid var(--line); padding: 0.7rem 0; }
+.rows li:last-child { border-bottom: none; }
+.rows .line { display: flex; gap: 0.6rem; align-items: baseline; flex-wrap: wrap; }
+.rows .desc { color: var(--muted); font-size: 0.85rem; margin: 0.15rem 0 0;
+              max-width: var(--measure); }
+
+.fine { color: var(--muted); font-size: 0.8rem; }
+.lede { font-size: 1rem; max-width: var(--measure); }
+
+input[type="search"] {
+  width: 100%; background: var(--surface); color: var(--text);
+  border: 1px solid var(--line); border-radius: 3px;
+  padding: 0.6rem 0.75rem; font: 300 0.95rem var(--mono);
+}
+input[type="search"]:focus { outline: 2px solid var(--cyan); outline-offset: 1px; }
+
+.chips { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0.7rem 0 0; padding: 0; list-style: none; }
+.chip { background: none; border: 1px solid var(--line); border-radius: 3px;
+        color: var(--muted); font: 300 0.78rem var(--mono); padding: 0.15rem 0.5rem;
+        cursor: pointer; transition: color var(--dur-fast) var(--ease); }
+.chip[aria-pressed="true"] { color: var(--text); border-color: var(--cyan); }

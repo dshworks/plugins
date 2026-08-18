@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://plugins.dsh.works/sitemap.xml

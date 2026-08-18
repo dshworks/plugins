@@ -1,0 +1,35 @@
+{
+  "name": "dsh-works-plugins",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The install decision for DeepSeek Harness plugins: the proof, the cost, and what else does the same job.",
+  "scripts": {
+    "data": "node scripts/build-data.mjs",
+    "dev": "vinext dev",
+    "build": "npm run data && vinext build",
+    "start": "vinext start",
+    "deploy": "npm run data && vinext deploy",
+    "lint": "vinext lint"
+  },
+  "dependencies": {
+    "next": "^16.0.7",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.37.3",
+    "@cloudflare/workers-types": "^5.20260818.1",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-rsc": "^0.5.34",
+    "typescript": "^5.9.0",
+    "vinext": "^0.0.51",
+    "vite": "^8.0.14",
+    "wrangler": "^4.93.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

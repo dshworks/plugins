@@ -31,8 +31,21 @@
   // query-tolerant twin. Found by cache-busting a request and getting the old
   // site back, which is the polite version of finding it in production.
   "routes": [
+    // Cloudflare matches a route against the whole URL, query string included,
+    // so `dsh.works/` alone does not catch `dsh.works/?utm_source=hn` — which
+    // is how a shared link actually arrives. The obvious patch, `dsh.works/?*`,
+    // is rejected by the API outright ("Route pattern should not have query
+    // parameters", 10022); it used to be accepted and silently dropped, which
+    // was worse. There is no route syntax that fixes this.
+    //
+    // A greedy `dsh.works/*` would fix it and take the four GitHub Pages
+    // project sites with it, and the Worker cannot proxy those back: the
+    // github.io origin 301s to dsh.works for every path, so forwarding loops.
+    //
+    // So the split stands, and the fallback page the query-string root lands on
+    // carries this site's real metadata and forwards to the bare root. See
+    // dshworks.github.io/index.html.
     { "pattern": "dsh.works/", "zone_name": "dsh.works" },
-    { "pattern": "dsh.works/?*", "zone_name": "dsh.works" },
     { "pattern": "dsh.works/p/*", "zone_name": "dsh.works" },
     { "pattern": "dsh.works/tag/*", "zone_name": "dsh.works" },
     { "pattern": "dsh.works/api/*", "zone_name": "dsh.works" },

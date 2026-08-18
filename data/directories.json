@@ -1,0 +1,30 @@
+{
+  "$comment": "Every public directory of dsh plugins we could find, and the number each one claims on its own front page, read by hand on the survey date. The point of the list is the spread: these sites index the same GitHub topic, so a range this wide is a filter policy being reported as a fact. Ours is in the list on the same terms. Re-read the sites before changing a number; do not interpolate.",
+  "surveyed": "2026-08-18",
+  "method": "front-page claim, read by hand",
+  "note": "topic:dsh-plugin held 7,193 repos on the survey date",
+  "sites": [
+    { "host": "dshplugin.store", "claims": 6685, "curation": "auto" },
+    { "host": "dshhub.org", "claims": 6072, "curation": "auto" },
+    { "host": "dsh.works", "claims": 6290, "curation": "auto", "ours": true },
+    { "host": "deepseekharnessplugins.com", "claims": 5922, "curation": "auto" },
+    { "host": "dshplugin.online", "claims": 4715, "curation": "auto" },
+    { "host": "dshfind.com", "claims": 3600, "curation": "hybrid" },
+    { "host": "deepseekplugin.org", "claims": 2894, "curation": "hybrid" },
+    { "host": "deepseekplugin.com", "claims": 2601, "curation": "hybrid" },
+    { "host": "dshai.org", "claims": 2565, "curation": "auto" },
+    { "host": "dsh-plugin.net", "claims": 2304, "curation": "hybrid" },
+    { "host": "dsh.so", "claims": 2068, "curation": "hybrid" },
+    { "host": "awesome-dsh-plugin.com", "claims": 1323, "curation": "curated" },
+    { "host": "dshplugin.dev", "claims": 1253, "curation": "hybrid" },
+    { "host": "dshplugins.cc", "claims": 1155, "curation": "auto" },
+    { "host": "dshplugin.io", "claims": 1026, "curation": "curated" },
+    { "host": "dshplugins.xyz", "claims": 300, "curation": "curated" },
+    { "host": "deepseek-harness-plugin.com", "claims": 289, "curation": "curated" },
+    { "host": "dshplug.com", "claims": 150, "curation": "hybrid" },
+    { "host": "dshpluginstore.com", "claims": 74, "curation": "curated" },
+    { "host": "dshplugins.site", "claims": 45, "curation": "curated" },
+    { "host": "dshplugins.com", "claims": 34, "curation": "curated" },
+    { "host": "deepseekplugins.com", "claims": 20, "curation": "curated" }
+  ]
+}

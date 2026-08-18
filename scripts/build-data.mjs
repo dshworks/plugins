@@ -206,6 +206,66 @@ const metaBytes = write("meta.json", meta);
 // looking like it worked (a valid sitemap, 18 URLs, no error anywhere).
 const slugBytes = write("slugs.json", { built: TODAY, slugs: entries.map((e) => e.slug) });
 
+// The front page's charts. Split out because only one page reads it and the
+// decision pages should not pay for it.
+//
+// Two of these three series are measured elsewhere and committed — the topic's
+// age curve by scripts/measure-ecosystem.mjs, the directory claims by hand off
+// the sites themselves — so each carries the date it was taken. The rest is
+// counted here from the registry, which means the numbers on the chart and the
+// numbers in the prose cannot drift apart.
+const readLocal = (name, fallback) => {
+  try {
+    return JSON.parse(readFileSync(join(ROOT, "data", name), "utf8"));
+  } catch {
+    console.log(`data: no data/${name}; the front page will omit that chart`);
+    return fallback;
+  }
+};
+const ecosystem = readLocal("ecosystem.json", null);
+const directories = readLocal("directories.json", null);
+
+// Stars are a dated popularity snapshot, not a quality signal, and the whole
+// point of showing the distribution is that it is a power law: the median
+// plugin has one star, so ranking six thousand of them by stars is ranking
+// noise. Thresholds, not buckets — "how many clear this bar" is the question.
+const starLadder = [0, 1, 2, 5, 10, 50, 100, 1000].map((min) => ({
+  min,
+  count: entries.filter((e) => e.stars >= min).length,
+}));
+
+const ecosystemBytes = write("ecosystem.json", {
+  built: TODAY,
+  counts: meta.counts,
+  authors: new Set(entries.map((e) => e.repo.split("/")[0].toLowerCase())).size,
+  stars: {
+    ladder: starLadder,
+    median: entries.length
+      ? entries
+          .map((e) => e.stars)
+          .sort((a, b) => a - b)[Math.floor(entries.length / 2)]
+      : 0,
+  },
+  tags: tags.map(({ tag, count }) => ({ tag, count })),
+  age: ecosystem && {
+    measured: ecosystem.measured,
+    topic: ecosystem.topic,
+    launch: ecosystem.launch,
+    query: ecosystem.query,
+    total: ecosystem.total,
+    release: ecosystem.release ?? null,
+    beforeFirstDay: ecosystem.beforeFirstDay,
+    sinceLaunch: ecosystem.sinceLaunch,
+    series: ecosystem.series,
+  },
+  directories: directories && {
+    surveyed: directories.surveyed,
+    method: directories.method,
+    note: directories.note,
+    sites: directories.sites,
+  },
+});
+
 let detailBytes = 0;
 for (const e of entries) detailBytes += write(`p/${e.slug}.json`, e);
 
@@ -220,6 +280,6 @@ for (const t of tags) {
 
 const kb = (n) => `${(n / 1024).toFixed(0)} KB`;
 console.log(`data: ${entries.length} plugins, ${tags.length} tags, ${themes.length} themes`);
-console.log(`data: index ${kb(indexBytes)}, meta ${kb(metaBytes)}, slugs ${kb(slugBytes)}, ${entries.length} detail ${kb(detailBytes)}, ${tags.length} tag ${kb(tagBytes)}`);
+console.log(`data: index ${kb(indexBytes)}, meta ${kb(metaBytes)}, slugs ${kb(slugBytes)}, ecosystem ${kb(ecosystemBytes)}, ${entries.length} detail ${kb(detailBytes)}, ${tags.length} tag ${kb(tagBytes)}`);
 const noProof = entries.filter((e) => !e.proof).length;
 if (noProof) console.log(`data: ${noProof} entries carry no proof and will say so on their page`);

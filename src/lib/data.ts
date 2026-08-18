@@ -64,7 +64,35 @@ async function asset<T>(path: string): Promise<T | null> {
   }
 }
 
+// The front page's charts. Its own file because only one page reads it, and a
+// decision page should not fetch a survey it never draws.
+export type Ecosystem = {
+  built: string;
+  counts: Meta["counts"];
+  authors: number;
+  stars: { ladder: { min: number; count: number }[]; median: number };
+  tags: { tag: string; count: number }[];
+  age: {
+    measured: string;
+    topic: string;
+    launch: string;
+    query: string;
+    total: number;
+    release: { version: string; published: string | null } | null;
+    beforeFirstDay: number;
+    sinceLaunch: number;
+    series: { date: string; created: number }[];
+  } | null;
+  directories: {
+    surveyed: string;
+    method: string;
+    note: string;
+    sites: { host: string; claims: number; curation: string; ours?: boolean }[];
+  } | null;
+};
+
 export const getMeta = () => asset<Meta>("meta.json");
+export const getEcosystem = () => asset<Ecosystem>("ecosystem.json");
 export const getPlugin = (slug: string) => asset<Plugin>(`p/${encodeURIComponent(slug)}.json`);
 export const getTag = (tag: string) => asset<TagFile>(`tags/${encodeURIComponent(tag)}.json`);
 

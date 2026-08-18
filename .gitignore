@@ -6,4 +6,10 @@ dist/
 !.env.example
 *.tsbuildinfo
 next-env.d.ts
+# data/ holds fetched copies of the registries, which are someone else's file
+# and get re-fetched every build. The two exceptions are inputs, not output:
+# a measurement nobody can reproduce without an API budget, and a survey read
+# by hand off two dozen websites. The site links to both as its receipts.
 data/*.json
+!data/ecosystem.json
+!data/directories.json

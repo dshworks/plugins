@@ -34,6 +34,22 @@
   --measure: 68ch;
   --dur-fast: 140ms;
   --ease: cubic-bezier(0.25, 0, 0.2, 1);
+
+  /* One curve for everything that enters or grows: quintic ease-out. It leaves
+   * fast and lands slowly, which reads as weight rather than as animation —
+   * the difference between an object arriving and a div being tweened. Exits
+   * use the mirror, because something leaving should accelerate away. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in: cubic-bezier(0.8, 0, 1, 1);
+
+  /* A ladder, not arbitrary numbers. Anything the pointer causes lands on t1
+   * or t2 so it feels attached to the hand; anything the scroll causes gets t3
+   * and up, because it has distance to cover and nobody is waiting on it. */
+  --t1: 150ms;
+  --t2: 200ms;
+  --t3: 300ms;
+  --t4: 500ms;
+  --t5: 700ms;
 }
 :root[data-theme="light"] { color-scheme: only light; }
 :root[data-theme="dark"] { color-scheme: only dark; }
@@ -138,3 +154,170 @@ input[type="search"]:focus { outline: 2px solid var(--cyan); outline-offset: 1px
         color: var(--muted); font: 300 0.78rem var(--mono); padding: 0.15rem 0.5rem;
         cursor: pointer; transition: color var(--dur-fast) var(--ease); }
 .chip[aria-pressed="true"] { color: var(--text); border-color: var(--cyan); }
+
+/* --- reveal on scroll ----------------------------------------------------- */
+/* Hiding content until a script runs is how a page becomes blank for the
+ * people least able to afford it. So the resting state is *visible*, and the
+ * hidden state only exists under `.reveal-ready`, a class the client adds to
+ * <html> after checking that JS is alive and prefers-reduced-motion is off.
+ * No JS, old browser, reduced motion, or a crashed bundle all land on a page
+ * that simply shows its content. */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity var(--t4) var(--ease-out),
+    transform var(--t4) var(--ease-out);
+  /* --i is the element's index in its group; the stagger is what turns a
+   * dozen simultaneous fades into one gesture that reads left-to-right. It is
+   * capped so the tail of a long list never waits on the head. */
+  transition-delay: calc(min(var(--i, 0) * 45ms, 360ms));
+}
+.reveal-ready [data-reveal].in {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- figures -------------------------------------------------------------- */
+/* Every chart is the same three parts: a header that states the number in
+ * words, the drawing, and a footer that says where the number came from. The
+ * footer is not decoration — a chart without its provenance is the same
+ * unfalsifiable claim this whole site exists to argue against. */
+.figure {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--surface);
+  padding: 1.1rem 1.2rem 0.9rem;
+  margin: 0 0 1.4rem;
+}
+.figure-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+}
+.figure-stat {
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--strong);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.figure-unit { color: var(--muted); font-size: 0.82rem; }
+.figure-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.8rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+.figure-foot a { color: var(--muted); text-decoration: underline; }
+.figure svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+/* Bars and gridlines. Monochrome by default so the one coloured bar means
+ * something; the grid is dotted and dim because it is a ruler, not content. */
+.ch-grid { stroke: var(--line); stroke-width: 1; stroke-dasharray: 1 4; }
+.ch-axis { fill: var(--muted); font-size: 9px; font-family: var(--mono); }
+.ch-bar { fill: var(--muted); }
+.ch-bar.is-accent { fill: var(--cyan); }
+.ch-bar.is-ours { fill: var(--pink); }
+.ch-label { fill: var(--text); font-size: 10px; font-family: var(--mono); }
+.ch-label.dim { fill: var(--muted); }
+
+/* Columns grow from the baseline; rows grow from the left. `transform-box:
+ * fill-box` makes the shape its own reference frame, so `bottom` and `left`
+ * mean what they say and no per-bar origin has to be computed in the markup.
+ * Both are pure transforms, so the browser never touches layout while they
+ * run — 6,000 rows on the page and the scroll still costs nothing. */
+.ch-rise, .ch-run { transform-box: fill-box; }
+.ch-rise { transform-origin: bottom; }
+.ch-run { transform-origin: left; }
+.reveal-ready .ch-rise { transform: scaleY(0); transition: transform var(--t5) var(--ease-out); }
+.reveal-ready .ch-run { transform: scaleX(0); transition: transform var(--t5) var(--ease-out); }
+.reveal-ready .in .ch-rise,
+.reveal-ready .in .ch-run { transform: none; }
+.reveal-ready .ch-rise,
+.reveal-ready .ch-run { transition-delay: calc(min(var(--i, 0) * 22ms, 420ms)); }
+
+/* --- the shelf map -------------------------------------------------------- */
+.shelf { list-style: none; margin: 0; padding: 0; }
+.shelf li { margin-bottom: 0.45rem; }
+.shelf a {
+  display: grid;
+  grid-template-columns: 10.5rem 1fr 3.2rem;
+  gap: 0.7rem;
+  align-items: center;
+  color: var(--text);
+  text-decoration: none;
+  padding: 0.2rem 0;
+}
+.shelf a:hover { text-decoration: none; }
+.shelf a:hover .shelf-name { color: var(--cyan); }
+.shelf-name { font-size: 0.85rem; transition: color var(--t1) var(--ease-out); }
+.shelf-track { background: var(--surface-2); border-radius: 2px; height: 0.6rem; overflow: hidden; }
+.shelf-fill {
+  display: block;
+  height: 100%;
+  background: var(--muted);
+  border-radius: 2px;
+  transform-origin: left center;
+  transition:
+    transform var(--t5) var(--ease-out),
+    background-color var(--t1) var(--ease-out);
+}
+.shelf a:hover .shelf-fill { background: var(--cyan); }
+.reveal-ready .shelf-fill { transform: scaleX(0); }
+.reveal-ready .in .shelf-fill { transform: scaleX(1); }
+.shelf-count { color: var(--muted); font-size: 0.78rem; text-align: right; font-variant-numeric: tabular-nums; }
+@media (max-width: 34rem) {
+  .shelf a { grid-template-columns: 6.5rem 1fr 2.8rem; gap: 0.5rem; }
+}
+
+/* --- the stat strip ------------------------------------------------------- */
+.strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  margin: 1.6rem 0;
+  list-style: none;
+  padding: 0;
+  overflow: hidden;
+}
+.strip li { background: var(--bg); padding: 0.85rem 1rem; }
+.strip .n {
+  display: block;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--strong);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+.strip .k { color: var(--muted); font-size: 0.74rem; }
+
+/* --- links that behave like objects --------------------------------------- */
+/* The only hover affordance on the whole site: the row nudges toward the
+ * reader by a hair. One pixel of travel at t1 is enough to say "this is a
+ * thing you can take"; anything more is a toy. */
+.rows li { transition: transform var(--t1) var(--ease-out); }
+.rows li:hover { transform: translateX(2px); }
+
+/* Plots fit the column; they do not scroll.
+ *
+ * A min-width and a sideways scrollbar were tried first, to keep the axis
+ * labels legible on a phone. It put the flat pre-launch days on screen and the
+ * cliff — the entire finding — behind a scrollbar the reader had to discover.
+ * Every chart here is carried by its shape, and the exact numbers are in the
+ * sentence above it, the SVG tooltips, and the API. So the shape always fits,
+ * and the overflow rule below is only a guard against a viewport narrower than
+ * anything we can design for. */
+.figure-plot { overflow-x: auto; overscroll-behavior-x: contain; }

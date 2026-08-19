@@ -27,6 +27,26 @@
   --yellow: #ffd53d;
   --yellow: light-dark(#7a5200, #ffd53d);
 
+  /* Gold belongs to the four sponsor seats and to nothing else on this site.
+   * It is deliberately not --yellow: yellow is already spoken for by the
+   * `warn` pill, and an advertisement that wears the warning colour reads as
+   * a fault. Gold is deeper and warmer, and it only ever appears inside the
+   * seat band — so on a page where every other colour marks a fact, one
+   * colour marks the only thing that was paid for. That is the disclosure,
+   * done in paint instead of in a footnote nobody reads. */
+  --gold: #f0c14b;
+  --gold: light-dark(#8a6206, #f0c14b);
+  /* The seat's resting border and its [ ] brackets. Measured, not eyeballed:
+   * the first pass (#6b5420 / #e0cfa0) came in at 2.91 and 1.48 against the
+   * two grounds — under the 3:1 floor a UI boundary needs, and in light mode
+   * the brackets read as a rendering fault rather than as restraint. These
+   * clear 3:1 on both and still sit far enough under --gold (12.4 / 5.3) that
+   * the plus is obviously the lit part. */
+  --gold-line: #7d6228;
+  --gold-line: light-dark(#ab8c42, #7d6228);
+  --gold-wash: rgba(240, 193, 75, 0.05);
+  --gold-wash: light-dark(rgba(138, 98, 6, 0.05), rgba(240, 193, 75, 0.05));
+
   --masthead-bg: rgba(0, 0, 0, 0.9);
   --masthead-bg: light-dark(rgba(251, 250, 247, 0.9), rgba(0, 0, 0, 0.9));
 
@@ -104,6 +124,21 @@ code {
 .sitebar-links { margin-left: auto; display: flex; gap: 1rem; flex-wrap: wrap; }
 .sitebar-links a { color: var(--muted); }
 .sitebar-links a[aria-current="page"] { color: var(--text); }
+/* At phone width the six links wrapped under the brand and the masthead read
+ * as a rendering fault. One line that scrolls sideways instead — the bar keeps
+ * its shape, and nothing is hidden from anyone. */
+@media (max-width: 34rem) {
+  .sitebar { gap: 0.9rem; padding: 0.6rem 1rem; }
+  /* The brand was wrapping between its caret and its name — two lines for
+   * four characters. It is the one thing in the bar that must never break. */
+  .sitebar-brand { flex: none; white-space: nowrap; }
+  .sitebar-links {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+    gap: 0.85rem; -webkit-overflow-scrolling: touch;
+  }
+  .sitebar-links::-webkit-scrollbar { display: none; }
+  .sitebar-links a { white-space: nowrap; }
+}
 
 /* --- the decision panel -------------------------------------------------- */
 /* Four questions, four rows, in the order a reader asks them. The label
@@ -154,6 +189,23 @@ input[type="search"]:focus { outline: 2px solid var(--cyan); outline-offset: 1px
         color: var(--muted); font: 300 0.78rem var(--mono); padding: 0.15rem 0.5rem;
         cursor: pointer; transition: color var(--dur-fast) var(--ease); }
 .chip[aria-pressed="true"] { color: var(--text); border-color: var(--cyan); }
+/* Ten tag chips wrapped to five rows on a phone — 212px of chip wall between
+ * the console and everything below it, which is more vertical budget than the
+ * verdict card itself. One scrolling row instead. Nothing is lost: every tag
+ * has a full row in the shelf map further down, and this is the gesture a
+ * phone user already expects from a filter strip. */
+@media (max-width: 34rem) {
+  .chips {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    /* Bleed to the viewport edge so the strip reads as scrollable rather than
+     * as a row that happens to be clipped. */
+    margin-inline: -1.5rem; padding-inline: 1.5rem;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chips li { flex: none; }
+  .chip { white-space: nowrap; }
+}
 
 /* --- reveal on scroll ----------------------------------------------------- */
 /* Hiding content until a script runs is how a page becomes blank for the
@@ -321,3 +373,161 @@ input[type="search"]:focus { outline: 2px solid var(--cyan); outline-offset: 1px
  * and the overflow rule below is only a guard against a viewport narrower than
  * anything we can design for. */
 .figure-plot { overflow-x: auto; overscroll-behavior-x: contain; }
+
+/* --- the console: the first viewport ------------------------------------- */
+/* The page used to open with a headline and four paragraphs of argument. The
+ * argument was right and nobody read it, because a directory's front page has
+ * about four seconds to prove it is not the twenty-second list of the same
+ * topic. So the machine goes first: a live field over 6,290 rows, with one
+ * real plugin already decided beneath it. You can touch the product before
+ * you have read a word about it, and the argument below is then evidence for
+ * something you have already seen work rather than a promise about it. */
+.console {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--surface);
+  margin: 1.4rem 0 0;
+  overflow: hidden;
+}
+.console-q {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+.console-q .caret { color: var(--pink); font-weight: 700; flex: none; }
+.console-q input[type="search"] {
+  border: none;
+  background: none;
+  padding: 0.35rem 0;
+  font-size: 1.05rem;
+  border-radius: 0;
+}
+.console-q input[type="search"]:focus { outline: none; }
+/* The focus ring goes on the whole row, not the bare input — the row is what
+ * reads as the control, and a ring around a borderless field looks like a
+ * rendering fault. */
+.console:focus-within .console-q { box-shadow: inset 0 0 0 2px var(--cyan); }
+.console-q .count { color: var(--muted); font-size: 0.74rem; flex: none; font-variant-numeric: tabular-nums; }
+
+.console-body { padding: 0.9rem 1rem 1rem; }
+.console-head {
+  display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap;
+  margin-bottom: 0.7rem;
+}
+.console-head .who { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; }
+.console-head .who a { color: var(--strong); }
+.console-slot {
+  color: var(--muted); font-size: 0.68rem; text-transform: uppercase;
+  letter-spacing: 0.12em; border: 1px solid var(--line); border-radius: 3px;
+  padding: 0 0.35rem;
+}
+
+/* The verdict: five labelled lines, the same five every plugin page answers,
+ * in the order a reader asks them. Fixed label column so the eye can jump to
+ * the one it came for. */
+.verdict { display: grid; grid-template-columns: 4.6rem minmax(0, 1fr); gap: 0.35rem 0.9rem; margin: 0; }
+.verdict dt {
+  color: var(--pink); font-size: 0.68rem; letter-spacing: 0.12em;
+  text-transform: uppercase; padding-top: 0.2rem;
+}
+.verdict dd { margin: 0; min-width: 0; font-size: 0.86rem; }
+.verdict dd.dim { color: var(--muted); }
+.verdict .cmd { font-size: 0.8rem; padding: 0.4rem 0.55rem; }
+@media (max-width: 34rem) {
+  /* Narrower label column, not a stacked one. Stacking read fine and cost
+   * ~270px, which put the gold band below the fold on a phone — the band
+   * exists to hold exactly that position, so the grid stays. */
+  .verdict { grid-template-columns: 3.4rem minmax(0, 1fr); gap: 0.3rem 0.6rem; }
+  .verdict dt { font-size: 0.6rem; letter-spacing: 0.06em; }
+  .verdict dd { font-size: 0.8rem; line-height: 1.5; }
+  .console-body { padding: 0.8rem 0.75rem 0.9rem; }
+  .console-foot { font-size: 0.68rem; margin-top: 0.6rem; padding-top: 0.55rem; }
+}
+
+.console-foot {
+  margin-top: 0.8rem; padding-top: 0.7rem; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 0.72rem;
+  display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+}
+.console-foot a { color: var(--muted); text-decoration: underline; }
+
+/* --- the four seats ------------------------------------------------------ */
+/* Directly under the console, above the argument. Not above the console: the
+ * staging this page is built on says the running product owns the first
+ * viewport and nothing sits over it, and a directory that puts advertising
+ * above its own working surface has told you what it is. This is the most
+ * prominent position on the page that does not cost the page its thesis.
+ *
+ * Empty seats show as empty. A house that sells four boxes and draws them
+ * full of imaginary logos is running the same trick as a directory that
+ * prints a number it did not measure. */
+.seats {
+  margin: 1.6rem 0 0;
+  border-top: 1px solid var(--gold-line);
+  border-bottom: 1px solid var(--gold-line);
+  padding: 0.8rem 0 1rem;
+  background: var(--gold-wash);
+}
+.seats-head {
+  display: flex; align-items: baseline; gap: 0.6rem 1rem; flex-wrap: wrap;
+  margin-bottom: 0.7rem;
+}
+.seats-head .title {
+  color: var(--gold); font-size: 0.7rem; text-transform: uppercase;
+  letter-spacing: 0.14em; font-weight: 700;
+}
+.seats-head .terms { margin-left: auto; color: var(--muted); font-size: 0.74rem; }
+@media (max-width: 34rem) {
+  /* Once it wraps, `margin-left: auto` strands the price on its own line
+   * against the right edge. On one line it is alignment; on two it is a
+   * fragment that looks lost. */
+  .seats-head .terms { margin-left: 0; }
+}
+.seats-head .terms a { color: var(--gold); text-decoration: underline; }
+
+.seats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem;
+  list-style: none; margin: 0; padding: 0;
+}
+@media (max-width: 44rem) { .seats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.seat {
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  gap: 0.3rem;
+  min-height: 6.8rem;
+  padding: 0.9rem 0.7rem;
+  border: 1px solid var(--gold-line);
+  border-radius: 3px;
+  background: var(--bg);
+  text-align: center;
+  text-decoration: none;
+  color: var(--muted);
+  transition: border-color var(--t1) var(--ease-out), background-color var(--t1) var(--ease-out),
+              transform var(--t1) var(--ease-out);
+}
+.seat:hover, .seat:focus-visible { text-decoration: none; border-color: var(--gold); transform: translateY(-2px); }
+.seat:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* The open seat is the invitation, and it is drawn as the bracket-plus the
+ * house already speaks in. The brackets sit back so the + is what carries. */
+.seat .plus { font-size: 2.1rem; line-height: 1; color: var(--gold-line); font-weight: 300; }
+.seat .plus b { color: var(--gold); font-weight: 400; padding: 0 0.15em; }
+.seat:hover .plus { color: var(--gold); }
+.seat .n {
+  font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.seat .say { font-size: 0.72rem; color: var(--muted); }
+
+.seat.is-taken { align-items: flex-start; text-align: left; justify-content: flex-start; border-color: var(--gold); }
+.seat.is-taken .who { color: var(--strong); font-weight: 700; font-size: 0.92rem; letter-spacing: -0.02em; }
+.seat.is-taken .say { color: var(--muted); font-size: 0.76rem; line-height: 1.45; }
+.seat.is-taken .tag {
+  color: var(--gold); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+}
+
+.seats-fine { color: var(--muted); font-size: 0.76rem; margin: 0.8rem 0 0; max-width: var(--measure); }
+.seats-fine strong { color: var(--gold); font-weight: 400; }

@@ -1,29 +1,40 @@
-import { getEcosystem, getMeta, getTag } from "@/lib/data";
+import { getEcosystem, getMeta, getSpecimen, getSponsors, getTag, saidPulse } from "@/lib/data";
 import { tagLabel } from "@/lib/tags";
-import Search from "./search";
+import Console from "./console";
+import Seats from "./seats";
 import Reveal from "./reveal";
 import { AgeChart, ClaimsChart, ShelfMap, StarLadder } from "./charts";
 
-// The dsh.works front door.
-//
-// The first version of this page made its argument in prose: twenty other
-// directories count the same topic, the counts disagree, therefore the count
-// is not the interesting number. All true, and all invisible — a reader had to
-// get through four paragraphs to reach a claim they still could not check.
-//
-// This version makes the same argument with the data, because we have it and
-// nobody else publishes it. Three measured pictures carry the page: almost the
-// whole topic was created in the week after dsh shipped, the directories'
-// counts span two orders of magnitude for one universe, and the median plugin
-// has a single star. Each says outright where its numbers came from, since a
-// chart without provenance is the exact unfalsifiable claim this site exists
-// to argue against.
-//
-// It still does not print a leaderboard. Ranking six thousand plugins by stars
-// is ranking noise, and the star ladder below is here to show that, not to
-// invite it.
+/* THE PROMISE
+ *
+ * THESIS          This page is the install decision *running*, not an essay
+ *                 about it. It refuses the awesome-list front door: logo,
+ *                 tagline, grid of starred cards, "browse all".
+ * OWN-WORLD       House material — black ground, JetBrains Mono 300, 3px
+ *                 hairlines, pink section labels, cyan links, charts drawn in
+ *                 one accent. Exactly one gold, spent only on the four paid
+ *                 seats, so the page's only advertisement is its only gold.
+ * STORY           A stranger types before reading; sees one real plugin
+ *                 already decided, receipt clickable; meets three measured
+ *                 charts that say why those numbers can be trusted; learns
+ *                 the four seats are the only thing here money can move.
+ * FIRST VIEWPORT  Site bar; one title line with the live counts; the console
+ *                 frame — pink caret, live field, indexed count — holding a
+ *                 real plugin's five-line verdict; the gold band's top rule
+ *                 arriving at the fold.
+ * FORM            Staging "First Viewport Is the Product Running", first
+ *                 dealt of three, roll 3778195c.
+ * --
+ * FINISH          unreviewed is unfinished: this build ends with the review,
+ *                 the verdict, and DESIGN.md.
+ */
 export default async function Home() {
-  const [meta, eco] = await Promise.all([getMeta(), getEcosystem()]);
+  const [meta, eco, specimen, sponsors] = await Promise.all([
+    getMeta(),
+    getEcosystem(),
+    getSpecimen(),
+    getSponsors(),
+  ]);
   if (!meta) {
     return (
       <main className="wrap">
@@ -45,6 +56,10 @@ export default async function Home() {
   const age = eco?.age ?? null;
   const dirs = eco?.directories ?? null;
   const proofPct = Math.round((meta.counts.withProof / meta.counts.plugins) * 100);
+  const p = specimen?.plugin ?? null;
+  // Printed rather than absorbed. 6,290 with 59 dead rows inside it is exactly
+  // the kind of number this site was built to argue against.
+  const gone = meta.counts.gone ?? 0;
 
   // Derived, not written into the copy. "Eleven days old" was true the
   // afternoon this page was built and would have been a lie by the weekend,
@@ -59,18 +74,102 @@ export default async function Home() {
     <main className="wrap">
       <Reveal />
 
-      <header style={{ paddingTop: "2.5rem" }}>
+      {/* The first viewport. One line of orientation, then the machine. The
+          h1 is small on purpose: a display headline here would be the site
+          talking about itself in the space where it could be working. */}
+      <header style={{ paddingTop: "1.8rem" }}>
         <h1>Should you install it?</h1>
-        <p className="lede">
-          Twenty-two directories list DeepSeek Harness plugins. Every one answers <em>what
-          exists</em>, by scraping the same GitHub topic and printing a count. This one answers
-          the next question — for each of{" "}
-          <strong>{meta.counts.plugins.toLocaleString()}</strong> plugins: the file that proves it
-          installs, whether anyone has touched it since, and how crowded the shelf is that it sits
-          on.
+        <p className="fine" style={{ maxWidth: "var(--measure)" }}>
+          {meta.counts.plugins.toLocaleString()} DeepSeek Harness plugins, {proofPct}% carrying a
+          receipt you can open{gone ? `, ${gone} whose repository has since vanished and say so` : ""}.
+          Twenty-two other directories will tell you what exists. Type, or read the one below.
         </p>
       </header>
 
+      <Console count={meta.counts.plugins} tags={meta.tags}>
+        {p ? (
+          <>
+            <div className="console-head">
+              <span className="who">
+                <a href={`/p/${p.slug}`}>{p.name}</a>
+              </span>
+              <span className="fine">
+                {p.stars.toLocaleString()}★<span className="dot">·</span>
+                {saidPulse(p.pulse)}
+                {p.npm && (
+                  <>
+                    <span className="dot">·</span>npm
+                  </>
+                )}
+              </span>
+              <span className="console-slot">decided</span>
+            </div>
+
+            <dl className="verdict">
+              <dt>Proof</dt>
+              <dd>
+                {p.proof ? (
+                  <a href={p.proof.url}>
+                    <code>
+                      {p.proof.path}#{p.proof.key}
+                    </code>
+                  </a>
+                ) : (
+                  <span className="dim">no receipt on file, and its page says so</span>
+                )}
+              </dd>
+
+              <dt>Install</dt>
+              <dd>
+                <code className="cmd">
+                  dsh plugin --profile web add {p.npm ?? `github:${p.repo}`}
+                </code>
+              </dd>
+
+              <dt>Pulse</dt>
+              <dd className="dim">
+                {saidPulse(p.pulse)}
+                {p.shelf && (
+                  <>
+                    {" · "}
+                    {p.shelf.rank === 1 ? "the most recent" : `${ordinal(p.shelf.rank)} most recent`} of
+                    the {p.shelf.size.toLocaleString()} on <a href={`/tag/${p.shelf.tag}`}>{tagLabel(p.shelf.tag)}</a>
+                  </>
+                )}
+              </dd>
+
+              <dt>Not</dt>
+              <dd className="dim">
+                a security review. That install path was verified against dsh{" "}
+                <code>{p.verifiedAgainst ?? "—"}</code> on {p.lastVerified ?? "an earlier sweep"};
+                the code behind it was not read.
+              </dd>
+            </dl>
+
+            <div className="console-foot">
+              {/* The rule is printed because this slot is worth money and is
+                  not for sale. A directory that shows you one plugin without
+                  saying how it got there has sold you something already. */}
+              <span>
+                Shown by rule, not placement: the {specimen?.rule ?? "freshest complete entry"}.
+              </span>
+              <a href={`/p/${p.slug}`}>its page →</a>
+            </div>
+          </>
+        ) : (
+          <p className="fine" style={{ margin: 0 }}>
+            No entry currently carries a complete receipt. Type to search{" "}
+            {meta.counts.plugins.toLocaleString()} rows.
+          </p>
+        )}
+      </Console>
+
+      {sponsors && <Seats data={sponsors} site="dsh.works" />}
+
+      {/* The bridge out of the seats and into the evidence: four measured
+          facts, no adjectives, each one recomputed on every build. It is also
+          the answer to "who is this" for a reader who scrolled past the
+          console without touching it. */}
       <ul className="strip">
         <Stat n={meta.counts.plugins.toLocaleString()} k="plugins, each with a page" />
         <Stat n={`${proofPct}%`} k="carry a receipt you can click" />
@@ -120,9 +219,6 @@ export default async function Home() {
           </p>
         </>
       )}
-
-      <h2>Find one</h2>
-      <Search count={meta.counts.plugins} tags={meta.tags} />
 
       <h2>The shelves</h2>
       <p className="fine">
@@ -197,10 +293,11 @@ export default async function Home() {
             </div>
           </div>
           <p className="fine">
-            Ours is the pink bar, on the same terms as everyone else&rsquo;s. 6,290 is a policy
-            too — it is what survived a sweep that publishes both what it kept and what it cut.
-            The argument of this site is not that our number is better. It is that a number is the
-            wrong thing to compare, and the receipt on each row is the right one.
+            Ours is the pink bar, on the same terms as everyone else&rsquo;s.{" "}
+            {meta.counts.plugins.toLocaleString()} is a policy too — it is what survived a sweep
+            that publishes both what it kept and what it cut. The argument of this site is not
+            that our number is better. It is that a number is the wrong thing to compare, and the
+            receipt on each row is the right one.
           </p>
         </>
       )}
@@ -290,6 +387,19 @@ export default async function Home() {
             )}
           </div>
         </div>
+        <div className="row">
+          <div className="label">Paid</div>
+          <div className="body">
+            <p style={{ marginBottom: 0 }}>
+              The four gold seats at the top are advertising, priced at{" "}
+              {sponsors?.price.said ?? "a published rate"}, and they are the only thing on this
+              site money can move. They sit in their own colour, outside the data, marked{" "}
+              <code>rel=&quot;sponsored&quot;</code>, and they buy the box — not a row, a rank, a
+              tag, a receipt, or a listing decision. <a href="/sponsor">The terms are published</a>{" "}
+              for the same reason the rejections are.
+            </p>
+          </div>
+        </div>
       </div>
 
       <h2>The registries</h2>
@@ -304,7 +414,8 @@ export default async function Home() {
         <a href="https://github.com/dshworks/awesome-dsh-themes">awesome-dsh-themes</a> covers
         ThemeRuntime packages, <code>--dsw-*</code> token overrides, and skins that restyle the
         Web UI — {meta.counts.themes.toLocaleString()} of them, same receipt discipline, plus real
-        screenshots and live in-browser previews in <a href="/awesome-dsh-themes/">the gallery</a>.
+        screenshots and live in-browser previews at{" "}
+        <a href="https://dshthemes.com">dshthemes.com</a>.
       </p>
       <p>
         <a href="https://github.com/dshworks/howto-dsh">howto-dsh</a> is what registry data cannot
@@ -377,7 +488,7 @@ export default async function Home() {
         <a href="https://github.com/dshworks/awesome-dsh-plugins/blob/main/data/plugins.json">
           <code>data/plugins.json</code>
         </a>
-        .
+        . Buying a seat does none of this and is not a shortcut to any of it.
       </p>
 
       <h2>What this is not</h2>
@@ -394,8 +505,23 @@ export default async function Home() {
       </p>
       <p className="fine">
         <strong>Not a quality ranking.</strong> Star counts are a dated snapshot of a repo&rsquo;s
-        popularity, carried so you can sort; they are not an opinion. Nothing here is sold,
-        sponsored, or promoted.
+        popularity, carried so you can sort; they are not an opinion. Nothing is ranked, scored,
+        or graded here.
+      </p>
+      {/* This paragraph used to read "Nothing here is sold, sponsored, or
+          promoted." Four seats are now sold, so the sentence had to change or
+          become a lie — and the site's entire product is not lying about what
+          it knows. Narrowed rather than deleted: the precise version is a
+          stronger claim than the old blanket one, because it can be checked. */}
+      <p className="fine">
+        <strong>Not for sale, except the four seats.</strong> The gold band at the top is paid
+        placement at {sponsors?.price.said ?? "a published rate"} and it is the entire commercial
+        surface of this site. No listing, ranking, receipt, tag, description or number anywhere
+        else has ever been bought, and the pipeline that produces them{" "}
+        <a href="https://github.com/dshworks/plugins/blob/main/scripts/build-data.mjs">
+          cannot read the sponsor file
+        </a>{" "}
+        into a plugin record. <a href="/sponsor">Terms</a>.
       </p>
       <p className="fine">
         <strong>Not eternal.</strong> Preview software moves weekly. Anything checked against an
@@ -403,6 +529,14 @@ export default async function Home() {
       </p>
     </main>
   );
+}
+
+// 1st, 2nd, 3rd — a rank read aloud. English exceptions at 11-13 included,
+// because "11st most recent" on a page about care would be its own argument.
+function ordinal(n: number): string {
+  const rem100 = n % 100;
+  if (rem100 >= 11 && rem100 <= 13) return `${n}th`;
+  return `${n}${["th", "st", "nd", "rd"][n % 10] ?? "th"}`;
 }
 
 function Stat({ n, k }: { n: string; k: string }) {

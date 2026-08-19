@@ -56,6 +56,7 @@ export default async function TagPage({ params }: Props) {
                 <span className="dot">·</span>
                 {p.days === null ? "no push date" : `${p.days}d`}
                 {p.npm && (<><span className="dot">·</span>npm</>)}
+                {p.gone && (<><span className="dot">·</span><span className="pill warn">repo gone</span></>)}
               </span>
             </span>
             {p.description && <p className="desc">{p.description}</p>}

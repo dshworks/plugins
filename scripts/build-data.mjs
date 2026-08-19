@@ -171,6 +171,10 @@ const meta = {
     npm: entries.filter((e) => e.npm).length,
     themes: themes.length,
     tags: tags.length,
+    // Entries whose repository stopped resolving. Counted and published rather
+    // than quietly dropped: "6,290 plugins" with 59 dead ones inside it is a
+    // number doing exactly what this site accuses other directories of.
+    gone: entries.filter((e) => e.status === "broken").length,
   },
   tags: tags.map(({ tag, count }) => ({ tag, count })),
 };
@@ -194,6 +198,10 @@ const indexBytes = write("index.json", {
   plugins: entries.map((e) => [
     e.slug, e.name, oneLine(e.description), e.tag ?? "",
     e.stars, e.pulse.days ?? -1, e.npm ? 1 : 0, e.proof ? 1 : 0,
+    // 9th field: the repository stopped resolving. Carried in the index rather
+    // than looked up per row, so a search result can say so before the reader
+    // clicks through and copies a command that cannot work.
+    e.status === "broken" ? 1 : 0,
   ]),
 });
 
@@ -264,7 +272,63 @@ const ecosystemBytes = write("ecosystem.json", {
     note: directories.note,
     sites: directories.sites,
   },
+  // The front page's rail: what was pushed most recently across the whole
+  // registry, stars breaking ties. Same order every shelf uses, so the rail is
+  // the top of the pile and not a second ranking. Description is cut on a word
+  // like the search index; a card is narrower than a page.
+  fresh: entries
+    .slice()
+    .sort((a, b) => (a.pulse.days ?? 1e9) - (b.pulse.days ?? 1e9) || b.stars - a.stars)
+    .slice(0, 24)
+    .map((e) => ({
+      slug: e.slug, name: e.name, repo: e.repo, description: oneLine(e.description),
+      tag: e.tag, stars: e.stars, days: e.pulse.days, npm: !!e.npm, proof: !!e.proof,
+    })),
+  pushedToday: entries.filter((e) => e.pulse.days === 0).length,
 });
+
+// The specimen: the one plugin the front page has already decided about
+// before the visitor types anything. It is not a recommendation and not a
+// paid slot — it is whichever entry currently carries the most complete
+// receipt, picked by a rule printed under it so nobody has to wonder how a
+// plugin gets there. Freshest first among entries that have every field a
+// decision needs (proof, an npm install path, and at least one star), which
+// means it rotates on its own as the registry moves.
+//
+// The rule is here rather than in the page so the page cannot quietly change
+// it. If this slot ever becomes purchasable it stops being a specimen, and
+// the four seats exist precisely so it never has to.
+const specimenOf = (list) =>
+  list
+    // `status !== broken` is not a quality filter — it is the one case where
+    // showing the entry would hand the visitor an install command for a
+    // repository that no longer exists, on the surface whose entire promise is
+    // that its commands are real.
+    .filter((e) => e.proof && e.npm && e.stars >= 1 && e.status !== "broken")
+    .sort((a, b) => (a.pulse.days ?? 1e9) - (b.pulse.days ?? 1e9) || b.stars - a.stars)[0] ?? null;
+
+const specimen = specimenOf(entries);
+const specimenBytes = write("specimen.json", {
+  built: TODAY,
+  rule: "freshest entry carrying a proof file, an npm install path, and at least one star",
+  plugin: specimen && {
+    slug: specimen.slug, name: specimen.name, repo: specimen.repo, npm: specimen.npm,
+    description: specimen.description, tag: specimen.tag, tags: specimen.tags,
+    stars: specimen.stars, pulse: specimen.pulse, proof: specimen.proof,
+    verifiedAgainst: specimen.verifiedAgainst, lastVerified: specimen.lastVerified,
+    // Where it sits on its own shelf, so the card can say "41st of 451 by last
+    // push" without the page loading the whole tag file to count.
+    shelf: specimen.tag
+      ? { tag: specimen.tag, size: byTag.get(specimen.tag).length, rank: byTag.get(specimen.tag).indexOf(specimen) + 1 }
+      : null,
+  },
+});
+
+// The seat inventory, copied through untouched. It is hand-edited in
+// data/sponsors.json and read by the page exactly as written — no derivation,
+// no join against the registry, deliberately. The moment sponsorship data can
+// reach a plugin record, the registry stops being worth reading.
+const sponsorsBytes = write("sponsors.json", JSON.parse(readFileSync(join(ROOT, "data/sponsors.json"), "utf8")));
 
 let detailBytes = 0;
 for (const e of entries) detailBytes += write(`p/${e.slug}.json`, e);
@@ -273,13 +337,14 @@ let tagBytes = 0;
 for (const t of tags) {
   const list = t.order.map((slug) => {
     const o = bySlug.get(slug);
-    return { slug: o.slug, name: o.name, stars: o.stars, days: o.pulse.days, npm: !!o.npm, description: o.description };
+    return { slug: o.slug, name: o.name, repo: o.repo, stars: o.stars, days: o.pulse.days, npm: !!o.npm, proof: !!o.proof, gone: o.status === "broken", description: o.description };
   });
   tagBytes += write(`tags/${t.tag}.json`, { tag: t.tag, count: t.count, plugins: list });
 }
 
 const kb = (n) => `${(n / 1024).toFixed(0)} KB`;
 console.log(`data: ${entries.length} plugins, ${tags.length} tags, ${themes.length} themes`);
-console.log(`data: index ${kb(indexBytes)}, meta ${kb(metaBytes)}, slugs ${kb(slugBytes)}, ecosystem ${kb(ecosystemBytes)}, ${entries.length} detail ${kb(detailBytes)}, ${tags.length} tag ${kb(tagBytes)}`);
+console.log(`data: index ${kb(indexBytes)}, meta ${kb(metaBytes)}, slugs ${kb(slugBytes)}, ecosystem ${kb(ecosystemBytes)}, ${entries.length} detail ${kb(detailBytes)}, ${tags.length} tag ${kb(tagBytes)}, specimen ${kb(specimenBytes)}, sponsors ${kb(sponsorsBytes)}`);
+console.log(`data: specimen is ${specimen ? `${specimen.name} (${specimen.pulse.days}d, ${specimen.stars}★)` : "none — no entry carries a full receipt"}`);
 const noProof = entries.filter((e) => !e.proof).length;
 if (noProof) console.log(`data: ${noProof} entries carry no proof and will say so on their page`);

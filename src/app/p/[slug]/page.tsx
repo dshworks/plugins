@@ -49,6 +49,25 @@ export default async function PluginPage({ params }: Props) {
           {p.official && (<><span className="dot">·</span><span className="pill">first-party</span></>)}
         </p>
         {p.description && <p className="lede">{p.description}</p>}
+        {/* The repository stopped resolving. Said at the top, before the
+            install command, because a reader who copies that command and gets
+            a 404 has been failed by this page — and said as "gone", not as a
+            quality judgment, since a deleted repo and a repo made private look
+            identical from outside and one of them can come back. The row and
+            its receipt stay: the install path really was verified on the date
+            below, and deleting that history would be the worse record. */}
+        {p.status === "broken" && (
+          <p className="fine" style={{ maxWidth: "var(--measure)" }}>
+            <span className="pill warn">repo gone</span> As of the last sweep,{" "}
+            <code>{p.repo}</code> no longer resolves on GitHub — deleted, or made private. The
+            install command below will fail. Everything else on this page is the record of what
+            was true while it existed;{" "}
+            <a href="https://github.com/dshworks/awesome-dsh-plugins/blob/main/data/gone.json">
+              the check is published
+            </a>
+            .
+          </p>
+        )}
       </header>
 
       <div className="panel">

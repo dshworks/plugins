@@ -33,14 +33,14 @@ export type Plugin = {
 export type TagFile = {
   tag: string;
   count: number;
-  plugins: { slug: string; name: string; stars: number; days: number | null; npm: boolean; description?: string }[];
+  plugins: { slug: string; name: string; stars: number; days: number | null; npm: boolean; proof?: boolean; gone?: boolean; description?: string }[];
 };
 
 export type Meta = {
   built: string;
   source: string;
   verifiedAgainst: string | null;
-  counts: { plugins: number; withProof: number; npm: number; themes: number; tags: number };
+  counts: { plugins: number; withProof: number; npm: number; themes: number; tags: number; gone?: number };
   tags: { tag: string; count: number }[];
 };
 
@@ -91,7 +91,37 @@ export type Ecosystem = {
   } | null;
 };
 
+// The four seats. Read straight from the hand-edited inventory — this type
+// deliberately shares no field with Plugin, and nothing joins the two. A seat
+// is a box on a page; if it could ever touch a registry row, the registry
+// would stop being the thing this site is for.
+export type Sponsors = {
+  updated: string;
+  price: { amount: number; currency: string; period: string; said: string };
+  checkout: string | null;
+  terms: string;
+  contact: string;
+  seats: {
+    n: number;
+    sponsor: { name: string; url: string; line: string; since: string; until: string } | null;
+  }[];
+};
+
+// The plugin the front page has already decided about, picked by a printed
+// rule in build-data.mjs. Not a recommendation, not for sale.
+export type Specimen = {
+  built: string;
+  rule: string;
+  plugin:
+    | (Pick<Plugin, "slug" | "name" | "repo" | "npm" | "description" | "tag" | "tags" | "stars" | "pulse" | "proof" | "verifiedAgainst" | "lastVerified"> & {
+        shelf: { tag: string; size: number; rank: number } | null;
+      })
+    | null;
+};
+
 export const getMeta = () => asset<Meta>("meta.json");
+export const getSponsors = () => asset<Sponsors>("sponsors.json");
+export const getSpecimen = () => asset<Specimen>("specimen.json");
 export const getEcosystem = () => asset<Ecosystem>("ecosystem.json");
 export const getPlugin = (slug: string) => asset<Plugin>(`p/${encodeURIComponent(slug)}.json`);
 export const getTag = (tag: string) => asset<TagFile>(`tags/${encodeURIComponent(tag)}.json`);

@@ -8,6 +8,13 @@ export const metadata: Metadata = {
     "Not another list. For each of 6,290 DeepSeek Harness plugins: the file that proves it installs, whether anyone still maintains it, and how crowded the shelf is. Community-run, not affiliated with DeepSeek.",
   openGraph: { type: "website", siteName: "dsh.works" },
   twitter: { card: "summary" },
+  // The front page's design promise lives in a source comment, which the
+  // bundler strips — so the one line that makes it auditable against the
+  // render is emitted as real markup. Anyone can now check the shipped page
+  // against the staging it claims to be built on.
+  other: {
+    "design-form": "staging: first-viewport-is-the-product-running · roll 3778195c · see src/app/page.tsx",
+  },
 };
 
 // The theme toggle is three states (auto / light / dark), so it is a word and

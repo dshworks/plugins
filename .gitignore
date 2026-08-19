@@ -7,9 +7,13 @@ dist/
 *.tsbuildinfo
 next-env.d.ts
 # data/ holds fetched copies of the registries, which are someone else's file
-# and get re-fetched every build. The two exceptions are inputs, not output:
-# a measurement nobody can reproduce without an API budget, and a survey read
-# by hand off two dozen websites. The site links to both as its receipts.
+# and get re-fetched every build. The exceptions are inputs, not output: a
+# measurement nobody can reproduce without an API budget, a survey read by hand
+# off two dozen websites, and the seat inventory. The site links to all three
+# as its receipts — sponsors.json in particular MUST be committed, because
+# dshthemes.com fetches it from this repo's raw URL and because /sponsor tells
+# readers the seat's term dates are a matter of public record.
 data/*.json
 !data/ecosystem.json
 !data/directories.json
+!data/sponsors.json

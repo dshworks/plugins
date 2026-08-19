@@ -52,7 +52,12 @@
     { "pattern": "dsh.works/assets/*", "zone_name": "dsh.works" },
     { "pattern": "dsh.works/_data/*", "zone_name": "dsh.works" },
     { "pattern": "dsh.works/llms.txt*", "zone_name": "dsh.works" },
-    { "pattern": "dsh.works/sitemap.xml*", "zone_name": "dsh.works" }
+    { "pattern": "dsh.works/sitemap.xml*", "zone_name": "dsh.works" },
+    // The seats link here. Because the Worker owns paths rather than the
+    // hostname, a page that is not on this list never reaches it and falls
+    // through to the Pages origin as a 404 — which is exactly what /sponsor
+    // did on its first deploy, with four gold boxes pointing at it.
+    { "pattern": "dsh.works/sponsor*", "zone_name": "dsh.works" }
   ],
   "observability": { "enabled": true }
 }

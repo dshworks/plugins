@@ -7,7 +7,7 @@ answers *what exists*, by scraping the same GitHub topic and printing a count.
 The counts range from **20 to 6,685 for the same universe** — which tells you
 the number is a filter policy, not a fact.
 
-This site answers the next question. For each of 6,290 plugins:
+This site answers the next question. For each of ~6,190 plugins:
 
 | Row | What it says | Where it comes from |
 | --- | --- | --- |
@@ -29,7 +29,7 @@ tag"** and never "451 plugins do this job", because the tag is what the data
 supports and the stronger sentence would be a lie wearing a fact's clothes.
 
 The shelf is still worth showing. Seeing the crowd before you pick from it is
-more than a card in a grid of 6,290 will ever tell you.
+more than a card in a grid of six thousand will ever tell you.
 
 ## Where the data comes from
 

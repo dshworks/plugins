@@ -1,21 +1,31 @@
 import type { Metadata } from "next";
+import { getMeta } from "@/lib/data";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://dsh.works"),
-  title: { default: "dsh.works — should you install it?", template: "%s — dsh.works" },
-  description:
-    "Not another list. For each of 6,290 DeepSeek Harness plugins: the file that proves it installs, whether anyone still maintains it, and how crowded the shelf is. Community-run, not affiliated with DeepSeek.",
-  openGraph: { type: "website", siteName: "dsh.works" },
-  twitter: { card: "summary" },
-  // The front page's design promise lives in a source comment, which the
-  // bundler strips — so the one line that makes it auditable against the
-  // render is emitted as real markup. Anyone can now check the shipped page
-  // against the staging it claims to be built on.
-  other: {
-    "design-form": "staging: first-viewport-is-the-product-running · roll 3778195c · see src/app/page.tsx",
-  },
-};
+// Derived, not typed in. The count in this description was 6,290 for a week
+// after the registry stopped saying 6,290 — a stale number in the one string
+// search engines and chat apps quote back, on a site whose argument is that
+// directories publish numbers they no longer measure. It reads the same
+// meta.json the pages do.
+export async function generateMetadata(): Promise<Metadata> {
+  const meta = await getMeta();
+  const n = meta ? meta.counts.plugins.toLocaleString() : "6,000+";
+  return {
+    metadataBase: new URL("https://dsh.works"),
+    title: { default: "dsh.works — should you install it?", template: "%s — dsh.works" },
+    description:
+      `Not another list. For each of ${n} DeepSeek Harness plugins: the file that proves it installs, whether anyone still maintains it, and how crowded the shelf is. Community-run, not affiliated with DeepSeek.`,
+    openGraph: { type: "website", siteName: "dsh.works" },
+    twitter: { card: "summary" },
+    // The front page's design promise lives in a source comment, which the
+    // bundler strips — so the one line that makes it auditable against the
+    // render is emitted as real markup. Anyone can now check the shipped page
+    // against the staging it claims to be built on.
+    other: {
+      "design-form": "staging: first-viewport-is-the-product-running · roll 3778195c · see src/app/page.tsx",
+    },
+  };
+}
 
 // The theme toggle is three states (auto / light / dark), so it is a word and
 // not an icon — two icons cannot express three states. It only ever upgrades

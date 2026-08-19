@@ -150,7 +150,7 @@ export default async function PluginPage({ params }: Props) {
             <p className="fine" style={{ marginBottom: "0.6rem" }}>
               A tag is a shelf, not a verdict — this one holds things that overlap and things
               that only look like they do. It is here so you can see the crowd before you pick
-              from it, which is more than a card in a grid of 6,290 will ever tell you.
+              from it, which is more than a card in a grid of six thousand will ever tell you.
             </p>
             <ul className="rows">
               {siblings.slice(0, 5).map((s) => (

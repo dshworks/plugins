@@ -83,12 +83,6 @@ export type Ecosystem = {
     sinceLaunch: number;
     series: { date: string; created: number }[];
   } | null;
-  directories: {
-    surveyed: string;
-    method: string;
-    note: string;
-    sites: { host: string; claims: number; curation: string; ours?: boolean }[];
-  } | null;
 };
 
 // The four seats. Read straight from the hand-edited inventory — this type

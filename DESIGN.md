@@ -24,29 +24,42 @@ dark value and the page still works. **No colour literal exists outside that
 | `--cyan` | `#00c2e9` | `#0a6e85` | links, the one chart accent |
 | `--pink` | `#e41478` | `#bd0e60` | section labels, the prompt caret, our own bar in a chart |
 | `--yellow` | `#ffd53d` | `#7a5200` | **state only** — the `warn` pill |
-| `--gold` | `#f0c14b` | `#8a6206` | **the four sponsor seats, and nothing else** |
+| `--gold` | `#f0c14b` | `#8a6206` | **sponsor-board STATUS only** — see below |
+| `--board-*` | fixed | fixed | the board's own enamel; the only tokens with no light/dark pair |
 
 Type is JetBrains Mono at 300 for everything; 700 for headings. One radius:
 3px. One measure: `--measure: 68ch`. Motion is a ladder — `--t1`/`--t2` for
 anything the pointer causes, `--t3`+ for anything the scroll causes, all on
 `--ease-out` (quintic), all off under `prefers-reduced-motion`.
 
-## The gold rule
+## The amber rule
 
-`--gold` marks the only thing on this site that money can move. It appears in
-exactly one component (`src/app/seats.tsx`) and nowhere else, which is how the
-disclosure is made in paint instead of in a footnote:
+`--gold` is the sponsor board's **status ink** and nothing else. It marks the
+seat the idle loop is on, the seat under the pointer, and the one action.
 
-- it is **not** `--yellow` — yellow is the `warn` state, and an advertisement
-  wearing a warning colour reads as a fault;
+**It does not mean "sponsor."** The first version painted every seat gold, which
+made a paying sponsor's name look identical to an empty seat's call to action —
+backwards, since the sponsor is the one thing on the board that is real. A
+sponsor's mark is `--board-ink` at full strength; amber marks what is *available*.
+
+- it is **not** `--yellow` — that is the `warn` state, and an advertisement
+  wearing the warning colour reads as a fault;
 - do not reach for it for a highlight, a callout, a "featured" badge, or a
-  fourth accent. The moment gold means two things it means nothing, and the
-  page loses the one signal that tells a stranger which box was bought.
+  fourth accent anywhere else on the site.
 
 ## The seats
 
 Four, `$490/yr`, inventory in `data/sponsors.json` (committed on purpose — see
 `.gitignore`, and note dshthemes.com fetches it from this repo's raw URL).
+
+Built on the staging **Sponsor Seats as a Numbered Plate**, dressed in
+**worlds/split-flap-departure-board**: a matte plate of fixed character cells
+that keeps its own ground in both schemes, so the advertising reads as laid
+*on* the page rather than drawn into it. Four states — taken / open /
+demonstrating / sold out — and the idle motion demonstrates the purchase (an
+open seat clatters to a mark tagged `SPECIMEN`, holds, clatters back) rather
+than rotating what is for sale. Every seat is on screen 100% of the time; a
+carousel would hide the thing people paid for.
 
 Structural rules, in order of how expensive they are to get wrong:
 
@@ -60,7 +73,15 @@ Structural rules, in order of how expensive they are to get wrong:
    would be the same trick as printing a number nobody measured.
 4. Paid links carry `rel="sponsored nofollow noopener"`. The markup is what
    makes the sentence in the copy true.
-5. The specimen slot — the one plugin decided on the front page — is picked by
+5. **The SPECIMEN tag is live for exactly as long as the mark is.** It is
+   cleared when the field *starts* emptying, not when it finishes — otherwise
+   the board reads "SPECIMEN" beside a field showing `[+]`.
+6. **Never a placeholder logo** for a sponsor who has not agreed: invented
+   proof, and a trademark problem the moment money changes hands.
+7. Motion stops on pointer, on focus, and on a hidden tab; under reduced motion
+   there is no loop at all — one seat settles on its specimen so the offer
+   still reads. All four verified.
+8. The specimen slot — the one plugin decided on the front page — is picked by
    a printed rule in `build-data.mjs` and is **not for sale**. The four seats
    exist so it never has to be.
 
@@ -76,9 +97,9 @@ h1 + one line of counts        <- orientation, small on purpose
 .console                       <- live field over 6,290 rows
   └ .verdict                      one real plugin, already decided
 .chips                         <- tag filters (a scrolling strip under 34rem)
-.seats                         <- the gold band, above the fold at 390/768/1440
+.board                         <- the sponsor plate, above the fold at 390/768/1440
 .strip                         <- four measured facts
-three .figure charts           <- the argument, each with its provenance foot
+two .figure charts             <- the argument, each with its provenance foot
 .panel                         <- proof / rejections / dated / paid
 ...registries, ours, api, what this is not
 ```
@@ -106,3 +127,17 @@ fault. It was moved rather than argued with.
 
 Real-device rendering, the JetBrains Mono fallback on a cold cache, and
 `prefers-contrast`.
+
+## What was removed, and why
+
+The front page used to carry **"A count is a policy, not a fact"** — a chart of
+22 competing directories ranked by their own claimed counts. The argument was
+true and the section was an advertisement for twenty-one other sites, printed in
+the space that should answer *should you install it*, with the largest of them
+sitting above us. It also had to be hand-resurveyed forever, and our own bar in
+it went stale the moment the registry moved.
+
+The argument survives as one sentence. The leaderboard does not. The survey is
+kept as research in `data/directories.json`, marked not-rendered; `build-data.mjs`
+no longer projects it and `ClaimsChart` is deleted. Don't wire it back in without
+deciding that again.

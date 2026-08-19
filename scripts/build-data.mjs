@@ -266,12 +266,12 @@ const ecosystemBytes = write("ecosystem.json", {
     sinceLaunch: ecosystem.sinceLaunch,
     series: ecosystem.series,
   },
-  directories: directories && {
-    surveyed: directories.surveyed,
-    method: directories.method,
-    note: directories.note,
-    sites: directories.sites,
-  },
+  // `directories` (the 22-site survey) is deliberately no longer projected.
+  // The front page used to rank every competing directory by its own claimed
+  // count, on our own front door, with the largest of them printed above us.
+  // The argument was true and the section was an advertisement for twenty-one
+  // other sites in the space that should answer "should you install it". The
+  // survey stays in data/directories.json as research; nothing renders it.
   // The front page's rail: what was pushed most recently across the whole
   // registry, stars breaking ties. Same order every shelf uses, so the rail is
   // the top of the pile and not a second ranking. Description is cut on a word

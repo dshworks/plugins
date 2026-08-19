@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
     // render is emitted as real markup. Anyone can now check the shipped page
     // against the staging it claims to be built on.
     other: {
-      "design-form": "staging: first-viewport-is-the-product-running · roll 3778195c · see src/app/page.tsx",
+      "design-form": "page: first-viewport-is-the-product-running · roll 3778195c; board: sponsor-seats-as-a-numbered-plate × split-flap-departure-board · see src/app/page.tsx",
     },
   };
 }

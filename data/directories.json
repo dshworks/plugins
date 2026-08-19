@@ -115,5 +115,6 @@
       "claims": 20,
       "curation": "curated"
     }
-  ]
+  ],
+  "_comment": "Survey of competing dsh plugin directories, kept as research. NOT RENDERED: the front page used to chart all 22 of these by their own claimed counts, which put the largest competitor above us on our own front door and spent the page's best space arguing about other people's numbers instead of answering the question the site exists for. The argument survives as one sentence; the leaderboard does not. Do not wire this back into a page without deciding that again."
 }

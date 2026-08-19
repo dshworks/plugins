@@ -3,27 +3,30 @@ import { tagLabel } from "@/lib/tags";
 import Console from "./console";
 import Seats from "./seats";
 import Reveal from "./reveal";
-import { AgeChart, ClaimsChart, ShelfMap, StarLadder } from "./charts";
+import { AgeChart, ShelfMap, StarLadder } from "./charts";
 
 /* THE PROMISE
  *
  * THESIS          This page is the install decision *running*, not an essay
- *                 about it. It refuses the awesome-list front door: logo,
- *                 tagline, grid of starred cards, "browse all".
+ *                 about it. It refuses the awesome-list front door, and it
+ *                 refuses to rank its competitors on its own front page.
  * OWN-WORLD       House material — black ground, JetBrains Mono 300, 3px
- *                 hairlines, pink section labels, cyan links, charts drawn in
- *                 one accent. Exactly one gold, spent only on the four paid
- *                 seats, so the page's only advertisement is its only gold.
+ *                 hairlines, pink section labels, cyan links, charts in one
+ *                 accent. The sponsor board is the single thing that breaks
+ *                 register: a matte split-flap plate in its own world, so the
+ *                 advertising reads as laid ON the page, not drawn into it.
  * STORY           A stranger types before reading; sees one real plugin
- *                 already decided, receipt clickable; meets three measured
- *                 charts that say why those numbers can be trusted; learns
- *                 the four seats are the only thing here money can move.
+ *                 already decided, receipt clickable; watches a seat on the
+ *                 board demonstrate what buying it would do; then meets two
+ *                 measured charts about this ecosystem, not about rivals.
  * FIRST VIEWPORT  Site bar; one title line with the live counts; the console
  *                 frame — pink caret, live field, indexed count — holding a
- *                 real plugin's five-line verdict; the gold band's top rule
+ *                 real plugin's five-line verdict; the board's top edge
  *                 arriving at the fold.
- * FORM            Staging "First Viewport Is the Product Running", first
- *                 dealt of three, roll 3778195c.
+ * FORM            Page: staging "First Viewport Is the Product Running", roll
+ *                 3778195c. Board: staging "Sponsor Seats as a Numbered
+ *                 Plate" (brief-pinned by the user), dressed in
+ *                 worlds/split-flap-departure-board.
  * --
  * FINISH          unreviewed is unfinished: this build ends with the review,
  *                 the verdict, and DESIGN.md.
@@ -54,7 +57,6 @@ export default async function Home() {
   );
 
   const age = eco?.age ?? null;
-  const dirs = eco?.directories ?? null;
   const proofPct = Math.round((meta.counts.withProof / meta.counts.plugins) * 100);
   const p = specimen?.plugin ?? null;
   // Printed rather than absorbed. 6,290 with 59 dead rows inside it is exactly
@@ -82,7 +84,7 @@ export default async function Home() {
         <p className="fine" style={{ maxWidth: "var(--measure)" }}>
           {meta.counts.plugins.toLocaleString()} DeepSeek Harness plugins, {proofPct}% carrying a
           receipt you can open{gone ? `, ${gone} whose repository has since vanished and say so` : ""}.
-          Twenty-two other directories will tell you what exists. Type, or read the one below.
+          Every one of them has a page that answers this. Type, or read the one below.
         </p>
       </header>
 
@@ -263,44 +265,6 @@ export default async function Home() {
           </section>
         ))}
       </div>
-
-      {dirs && (
-        <>
-          <h2>A count is a policy, not a fact</h2>
-          <p className="lede">
-            These sites index the same GitHub topic. They report between{" "}
-            {Math.min(...dirs.sites.map((s) => s.claims)).toLocaleString()} and{" "}
-            {Math.max(...dirs.sites.map((s) => s.claims)).toLocaleString()} plugins for it. Nobody
-            is lying: each number is a filter — what counts as installable, what got reviewed,
-            what the sweep could reach — printed on the front page as though it were a
-            measurement.
-          </p>
-          <div className="figure" data-reveal="claims">
-            <div className="figure-head">
-              <span className="figure-stat">
-                {Math.round(Math.max(...dirs.sites.map((s) => s.claims)) / Math.min(...dirs.sites.map((s) => s.claims)))}×
-              </span>
-              <span className="figure-unit">
-                between the largest and smallest claim about one universe
-              </span>
-            </div>
-            <ClaimsChart sites={dirs.sites} topicTotal={age?.total ?? 0} />
-            <div className="figure-foot">
-              <span>
-                {dirs.method}, {dirs.surveyed} — {dirs.note}
-              </span>
-              <a href="https://github.com/dshworks/plugins/blob/main/data/directories.json">the list</a>
-            </div>
-          </div>
-          <p className="fine">
-            Ours is the pink bar, on the same terms as everyone else&rsquo;s.{" "}
-            {meta.counts.plugins.toLocaleString()} is a policy too — it is what survived a sweep
-            that publishes both what it kept and what it cut. The argument of this site is not
-            that our number is better. It is that a number is the wrong thing to compare, and the
-            receipt on each row is the right one.
-          </p>
-        </>
-      )}
 
       {eco && (
         <>

@@ -35,8 +35,9 @@ export default async function Sponsor() {
       <header style={{ paddingTop: "2.5rem" }}>
         <h1>Sponsor a seat</h1>
         <p className="lede">
-          There are four, they cost {sponsors.price.said} each, and {open === 0 ? "none" : open} of
-          them {open === 1 ? "is" : "are"} open right now. They pay for the domains, the Workers,
+          There are four, they cost {sponsors.price.said} each, and{" "}
+          {open === 4 ? "all four are" : open === 0 ? "none are" : `${open} of them ${open === 1 ? "is" : "are"}`}{" "}
+          open right now. They pay for the domains, the Workers,
           and the sweep that keeps {meta?.counts.plugins.toLocaleString() ?? "6,000+"} rows dated.
         </p>
       </header>

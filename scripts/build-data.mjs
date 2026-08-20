@@ -159,12 +159,33 @@ const write = (rel, value) => {
   return json.length;
 };
 
+// Every dsh release the registry has rows under, biggest share first. Ties
+// break toward the newer release so a 50/50 split does not read as older than
+// it is.
+const verifiedSpread = (() => {
+  const byVersion = new Map();
+  for (const e of entries) {
+    if (!e.verifiedAgainst) continue;
+    byVersion.set(e.verifiedAgainst, (byVersion.get(e.verifiedAgainst) ?? 0) + 1);
+  }
+  return [...byVersion]
+    .map(([version, count]) => ({ version, count }))
+    .sort((a, b) => b.count - a.count || b.version.localeCompare(a.version));
+})();
+
 const meta = {
   built: TODAY,
   source: LOCAL ? "local checkout" : "dshworks registries",
-  // The newest release anything was checked against, not whichever entry
-  // sorted first — that was reporting rc.5 while the registry was on rc.6.
-  verifiedAgainst: [...new Set(entries.map((e) => e.verifiedAgainst).filter(Boolean))].sort().pop() ?? null,
+  // The release MOST rows were checked under, not the newest one any row
+  // carries. Those are the same number only while the registry re-verifies in
+  // one pass, and it does not: triage stamps the release it ran under, so the
+  // day a few hundred new entries land under rc.8 the newest-wins rule would
+  // headline "checked against rc.8" over six thousand rows that say rc.6.
+  // A one-line summary that flatters the tail is the exact move this site
+  // exists to argue against, so the summary follows the mass and the spread
+  // is published beside it.
+  verifiedAgainst: verifiedSpread[0]?.version ?? null,
+  verifiedSpread,
   counts: {
     plugins: entries.length,
     withProof: entries.filter((e) => e.proof).length,

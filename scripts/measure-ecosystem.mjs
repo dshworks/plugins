@@ -85,19 +85,46 @@ const withStars = await count(`topic:${TOPIC} stars:>=1`);
 // rc.7 ships and 6,290 rows still say rc.6, that is not an error to paper over
 // — it is the one fact a dated registry can tell a reader that an undated one
 // cannot. So we fetch it and print it rather than quietly relabelling rows.
+// What `npx @deepseek-ai/dsh` actually installs, and — separately — whether
+// something newer is already on the registry under another tag.
+//
+// These come apart, and on 2026-08-20 they were apart: `latest` was
+// 0.1.0-rc.7 while 0.1.0-rc.8 had been published to `next` the day before,
+// with GitHub release notes and everything. A reader who saw the rc.8
+// announcement and then read a page dated against rc.7 would reasonably think
+// the page was stale. It was not; `latest` is the honest answer to "what do
+// you get", and `next` is the honest answer to "what exists". Report both and
+// the confusion has nowhere to live.
 async function currentRelease() {
   try {
     const res = await fetch("https://registry.npmjs.org/@deepseek-ai/dsh", { headers });
     if (!res.ok) return null;
     const pkg = await res.json();
-    const version = pkg["dist-tags"]?.latest;
-    return version ? { version, published: pkg.time?.[version]?.slice(0, 10) ?? null } : null;
+    const tags = pkg["dist-tags"] ?? {};
+    const version = tags.latest;
+    if (!version) return null;
+    const at = (v) => pkg.time?.[v]?.slice(0, 10) ?? null;
+    const release = { version, published: at(version) };
+    // Any tag pointing somewhere other than `latest`, newest first. Recorded
+    // as a list rather than hardcoding `next`, because the tag a project uses
+    // for prereleases is a convention, not a rule.
+    const ahead = Object.entries(tags)
+      .filter(([tag, v]) => tag !== "latest" && v !== version && at(v) && at(v) >= release.published)
+      .map(([tag, v]) => ({ tag, version: v, published: at(v) }))
+      .sort((a, b) => b.published.localeCompare(a.published));
+    if (ahead.length) release.ahead = ahead;
+    return release;
   } catch {
     return null;
   }
 }
 const release = await currentRelease();
-if (release) console.error(`  dsh latest on npm: ${release.version} (${release.published})`);
+if (release) {
+  console.error(`  dsh latest on npm: ${release.version} (${release.published})`);
+  for (const a of release.ahead ?? []) {
+    console.error(`  ahead of latest: ${a.version} on the '${a.tag}' tag (${a.published}) — not what npx installs`);
+  }
+}
 
 const series = [];
 for (let i = 0; i < days.length; i++) {

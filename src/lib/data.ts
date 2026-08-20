@@ -39,7 +39,10 @@ export type TagFile = {
 export type Meta = {
   built: string;
   source: string;
+  /** The release most rows were checked under — the mass, not the newest tail. */
   verifiedAgainst: string | null;
+  /** Every release the registry has rows under, biggest share first. */
+  verifiedSpread?: { version: string; count: number }[];
   counts: { plugins: number; withProof: number; npm: number; themes: number; tags: number; gone?: number };
   tags: { tag: string; count: number }[];
 };
@@ -78,7 +81,13 @@ export type Ecosystem = {
     launch: string;
     query: string;
     total: number;
-    release: { version: string; published: string | null } | null;
+    release: {
+      /** What `npx @deepseek-ai/dsh` installs today — the `latest` dist-tag. */
+      version: string;
+      published: string | null;
+      /** Newer versions sitting on another dist-tag, e.g. `next`. Not what npx gives you. */
+      ahead?: { tag: string; version: string; published: string }[];
+    } | null;
     beforeFirstDay: number;
     sinceLaunch: number;
     series: { date: string; created: number }[];

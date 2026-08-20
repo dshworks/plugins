@@ -94,4 +94,6 @@ Not a security review: an install path was checked, not a codebase, and git
 installs run code on your machine at install time outside any sandbox. Not a
 quality ranking. Nothing here is sold, sponsored, or promoted.
 
-MIT.
+MIT. Not affiliated with DeepSeek. "DeepSeek Harness" is DeepSeek's trademark, used
+here only to say what this catalogues; the name follows the "DSH" form their
+[brand guidelines](https://github.com/deepseek-ai/deepseek-harness/blob/master/BRAND_GUIDELINES.md) recommend.

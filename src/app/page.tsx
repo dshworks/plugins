@@ -333,8 +333,23 @@ export default async function Home() {
               Every row carries <code>lastVerified</code> and <code>verifiedAgainst</code> — the
               exact dsh release it was checked under. The harness is a developer preview that has
               already removed one manifest format with no migration, so an undated &ldquo;works
-              with dsh&rdquo; is a rumour. This build was checked against{" "}
-              <code>{meta.verifiedAgainst ?? "—"}</code>.
+              with dsh&rdquo; is a rumour. Most rows here were checked against{" "}
+              <code>{meta.verifiedAgainst ?? "—"}</code>
+              {(meta.verifiedSpread?.length ?? 0) > 1 && (
+                <>
+                  {" "}
+                  &mdash;{" "}
+                  {meta.verifiedSpread!.map(({ version, count }, i) => (
+                    <span key={version}>
+                      {i > 0 && ", "}
+                      {count.toLocaleString()} under <code>{version}</code>
+                    </span>
+                  ))}
+                  . The registry re-verifies in waves, so the newest rows are ahead of the rest;
+                  that is the spread, not a rounding
+                </>
+              )}
+              .
             </p>
             {/* The gap, printed rather than papered over. Relabelling 6,290 rows
                 to whatever shipped last night would take one sed and destroy the
@@ -349,6 +364,24 @@ export default async function Home() {
                 under <code>{meta.verifiedAgainst}</code> until the next sweep dates it forward.
               </p>
             )}
+            {/* latest and next come apart, and when they do a reader who saw
+                the release announcement thinks this page is stale. It is not:
+                what you install and what exists are different questions. */}
+            {age?.release?.ahead?.length ? (
+              <p className="fine" style={{ margin: "0.6rem 0 0" }}>
+                Newer than that, and not what you get:{" "}
+                {age.release.ahead.map((a, i) => (
+                  <span key={a.tag}>
+                    {i > 0 && ", "}
+                    <code>{a.version}</code> has been on npm&rsquo;s{" "}
+                    <code>{a.tag}</code> tag since {a.published}
+                  </span>
+                ))}
+                . <code>npx @deepseek-ai/dsh</code> follows <code>latest</code>, so it still
+                installs <code>{age.release.version}</code>. A plugin author reading release
+                notes and a user running the install line are on different versions right now.
+              </p>
+            ) : null}
           </div>
         </div>
         <div className="row">

@@ -1,4 +1,5 @@
 import { getMeta } from "@/lib/data";
+import { oursCount, oursHosted } from "@/lib/ours";
 
 // The audience for a plugin directory is people running agents, so the site
 // publishes a map an agent can read in one fetch. One of the twenty-four
@@ -14,7 +15,7 @@ export async function GET() {
 > GitHub topic. For each of ${n(c?.plugins)} plugins this site answers three things:
 > which file proves it installs, whether anyone still maintains it, and how
 > crowded the shelf is that it sits on. Also the front door for the dshworks
-> registries (plugins, themes), the field notes, and the three plugins this org
+> registries (plugins, themes), the field notes, and the ${oursCount().toLowerCase()} plugins this org
 > publishes. Community-run, MIT, not affiliated with DeepSeek.
 
 Built ${meta?.built ?? "?"} from the open registry at
@@ -42,7 +43,7 @@ dropped or quietly badged.
 - /tag/{tag} — everything on one shelf, freshest first
 - /awesome-dsh-plugins/ — the same registry as a filterable gallery
 - /awesome-dsh-themes/ — the theme gallery, with live in-browser previews
-- /dsh-meter/ , /dsh-crew/ — plugins this org publishes
+- ${oursHosted().map((p) => p.href).join(" , ")} — plugins this org publishes
 - https://github.com/dshworks/howto-dsh — verified field notes on the harness itself
 
 ## Fields that are not obvious

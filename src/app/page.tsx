@@ -1,5 +1,6 @@
 import { getEcosystem, getMeta, getSpecimen, getSponsors, getTag, saidPulse } from "@/lib/data";
 import { tagLabel } from "@/lib/tags";
+import { OURS, oursCount } from "@/lib/ours";
 import Console from "./console";
 import Seats from "./seats";
 import Reveal from "./reveal";
@@ -423,44 +424,20 @@ export default async function Home() {
 
       <h2 id="ours">What we ship ourselves</h2>
       <p className="fine">
-        Three plugins, in the registry on the same terms as everyone else&rsquo;s — same schema,
-        same proof file, same verified-against date. Reading six thousand plugins taught us what
-        was missing. No other directory in this ecosystem ships one.
+        {oursCount()} plugins, in the registry on the same terms as everyone else&rsquo;s — same
+        schema, same proof file, same verified-against date. Reading ten thousand plugins taught
+        us what was missing. No other directory in this ecosystem ships one.
       </p>
       <ul className="rows">
-        <li>
-          <span className="line">
-            <a href="/dsh-meter/">dsh-meter</a>
-            <span className="fine">cost</span>
-          </span>
-          <p className="desc">
-            DeepSeek bills by the hour now. One line under the composer: what this session cost,
-            which tariff is running, how long until it flips, and the balance behind it. Both
-            published rate cards, priced at dispatch time.
-          </p>
-        </li>
-        <li>
-          <span className="line">
-            <a href="https://github.com/dshworks/dsh-watch">dsh-watch</a>
-            <span className="fine">unattended</span>
-          </span>
-          <p className="desc">
-            Background stream listeners that wake the agent: matching lines from a command or a
-            growing file arrive as batched, budgeted notices — plus a daemon host, because no
-            stock dsh surface keeps an agent standing.
-          </p>
-        </li>
-        <li>
-          <span className="line">
-            <a href="/dsh-crew/">dsh-crew</a>
-            <span className="fine">crew</span>
-          </span>
-          <p className="desc">
-            Claude Code and Codex, each in a real terminal pane inside your dsh session —
-            typeable, with five tools so the dsh agent seats them, hands them work, and reads
-            their screens.
-          </p>
-        </li>
+        {OURS.map((p) => (
+          <li key={p.name}>
+            <span className="line">
+              <a href={p.href}>{p.name}</a>
+              <span className="fine">{p.kind}</span>
+            </span>
+            <p className="desc">{p.what}</p>
+          </li>
+        ))}
       </ul>
 
       <h2>Use it as an API</h2>

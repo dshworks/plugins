@@ -17,3 +17,4 @@ data/*.json
 !data/ecosystem.json
 !data/directories.json
 !data/sponsors.json
+.vinext/

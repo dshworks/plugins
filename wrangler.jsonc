@@ -38,7 +38,7 @@
     // parameters", 10022); it used to be accepted and silently dropped, which
     // was worse. There is no route syntax that fixes this.
     //
-    // A greedy `dsh.works/*` would fix it and take the four GitHub Pages
+    // A greedy `dsh.works/*` would fix it and take the five GitHub Pages
     // project sites with it, and the Worker cannot proxy those back: the
     // github.io origin 301s to dsh.works for every path, so forwarding loops.
     //

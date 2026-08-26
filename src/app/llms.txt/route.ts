@@ -31,6 +31,7 @@ dropped or quietly badged.
 - /api/plugins/{slug} — one plugin: proof, install command, pulse, tag, repo facts
 - /api/tags/{tag} — every plugin carrying a tag, ordered by last push
 - /_data/index.json — every entry as a compact tuple, for search
+- /_data/seams.json — which harness extension seams the ecosystem uses, with the counting regex and the harness source path for each
 - /sitemap.xml — every page on this site
 - /awesome-dsh-plugins/plugins.json — the upstream registry, unprojected
 - /awesome-dsh-themes/themes.json — every theme, with preview and CSS pointers
@@ -38,7 +39,8 @@ dropped or quietly badged.
 
 ## Human surfaces
 
-- / — this page: search, the crowded shelves, what we ship
+- / — this page: search, the crowded shelves, what nobody has built, what we ship
+- /#unbuilt — the seam map: 11k plugins measured against the harness's extension points
 - /p/{slug} — the decision page for one plugin
 - /tag/{tag} — everything on one shelf, freshest first
 - /awesome-dsh-plugins/ — the same registry as a filterable gallery

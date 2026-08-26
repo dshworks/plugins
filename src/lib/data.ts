@@ -94,6 +94,41 @@ export type Ecosystem = {
   } | null;
 };
 
+// The seam map: which of the harness's extension points the ecosystem
+// actually uses. Its own file because only the front page draws it.
+//
+// `count` is "plugins whose name or description says they do this" -- a census
+// over the whole registry rather than a sample of source, because the sampled
+// version of this measurement got it wrong: it read 227 entry files, saw no
+// `ctx.lsp`, and concluded nobody had built code intelligence while the
+// registry held sixteen that had. A rare category is invisible to a sample and
+// obvious to a census.
+export type Seams = {
+  built: string;
+  /** The dsh release every `src` path below was read at. */
+  harness: string;
+  total: number;
+  source: string;
+  method: string;
+  loudest: number;
+  medianDeep: number;
+  ratio: number;
+  underOnePct: number;
+  deepCount: number;
+  /** Plugins carrying the `memory` tag, counted across all tags rather than the primary one. */
+  memoryTagged: number;
+  seams: {
+    id: string;
+    ctx: string;
+    deep: boolean;
+    src: string;
+    what: string;
+    rx: string;
+    count: number;
+    share: number;
+  }[];
+};
+
 // The four seats. Read straight from the hand-edited inventory — this type
 // deliberately shares no field with Plugin, and nothing joins the two. A seat
 // is a box on a page; if it could ever touch a registry row, the registry
@@ -126,6 +161,7 @@ export const getMeta = () => asset<Meta>("meta.json");
 export const getSponsors = () => asset<Sponsors>("sponsors.json");
 export const getSpecimen = () => asset<Specimen>("specimen.json");
 export const getEcosystem = () => asset<Ecosystem>("ecosystem.json");
+export const getSeams = () => asset<Seams>("seams.json");
 export const getPlugin = (slug: string) => asset<Plugin>(`p/${encodeURIComponent(slug)}.json`);
 export const getTag = (tag: string) => asset<TagFile>(`tags/${encodeURIComponent(tag)}.json`);
 

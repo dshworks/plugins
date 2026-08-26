@@ -189,3 +189,88 @@ export function StarLadder({ ladder, total }: { ladder: { min: number; count: nu
     </Plot>
   );
 }
+
+// --- what the ecosystem built on, and what it did not -----------------------
+
+export type Seam = {
+  id: string;
+  ctx: string;
+  deep: boolean;
+  src: string;
+  what: string;
+  count: number;
+  share: number;
+};
+
+/**
+ * Extension seams by how many plugins claim to use them.
+ *
+ * Linear, and deliberately. The first version of this chart used a log axis,
+ * on the reasoning that a 2-to-1,627 range draws most rows as nothing —
+ * and then it drew `ctx.e2b`, which two plugins in eleven thousand use, at a
+ * quarter the width of `ctx.tools`. A reader who trusts the picture would have
+ * come away with the opposite of the finding. A chart that has to be corrected
+ * by its own caption is a broken chart.
+ *
+ * Linear says the true thing: two long bars and seventeen hairlines. The exact
+ * count sits beside every row, so nothing is lost by refusing to flatter the
+ * small numbers — you get the real shape and the real number.
+ *
+ * Two colours, one distinction: the seams everybody builds on versus the ones
+ * that change what the agent does. The pink hairlines are the story.
+ */
+export function SeamMap({ seams, total }: { seams: Seam[]; total: number }) {
+  const rows = [...seams].sort((a, b) => b.count - a.count);
+  const ROW = 21;
+  const LABEL = 128;
+  const W = 720;
+  const H = rows.length * ROW + 4;
+  const max = rows[0]?.count ?? 1;
+  const plot = W - LABEL - 96;
+  // A hairline floor so a row with two plugins is still visibly a row. Two
+  // pixels is not a lie about the value — the number is printed next to it —
+  // it is the difference between "almost none" and "this row is missing".
+  const x = (n: number) => Math.max(2, (n / max) * plot);
+  return (
+    <Plot>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        role="img"
+        aria-label={`Harness extension seams by how many of ${fmt(total)} plugins use them. ${rows
+          .map((r) => `${r.ctx}: ${fmt(r.count)}`)
+          .join("; ")}.`}
+      >
+        {rows.map((r, i) => {
+          const y = i * ROW;
+          const w = x(r.count);
+          return (
+            <g key={r.id} style={{ ["--i" as string]: i }}>
+              <text className="ch-label dim" x={LABEL - 8} y={y + 14} textAnchor="end">
+                {r.ctx}
+              </text>
+              <rect
+                className={`ch-bar ch-run${r.deep ? " is-deep" : ""}`}
+                x={LABEL}
+                y={y + 5}
+                width={w}
+                height={ROW - 10}
+                rx="1"
+              >
+                <title>{`${fmt(r.count)} of ${fmt(total)} plugins (${
+                  r.share < 0.005 ? "<1" : Math.round(r.share * 100)
+                }%) — ${r.what}`}</title>
+              </rect>
+              <text className="ch-axis" x={LABEL + w + 6} y={y + 14}>
+                {fmt(r.count)}
+                <tspan className="ch-axis dim">
+                  {" · "}
+                  {r.share < 0.005 ? "<1" : Math.round(r.share * 100)}%
+                </tspan>
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </Plot>
+  );
+}

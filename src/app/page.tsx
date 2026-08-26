@@ -1,10 +1,10 @@
-import { getEcosystem, getMeta, getSpecimen, getSponsors, getTag, saidPulse } from "@/lib/data";
+import { getEcosystem, getMeta, getSeams, getSpecimen, getSponsors, getTag, saidPulse } from "@/lib/data";
 import { tagLabel } from "@/lib/tags";
 import { OURS, oursCount } from "@/lib/ours";
 import Console from "./console";
 import Seats from "./seats";
 import Reveal from "./reveal";
-import { AgeChart, ShelfMap, StarLadder } from "./charts";
+import { AgeChart, SeamMap, ShelfMap, StarLadder } from "./charts";
 
 /* THE PROMISE
  *
@@ -18,8 +18,10 @@ import { AgeChart, ShelfMap, StarLadder } from "./charts";
  *                 advertising reads as laid ON the page, not drawn into it.
  * STORY           A stranger types before reading; sees one real plugin
  *                 already decided, receipt clickable; watches a seat on the
- *                 board demonstrate what buying it would do; then meets two
- *                 measured charts about this ecosystem, not about rivals.
+ *                 board demonstrate what buying it would do; then meets three
+ *                 measured charts about this ecosystem, not about rivals -- the
+ *                 last of which, the seam map, is the only one that hands the
+ *                 reader something to go and do.
  * FIRST VIEWPORT  Site bar; one title line with the live counts; the console
  *                 frame — pink caret, live field, indexed count — holding a
  *                 real plugin's five-line verdict; the board's top edge
@@ -33,11 +35,12 @@ import { AgeChart, ShelfMap, StarLadder } from "./charts";
  *                 the verdict, and DESIGN.md.
  */
 export default async function Home() {
-  const [meta, eco, specimen, sponsors] = await Promise.all([
+  const [meta, eco, specimen, sponsors, seams] = await Promise.all([
     getMeta(),
     getEcosystem(),
     getSpecimen(),
     getSponsors(),
+    getSeams(),
   ]);
   if (!meta) {
     return (
@@ -292,6 +295,99 @@ export default async function Home() {
             Carried so you can sort, printed so you can see what sorting by it would do. In an
             ecosystem this young a star mostly records who posted first, not what works — which is
             why nothing on this site is ordered by it.
+          </p>
+        </>
+      )}
+
+      {seams && (
+        <>
+          <h2 id="unbuilt">What nobody has built yet</h2>
+          <p>
+            {seams.total.toLocaleString()} plugins.{" "}
+            {seams.seams.find((x) => x.id === "tools")?.count.toLocaleString()} of them add a
+            tool. {seams.seams.find((x) => x.id === "webServer")?.count.toLocaleString()} add a
+            page. That is the ecosystem.
+          </p>
+          <p>The harness has rather more surface than that.</p>
+          <div className="figure" data-reveal="seams">
+            <div className="figure-head">
+              <span className="figure-stat">{seams.ratio}&times;</span>
+              <span className="figure-unit">
+                more plugins add a tool than touch the median deep seam &mdash;{" "}
+                {seams.underOnePct} of {seams.deepCount} are under 1%
+              </span>
+            </div>
+            <SeamMap seams={seams.seams} total={seams.total} />
+            <div className="figure-foot">
+              <span>
+                Pink changes what the agent does. Linear, so the short bars are honestly
+                short &mdash; {seams.seams[0].count} plugins to{" "}
+                {seams.loudest.toLocaleString()}, counted over every name and description in the
+                registry, read against dsh <code>{seams.harness}</code>.
+              </span>
+              <a href="https://github.com/dshworks/plugins/blob/main/scripts/measure-seams.mjs">
+                the script
+              </a>
+            </div>
+          </div>
+          <p>
+            Seventeen of these seams change what the agent <em>does</em> &mdash; how it plans,
+            what it forgets, when it wakes up, whether it can hold a terminal or spawn a child.
+            Eleven are under one percent.{" "}
+            {seams.seams.find((x) => x.id === "e2b")?.count} plugins in{" "}
+            {seams.total.toLocaleString()} use <code>ctx.e2b</code>.{" "}
+            {seams.seams.find((x) => x.id === "invariants")?.count} use{" "}
+            <code>ctx.invariants</code>. {seams.seams.find((x) => x.id === "planMode")?.count}{" "}
+            mention plan mode, and they are all drawing a UI for it.
+          </p>
+          <p>
+            Nobody closed those doors. <code>ctx.lsp.registerProvider()</code> is right there, it
+            is documented, it takes one argument. The short bars are short because a tool plugin
+            is an afternoon and a compaction strategy needs an opinion about what to throw away.
+            Hard things stay unbuilt. This is not a scandal, it is a to-do list.
+          </p>
+          <p className="fine">
+            If you want to write one and would rather not be the{" "}
+            {seams.seams.find((x) => x.id === "tools")?.count.toLocaleString()}th person to wrap an
+            API, the bottom of that chart is the list. Each links the file in the harness that
+            proves the seam is real, at <code>{seams.harness}</code>:
+          </p>
+          <ul className="rows">
+            {seams.seams
+              .filter((x) => x.deep && x.src)
+              .slice(0, 5)
+              .map((x) => (
+                <li key={x.id}>
+                  <span className="line">
+                    <a
+                      href={`https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v${seams.harness}/${x.src}`}
+                    >
+                      <code>{x.ctx}</code>
+                    </a>
+                    <span className="fine">
+                      {x.count} of {seams.total.toLocaleString()}
+                    </span>
+                  </span>
+                  <p className="desc">{x.what}</p>
+                </li>
+              ))}
+          </ul>
+          <p>
+            The best one: {seams.memoryTagged.toLocaleString()} plugins are tagged{" "}
+            <code>memory</code>. {seams.seams.find((x) => x.id === "compaction")?.count} plugins
+            in the entire registry mention the context window at all. The largest category in this
+            ecosystem is solving the forgetting problem from outside the thing that does the
+            forgetting.
+          </p>
+          <p className="fine">
+            We got this wrong first. The original version sampled 227 plugins&rsquo; source, found
+            no <code>ctx.lsp</code>, and nearly announced that nobody had built code intelligence
+            &mdash; the registry has sixteen, one an explicit language-server provider. A sample
+            cannot see a category that is 0.14% of the population. So this is a census over every
+            name and description we hold, each row carries the regex that counted it and the
+            harness file that proves the seam exists, and both are in{" "}
+            <a href="https://github.com/dshworks/plugins/blob/main/data/seams.json">seams.json</a>{" "}
+            so you can tell us it is still wrong.
           </p>
         </>
       )}

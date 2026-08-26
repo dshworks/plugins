@@ -253,6 +253,9 @@ const readLocal = (name, fallback) => {
 };
 const ecosystem = readLocal("ecosystem.json", null);
 const directories = readLocal("directories.json", null);
+// Measured by scripts/measure-seams.mjs against a named harness release, and
+// committed, so the map of what is unbuilt carries the version it was true for.
+const seams = readLocal("seams.json", null);
 
 // Stars are a dated popularity snapshot, not a quality signal, and the whole
 // point of showing the distribution is that it is a power law: the median
@@ -262,6 +265,13 @@ const starLadder = [0, 1, 2, 5, 10, 50, 100, 1000].map((min) => ({
   min,
   count: entries.filter((e) => e.stars >= min).length,
 }));
+
+// The seam map is its own file for the same reason the survey is: only the
+// front page draws it, and a decision page should not fetch a map it never
+// shows. Passed through rather than recomputed -- the measuring script owns
+// the regexes and the harness source paths, and this pass must not quietly
+// disagree with the file a reader can re-derive.
+const seamBytes = seams ? write("seams.json", seams) : 0;
 
 const ecosystemBytes = write("ecosystem.json", {
   built: TODAY,
@@ -365,7 +375,7 @@ for (const t of tags) {
 
 const kb = (n) => `${(n / 1024).toFixed(0)} KB`;
 console.log(`data: ${entries.length} plugins, ${tags.length} tags, ${themes.length} themes`);
-console.log(`data: index ${kb(indexBytes)}, meta ${kb(metaBytes)}, slugs ${kb(slugBytes)}, ecosystem ${kb(ecosystemBytes)}, ${entries.length} detail ${kb(detailBytes)}, ${tags.length} tag ${kb(tagBytes)}, specimen ${kb(specimenBytes)}, sponsors ${kb(sponsorsBytes)}`);
+console.log(`data: index ${kb(indexBytes)}, meta ${kb(metaBytes)}, slugs ${kb(slugBytes)}, ecosystem ${kb(ecosystemBytes)}, seams ${kb(seamBytes)}, ${entries.length} detail ${kb(detailBytes)}, ${tags.length} tag ${kb(tagBytes)}, specimen ${kb(specimenBytes)}, sponsors ${kb(sponsorsBytes)}`);
 console.log(`data: specimen is ${specimen ? `${specimen.name} (${specimen.pulse.days}d, ${specimen.stars}★)` : "none — no entry carries a full receipt"}`);
 const noProof = entries.filter((e) => !e.proof).length;
 if (noProof) console.log(`data: ${noProof} entries carry no proof and will say so on their page`);

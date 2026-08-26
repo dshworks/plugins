@@ -291,6 +291,10 @@ input[type="search"]:focus { outline: 2px solid var(--cyan); outline-offset: 1px
 .ch-bar { fill: var(--muted); }
 .ch-bar.is-accent { fill: var(--cyan); }
 .ch-bar.is-ours { fill: var(--pink); }
+/* The seam map's one distinction: seams that change what the agent does, as
+ * against the two everybody already builds on. The grey bars are the ecosystem
+ * as it is; the pink ones are the argument. */
+.ch-bar.is-deep { fill: var(--pink); }
 .ch-label { fill: var(--text); font-size: 10px; font-family: var(--mono); }
 .ch-label.dim { fill: var(--muted); }
 

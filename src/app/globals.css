@@ -482,24 +482,11 @@ input[type="search"]:focus { outline: 2px solid var(--cyan); outline-offset: 1px
  * Column discipline is the world's, not ours: seat / sponsor / status, every
  * character in a fixed cell, nothing variable-width on the board. */
 .board {
-  /* First element on the page now, so the top margin is the frame's own
-   * breathing room rather than a gap from something above it. */
-  position: relative;
-  margin: 1.1rem 0 2.4rem;
+  margin: 1.6rem 0 0;
   background: var(--board-bg);
-  /* A rented frame, not a section. The double rule — a hard outer edge in the
-   * page's own ink, then the board's seam inside it — is what makes the thing
-   * read as laid ON the page rather than cut out of it. One is the hole in the
-   * page; the other is the object sitting in the hole. */
   border: 1px solid var(--board-seam);
-  /* Offset, or it is invisible: --strong is #000 in light mode and the board's
-   * ground is #0a0a0b, so a flush outline is black on black. The offset lets
-   * the page colour through as a gap, and the result reads the way a rented
-   * frame should — object, gap, rule, page. */
-  outline: 2px solid var(--strong);
-  outline-offset: 4px;
-  border-radius: 2px;
-  padding: 1.5rem 0.9rem 0.95rem;
+  border-radius: 3px;
+  padding: 0.85rem 0.9rem 0.95rem;
   color: var(--board-ink);
   /* No max-height. It was set to stop the band outgrowing the page and it
    * clipped the advertising disclosure instead — the one thing on the board
@@ -618,24 +605,7 @@ input[type="search"]:focus { outline: 2px solid var(--cyan); outline-offset: 1px
   .cell { transition: none; }
 }
 
-/* The frame's label and its intro price.
- *
- * The tab is set in the PAGE's ink on the BOARD's ground, straddling the top
- * edge — the one element deliberately in neither world, because a disclosure
- * that belongs to the advertiser is not a disclosure. It is not hidden behind
- * a hover, not abbreviated to "Ad", and not the same size as the price. */
-.board-tab {
-  position: absolute;
-  top: 0; left: 0;
-  background: var(--strong);
-  color: var(--bg);
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  padding: 0.2rem 0.6rem;
-  border-bottom-right-radius: 2px;
-}
-
+/* The board's intro price line. */
 .board-sale {
   display: flex;
   align-items: baseline;
@@ -668,7 +638,6 @@ input[type="search"]:focus { outline: 2px solid var(--cyan); outline-offset: 1px
 .board-sale > span b { color: var(--gold); font-weight: 400; }
 
 @media (max-width: 640px) {
-  .board { padding-top: 1.7rem; outline-width: 2px; }
   .board-sale { font-size: 0.72rem; }
 }
 
@@ -736,4 +705,66 @@ input[type="search"]:focus { outline: 2px solid var(--cyan); outline-offset: 1px
 @media (max-width: 720px) {
   .pick { grid-template-columns: 1fr; gap: 0.9rem 0; }
   .pick-shot { max-width: 420px; }
+}
+
+/* --- the ad strip --------------------------------------------------------- */
+/* One row above the site bar. Inverted against the page — the board's enamel
+ * ground in both schemes — so it reads as bought space at a glance without
+ * needing a border, a box, or any of the furniture a section would get.
+ *
+ * Deliberately small. It is a strip, not a placement: one line, no wrap on a
+ * desktop, and it takes ~30px off the fold instead of a screenful. The thing
+ * being sold is still the board further down; this only points at it. */
+.adbar {
+  background: var(--board-bg);
+  color: var(--board-ink);
+  border-bottom: 1px solid var(--board-seam);
+  font-size: 0.74rem;
+  line-height: 1;
+}
+.adbar-in {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1.5rem;
+  color: inherit;
+  text-decoration: none;
+  transition: background var(--dur-fast) var(--ease);
+}
+.adbar-in:hover { background: #141418; }
+.adbar-in:hover .adbar-go { transform: translateX(2px); }
+
+/* The label. Never "sponsored", never a symbol, never last. */
+.adbar-tag {
+  flex: none;
+  background: var(--gold);
+  color: #0a0a0b;
+  font-weight: 400;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.16rem 0.36rem;
+  border-radius: 2px;
+}
+.adbar-say { color: var(--board-ink); }
+.adbar-say b { color: var(--gold); font-weight: 400; }
+.adbar-when { margin-left: auto; color: var(--board-dim); }
+.adbar-days { color: var(--gold); }
+.adbar-go {
+  flex: none;
+  color: var(--gold);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adbar-in, .adbar-go { transition: none; }
+  .adbar-in:hover .adbar-go { transform: none; }
+}
+
+/* On a phone the deadline moves under the offer rather than off the edge, and
+ * the whole strip is still one visual row's worth of weight. */
+@media (max-width: 620px) {
+  .adbar-in { flex-wrap: wrap; gap: 0.35rem 0.5rem; padding: 0.42rem 1rem; }
+  .adbar-when { margin-left: 0; width: 100%; }
+  .adbar-go { display: none; }
 }

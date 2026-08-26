@@ -179,12 +179,6 @@ export default function Seats({ data, site }: { data: Sponsors; site: string }) 
       onBlurCapture={release}
       ref={boardRef as React.Ref<HTMLDivElement>}
     >
-      {/* The frame's own label. It sits OUTSIDE the head row, hard against the
-          top edge, because the one thing a reader must be able to do in a
-          glance is tell paid space from the page — and a disclosure that
-          shares a line with a price is a price tag, not a disclosure. */}
-      <span className="board-tab" aria-hidden="true">Advertisement</span>
-
       <div className="board-head">
         <h2 id="seats-h">Sponsor board</h2>
         <span className="board-sub">

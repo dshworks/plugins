@@ -32,7 +32,9 @@ export async function generateMetadata(): Promise<Metadata> {
 // something already on the page: with no JS the page follows the OS.
 const THEME_SCRIPT = `try{var t=localStorage.getItem('dsh-theme');if(t&&t!=='auto')document.documentElement.dataset.theme=t}catch(e){}`;
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import AdBar from "./adbar";
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -45,6 +47,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        {/* Above the site bar on purpose: it is the only thing on the page
+            that is not ours, so it sits outside our furniture rather than
+            inside it. One row, and gone entirely once the offer lapses. */}
+        <AdBar />
         <nav className="sitebar" aria-label="dsh.works">
           <a className="sitebar-brand" href="https://dsh.works/">
             <span className="caret">&gt;</span> dsh<i>.works</i>

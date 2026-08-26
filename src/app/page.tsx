@@ -81,22 +81,6 @@ export default async function Home() {
     <main className="wrap">
       <Reveal />
 
-      {/* The board, first thing on the page.
-       *
-       * It used to sit under the console, on the reasoning that the site's own
-       * primary action should come before the advertising. That is the polite
-       * order and it undersold the space: a billboard nobody reaches is worth
-       * what nobody pays for it. Moved up deliberately, with the trade named —
-       * the reader now meets paid space before they meet the product.
-       *
-       * What makes that survivable is that it does not pretend. It is labelled
-       * ADVERTISEMENT on its own tab, it is dressed in a world nothing else
-       * here wears, and it carries the disclosure that a seat buys the box and
-       * cannot move a number in the dataset. Ad space that announces itself is
-       * honest; ad space that dresses as content is the thing this whole site
-       * exists to argue against. */}
-      {sponsors && <Seats data={sponsors} site="dsh.works" />}
-
       {/* The first viewport. One line of orientation, then the machine. The
           h1 is small on purpose: a display headline here would be the site
           talking about itself in the space where it could be working. */}
@@ -187,7 +171,9 @@ export default async function Home() {
         )}
       </Console>
 
-      {/* The bridge into the evidence: four measured
+      {sponsors && <Seats data={sponsors} site="dsh.works" />}
+
+      {/* The bridge out of the seats and into the evidence: four measured
           facts, no adjectives, each one recomputed on every build. It is also
           the answer to "who is this" for a reader who scrolled past the
           console without touching it. */}

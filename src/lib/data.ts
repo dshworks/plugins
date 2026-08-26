@@ -133,17 +133,25 @@ export type Seams = {
 // deliberately shares no field with Plugin, and nothing joins the two. A seat
 // is a box on a page; if it could ever touch a registry row, the registry
 // would stop being the thing this site is for.
+export type Money = { amount: number; currency: string; period: string; said: string };
 export type Sponsors = {
   updated: string;
-  price: { amount: number; currency: string; period: string; said: string };
+  /** The headline figure. dshthemes' loader validates on `price.said`, so it stays a single value. */
+  price: Money;
+  /** An intro offer with a real deadline printed on the page. Absent once it lapses. */
+  sale?: { until: string; said: string; why?: string; was?: Money };
   checkout: string | null;
   terms: string;
   contact: string;
   seats: {
     n: number;
+    /** Overrides the headline for this seat — how the annual seat differs from the monthly three. */
+    price?: Money;
+    note?: string;
     sponsor: { name: string; url: string; line: string; since: string; until: string } | null;
   }[];
 };
+
 
 // The plugin the front page has already decided about, picked by a printed
 // rule in build-data.mjs. Not a recommendation, not for sale.

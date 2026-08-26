@@ -482,11 +482,24 @@ input[type="search"]:focus { outline: 2px solid var(--cyan); outline-offset: 1px
  * Column discipline is the world's, not ours: seat / sponsor / status, every
  * character in a fixed cell, nothing variable-width on the board. */
 .board {
-  margin: 1.6rem 0 0;
+  /* First element on the page now, so the top margin is the frame's own
+   * breathing room rather than a gap from something above it. */
+  position: relative;
+  margin: 1.1rem 0 2.4rem;
   background: var(--board-bg);
+  /* A rented frame, not a section. The double rule — a hard outer edge in the
+   * page's own ink, then the board's seam inside it — is what makes the thing
+   * read as laid ON the page rather than cut out of it. One is the hole in the
+   * page; the other is the object sitting in the hole. */
   border: 1px solid var(--board-seam);
-  border-radius: 3px;
-  padding: 0.85rem 0.9rem 0.95rem;
+  /* Offset, or it is invisible: --strong is #000 in light mode and the board's
+   * ground is #0a0a0b, so a flush outline is black on black. The offset lets
+   * the page colour through as a gap, and the result reads the way a rented
+   * frame should — object, gap, rule, page. */
+  outline: 2px solid var(--strong);
+  outline-offset: 4px;
+  border-radius: 2px;
+  padding: 1.5rem 0.9rem 0.95rem;
   color: var(--board-ink);
   /* No max-height. It was set to stop the band outgrowing the page and it
    * clipped the advertising disclosure instead — the one thing on the board
@@ -603,4 +616,124 @@ input[type="search"]:focus { outline: 2px solid var(--cyan); outline-offset: 1px
  * specimen and stops, so the offer still reads without anything moving. */
 @media (prefers-reduced-motion: reduce) {
   .cell { transition: none; }
+}
+
+/* The frame's label and its intro price.
+ *
+ * The tab is set in the PAGE's ink on the BOARD's ground, straddling the top
+ * edge — the one element deliberately in neither world, because a disclosure
+ * that belongs to the advertiser is not a disclosure. It is not hidden behind
+ * a hover, not abbreviated to "Ad", and not the same size as the price. */
+.board-tab {
+  position: absolute;
+  top: 0; left: 0;
+  background: var(--strong);
+  color: var(--bg);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-bottom-right-radius: 2px;
+}
+
+.board-sale {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  margin: 0 0 0.75rem;
+  font-size: 0.76rem;
+  color: var(--board-ink);
+}
+.board-sale-tag {
+  background: var(--gold);
+  color: #0a0a0b;
+  font-weight: 400;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.14rem 0.42rem;
+  border-radius: 2px;
+}
+/* The old price, struck. Kept dim so it reads as a fact about what changed and
+ * not as a second thing being sold. */
+.board-sale-was {
+  color: var(--board-dim);
+  text-decoration: line-through;
+  margin-left: 0.3rem;
+}
+/* Scoped to the sentence, NOT to every <b> in the block — the Intro tag is
+ * also a <b>, and an unscoped rule painted its text gold on a gold ground,
+ * i.e. an empty rectangle. */
+.board-sale > span b { color: var(--gold); font-weight: 400; }
+
+@media (max-width: 640px) {
+  .board { padding-top: 1.7rem; outline-width: 2px; }
+  .board-sale { font-size: 0.72rem; }
+}
+
+/* --- editor's pick -------------------------------------------------------- */
+/* The one human choice on the page. It gets more room than a shelf row and
+ * less furniture than the board: this is the site speaking in its own voice,
+ * not a rented frame, so it stays in the house material throughout. */
+.pick {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: 0 1.4rem;
+  align-items: start;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--pink);
+  border-radius: 3px;
+  background: var(--surface);
+  padding: 1rem 1.1rem 1.05rem;
+  margin: 0 0 1rem;
+}
+.pick-shot {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--surface-2);
+  line-height: 0;
+}
+.pick-shot img { width: 100%; height: auto; display: block; }
+/* The one piece of motion here that is not the shared reveal: the card lifts a
+ * hair on hover. It exists because the whole block is a recommendation, and a
+ * recommendation that does not respond to the pointer reads as a static ad.
+ * Transform only — no layout, no paint of anything but the compositor. */
+.pick-shot img {
+  transition: transform var(--t4) var(--ease-out);
+}
+.pick:hover .pick-shot img { transform: scale(1.015); }
+@media (prefers-reduced-motion: reduce) {
+  .pick:hover .pick-shot img { transform: none; }
+}
+
+.pick-kicker {
+  margin: 0 0 0.35rem;
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pink);
+}
+.pick-name { margin: 0 0 0.5rem; font-size: 1rem; font-weight: 400; }
+.pick-name .fine { color: var(--muted); font-size: 0.76rem; }
+/* Their sentence, set apart from mine. A reader must be able to tell the
+ * author's claim from the recommender's — collapsing the two is how a
+ * directory starts sounding like a press release. */
+.pick-their {
+  margin: 0 0 0.7rem;
+  padding-left: 0.7rem;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+.pick-note { margin: 0 0 0.7rem; }
+.pick-why { margin: 0 0 0.8rem; padding-left: 1rem; font-size: 0.86rem; }
+.pick-why li { margin-bottom: 0.4rem; }
+.pick-foot { margin: 0; border-top: 1px solid var(--line); padding-top: 0.6rem; }
+
+@media (max-width: 720px) {
+  .pick { grid-template-columns: 1fr; gap: 0.9rem 0; }
+  .pick-shot { max-width: 420px; }
 }

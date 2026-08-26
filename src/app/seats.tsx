@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Sponsors } from "@/lib/data";
+import type { Money, Sponsors } from "@/lib/data";
 
 // The four seats, as a departure board.
 //
@@ -38,6 +38,24 @@ const FLAP = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·-.&+ ";
 // What an open seat demonstrates. Deliberately not a fake company: it says what
 // the buyer would put there, in the buyer's own terms.
 const SPECIMEN = "YOUR PRODUCT";
+
+// Both helpers live here rather than in @/lib/data on purpose: this is a
+// "use client" module, and a VALUE import from data.ts drags `cloudflare:workers`
+// into the browser bundle and fails the build. Types are erased, so
+// `import type` from there is fine; a function is not.
+//
+/** Days from today until an ISO date, floored at 0. */
+function daysUntil(iso: string): number {
+  const today = new Date().toISOString().slice(0, 10);
+  return Math.max(0, Math.round((Date.parse(iso) - Date.parse(today)) / 86400000));
+}
+
+// "2026-08-31" -> "31 Aug". Printed rather than relative-only, because a
+// countdown without a date is a pressure tactic and a date can be checked.
+function said(iso: string): string {
+  const [, m, d] = iso.split("-").map(Number);
+  return `${d} ${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][m - 1]}`;
+}
 
 const pad = (s: string) => s.slice(0, CELLS).padEnd(CELLS, " ");
 const EMPTY = pad("[+]");
@@ -139,6 +157,18 @@ export default function Seats({ data, site }: { data: Sponsors; site: string }) 
   const hold = () => { paused.current = true; };
   const release = () => { paused.current = false; };
 
+  // Three seats are monthly and the fourth is annual, so the price belongs to
+  // the seat, not to the board. `data.price` stays the headline because
+  // dshthemes' loader validates on it and renders the same inventory.
+  const priceOf = (s: Sponsors["seats"][number]): Money => s.price ?? data.price;
+  const annual = seats.find((s) => s.price)?.price;
+  // A lapsed sale is not a sale. Once the date passes the whole block stops
+  // rendering rather than shouting a deadline that already went.
+  const sale = data.sale && daysUntil(data.sale.until) >= 0 && Date.now() <= Date.parse(data.sale.until) + 86400000
+    ? data.sale
+    : null;
+  const left = sale ? daysUntil(sale.until) : 0;
+
   return (
     <section
       className="board"
@@ -149,6 +179,12 @@ export default function Seats({ data, site }: { data: Sponsors; site: string }) 
       onBlurCapture={release}
       ref={boardRef as React.Ref<HTMLDivElement>}
     >
+      {/* The frame's own label. It sits OUTSIDE the head row, hard against the
+          top edge, because the one thing a reader must be able to do in a
+          glance is tell paid space from the page — and a disclosure that
+          shares a line with a price is a price tag, not a disclosure. */}
+      <span className="board-tab" aria-hidden="true">Advertisement</span>
+
       <div className="board-head">
         <h2 id="seats-h">Sponsor board</h2>
         <span className="board-sub">
@@ -157,10 +193,23 @@ export default function Seats({ data, site }: { data: Sponsors; site: string }) 
             : open.length === 0
               ? "Sold out"
               : `${open.length} of ${seats.length} open`}{" "}
-          · {data.price.said} ·{" "}
-          <a href={data.terms}>what a seat buys</a>
+          · <a href={data.terms}>what a seat buys</a>
         </span>
       </div>
+
+      {sale && (
+        // A deadline is only worth printing if it is real, so it is printed as
+        // a date and a countdown rather than as urgency. When it lapses the
+        // block disappears on its own instead of nagging forever.
+        <p className="board-sale">
+          <b className="board-sale-tag">Intro</b>
+          <span>
+            {data.price.said} <span className="board-sale-was">{sale.was?.said}</span> · the annual
+            seat {annual?.said ?? ""} · <b>{left === 0 ? "last day" : `${left} day${left === 1 ? "" : "s"} left`}</b>,
+            ends {said(sale.until)}
+          </span>
+        </p>
+      )}
 
       <div className="board-cols" aria-hidden="true">
         <span>Seat</span>
@@ -190,7 +239,7 @@ export default function Seats({ data, site }: { data: Sponsors; site: string }) 
                   ))}
                 </a>
               ) : (
-                <a className="bcells" href={buy} aria-label={`Seat ${s.n} is open — ${data.price.said}`}>
+                <a className="bcells" href={buy} aria-label={`Seat ${s.n} is open — ${priceOf(s).said}`}>
                   {cells.split("").map((c, i) => (
                     <b key={i} className="cell">{c === " " ? " " : c}</b>
                   ))}
@@ -203,7 +252,7 @@ export default function Seats({ data, site }: { data: Sponsors; site: string }) 
                   <span className="tag-specimen">Specimen</span>
                 ) : (
                   <a className="tag-open" href={buy}>
-                    Open <i>{data.price.said}</i>
+                    Open <i>{priceOf(s).said}</i>
                   </a>
                 )}
               </span>

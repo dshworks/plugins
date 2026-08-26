@@ -1,6 +1,7 @@
 import { getEcosystem, getMeta, getSeams, getSpecimen, getSponsors, getTag, saidPulse } from "@/lib/data";
 import { tagLabel } from "@/lib/tags";
 import { OURS, oursCount } from "@/lib/ours";
+import { PICK } from "@/lib/pick";
 import Console from "./console";
 import Seats from "./seats";
 import Reveal from "./reveal";
@@ -79,6 +80,22 @@ export default async function Home() {
   return (
     <main className="wrap">
       <Reveal />
+
+      {/* The board, first thing on the page.
+       *
+       * It used to sit under the console, on the reasoning that the site's own
+       * primary action should come before the advertising. That is the polite
+       * order and it undersold the space: a billboard nobody reaches is worth
+       * what nobody pays for it. Moved up deliberately, with the trade named —
+       * the reader now meets paid space before they meet the product.
+       *
+       * What makes that survivable is that it does not pretend. It is labelled
+       * ADVERTISEMENT on its own tab, it is dressed in a world nothing else
+       * here wears, and it carries the disclosure that a seat buys the box and
+       * cannot move a number in the dataset. Ad space that announces itself is
+       * honest; ad space that dresses as content is the thing this whole site
+       * exists to argue against. */}
+      {sponsors && <Seats data={sponsors} site="dsh.works" />}
 
       {/* The first viewport. One line of orientation, then the machine. The
           h1 is small on purpose: a display headline here would be the site
@@ -170,9 +187,7 @@ export default async function Home() {
         )}
       </Console>
 
-      {sponsors && <Seats data={sponsors} site="dsh.works" />}
-
-      {/* The bridge out of the seats and into the evidence: four measured
+      {/* The bridge into the evidence: four measured
           facts, no adjectives, each one recomputed on every build. It is also
           the answer to "who is this" for a reader who scrolled past the
           console without touching it. */}
@@ -225,6 +240,61 @@ export default async function Home() {
           </p>
         </>
       )}
+
+      {/* The editor's pick.
+       *
+       * The only human choice on the page, and it is put next to the machine
+       * one on purpose: the console above shows a plugin picked BY RULE and
+       * prints the rule. This one is picked by a person and prints the person,
+       * the date, the bar it had to clear, and the fact that it is not for
+       * sale. Those are the same discipline, not opposite ones — a choice is
+       * fine, an unlabelled choice is not.
+       *
+       * The showcase image is GitHub's own opengraph render of the repo. It is
+       * not a screenshot of the plugin running, and the caption says so rather
+       * than letting a card imply a product shot we never took. */}
+      <h2 id="pick">Editor&rsquo;s pick</h2>
+      <div className="pick" data-reveal="pick">
+        <a className="pick-shot" href={`https://github.com/${PICK.repo}`} tabIndex={-1} aria-hidden="true">
+          <img
+            src={`https://opengraph.githubassets.com/1/${PICK.repo}`}
+            alt=""
+            width={640}
+            height={320}
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+        <div className="pick-body">
+          <p className="pick-kicker">
+            One a person chose · not for sale · picked {PICK.picked}
+          </p>
+          <h3 className="pick-name">
+            <a href={`/p/${PICK.slug}`}>{PICK.repo.split("/")[1]}</a>{" "}
+            <span className="fine">{PICK.repo.split("/")[0]}</span>
+          </h3>
+          <p className="pick-their">&ldquo;{PICK.their}&rdquo;</p>
+          <p className="pick-note">{PICK.note}</p>
+          <ul className="pick-why">
+            {PICK.detail.map((d) => (
+              <li key={d.label}>
+                {d.what} <a href={d.href}><code>{d.label}</code></a>
+              </li>
+            ))}
+          </ul>
+          <p className="pick-foot fine">
+            Chosen by {PICK.by}, against a bar printed in{" "}
+            <a href="https://github.com/dshworks/plugins/blob/main/src/lib/pick.ts">
+              <code>pick.ts</code>
+            </a>
+            : the source is public and was read, it builds on a seam{" "}
+            <a href={PICK.seam.href}>the ecosystem left empty</a> (<code>{PICK.seam.ctx}</code>), it
+            ships, and there is no relationship with us. Nobody paid for this and nobody can — the{" "}
+            <a href="#seats-h">seats above</a> are where money goes, and they buy a box, not a
+            sentence. The image is GitHub&rsquo;s own card for the repo, not a shot of it running.
+          </p>
+        </div>
+      </div>
 
       <h2>The shelves</h2>
       <p className="fine">

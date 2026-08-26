@@ -14,6 +14,13 @@ export const metadata: Metadata = {
 // is: what you get, what you cannot get at any price, what it costs, who is
 // refused. The refusal list is the most useful part of it — a directory that
 // will not say who it turns down has not actually decided.
+// "2026-08-31" -> "31 August". A deadline a reader can put in a calendar.
+function longDate(iso: string): string {
+  const [, m, d] = iso.split("-").map(Number);
+  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  return `${d} ${months[m - 1]}`;
+}
+
 export default async function Sponsor() {
   const [sponsors, meta] = await Promise.all([getSponsors(), getMeta()]);
   if (!sponsors) {
@@ -35,12 +42,22 @@ export default async function Sponsor() {
       <header style={{ paddingTop: "2.5rem" }}>
         <h1>Sponsor a seat</h1>
         <p className="lede">
-          There are four, they cost {sponsors.price.said} each, and{" "}
-          {open === 4 ? "all four are" : open === 0 ? "none are" : `${open} of them ${open === 1 ? "is" : "are"}`}{" "}
+          There are four. Three are {sponsors.price.said}; the fourth is{" "}
+          {sponsors.seats.find((x) => x.price)?.price?.said ?? sponsors.price.said}.{" "}
+          {open === 4 ? "All four are" : open === 0 ? "None are" : `${open} of them ${open === 1 ? "is" : "are"}`}{" "}
           open right now. They pay for the domains, the Workers,
           and the sweep that keeps {meta?.counts.plugins.toLocaleString() ?? "6,000+"} rows dated.
         </p>
       </header>
+
+      {sponsors.sale && (
+        <p className="lede" style={{ marginTop: "-0.4rem" }}>
+          <strong>Intro pricing until {longDate(sponsors.sale.until)}.</strong>{" "}
+          {sponsors.sale.was ? `It was ${sponsors.sale.was.said} a seat. ` : ""}
+          {sponsors.sale.why} After that the rate goes back up; a seat taken before then keeps
+          what it paid for its current term.
+        </p>
+      )}
 
       <h2>What a seat buys</h2>
       <div className="panel">
@@ -48,8 +65,9 @@ export default async function Sponsor() {
           <div className="label">The box</div>
           <div className="body">
             <p style={{ marginBottom: 0 }}>
-              One of four gold boxes in the band directly under the console on the front page —
-              the first thing below the working surface, above every chart and every list. Your
+              One of four gold boxes on the board at the very top of the front page — above the
+              headline, above the console, above every chart and every list. It is the first thing
+              on the page, framed and labelled ADVERTISEMENT so nobody mistakes it for us. Your
               name, one line of your own copy, and a link. Served from the same static build as
               everything else: no third-party ad script, no tracker, no auction, nothing loaded
               from a network we do not control.
@@ -57,10 +75,11 @@ export default async function Sponsor() {
           </div>
         </div>
         <div className="row">
-          <div className="label">A year</div>
+          <div className="label">The term</div>
           <div className="body">
             <p style={{ marginBottom: 0 }}>
-              Twelve months from the day it goes live. The start and end dates are printed in{" "}
+              Monthly on three seats, cancel whenever; the fourth is annual and cheaper per month
+              because it is paid up front. Either way the start and end dates are printed in{" "}
               <a href="https://github.com/dshworks/plugins/blob/main/data/sponsors.json">
                 <code>data/sponsors.json</code>
               </a>
@@ -108,8 +127,9 @@ export default async function Sponsor() {
       <h2>Taking one</h2>
       {sponsors.checkout ? (
         <p>
-          <a href={sponsors.checkout}>Take a seat — {sponsors.price.said}</a>. Yearly, cancel any
-          time before renewal. After checkout, send the name, one line of copy, and the link you
+          <a href={sponsors.checkout}>Take a seat — {sponsors.price.said}</a>. Monthly, cancel any
+          time before renewal; the annual seat is{" "}
+          {sponsors.seats.find((x) => x.price)?.price?.said ?? "priced separately"}. After checkout, send the name, one line of copy, and the link you
           want to <a href={`mailto:${sponsors.contact}`}>{sponsors.contact}</a>; it goes live in
           the next build.
         </p>
@@ -117,7 +137,7 @@ export default async function Sponsor() {
         <p>
           Checkout is not wired up yet, so this is done by hand and honestly:{" "}
           <a href={`mailto:${sponsors.contact}`}>{sponsors.contact}</a> with the name, one line of
-          copy, and the link. We invoice for the year, and the seat goes live in the next build
+          copy, and the link. We invoice for the term, and the seat goes live in the next build
           with its dates written into the public repo.
         </p>
       )}

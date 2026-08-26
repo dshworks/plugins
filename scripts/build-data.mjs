@@ -273,6 +273,26 @@ const starLadder = [0, 1, 2, 5, 10, 50, 100, 1000].map((min) => ({
 // disagree with the file a reader can re-derive.
 const seamBytes = seams ? write("seams.json", seams) : 0;
 
+// The editor's pick is a hand-written slug in src/lib/pick.ts, and the front
+// page links it as /p/<slug>. If that entry ever leaves the registry — renamed,
+// rejected on a re-prove, repo deleted — the link becomes a 404 in the one
+// block on the site that is a personal recommendation. Fail the build instead
+// of shipping a dead endorsement.
+try {
+  const pickSrc = readFileSync(join(ROOT, "src/lib/pick.ts"), "utf8");
+  const slug = pickSrc.match(/slug:\s*"([^"]+)"/)?.[1];
+  if (!slug) throw new Error("no slug found in src/lib/pick.ts");
+  if (!entries.some((e) => e.slug === slug)) {
+    console.error(`data: the editor's pick "${slug}" is no longer in the registry — /p/${slug} would 404.`);
+    console.error(`data: pick another in src/lib/pick.ts, or say why this one left.`);
+    process.exit(1);
+  }
+  console.log(`data: editor's pick ${slug} is listed`);
+} catch (err) {
+  console.error(`data: could not verify the editor's pick (${err.message})`);
+  process.exit(1);
+}
+
 const ecosystemBytes = write("ecosystem.json", {
   built: TODAY,
   counts: meta.counts,

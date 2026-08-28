@@ -190,6 +190,84 @@ export function StarLadder({ ladder, total }: { ladder: { min: number; count: nu
   );
 }
 
+// --- who the count is actually made of --------------------------------------
+
+/**
+ * Share of the shelf held by the N largest accounts, as a cumulative ladder.
+ *
+ * Same form as the star ladder on purpose: thresholds, not buckets, because
+ * the question is "how much comes from how few". Cumulative, so each bar
+ * contains the ones above it and the shape of the curve is the finding — a
+ * steep first step and then almost flat.
+ *
+ * No account is named. Naming the top one would turn a fact about our
+ * denominator into a claim about a person, and it is not their fault that a
+ * directory publishes a count.
+ */
+export function OwnerLadder({
+  ladder,
+  total,
+  singletonShare,
+}: {
+  ladder: { k: number; share: number }[];
+  total: number;
+  singletonShare: number;
+}) {
+  // The singleton row is NOT cumulative and is drawn last with a different
+  // fill, because it answers the opposite question: not "how few accounts hold
+  // how much" but "how much comes from accounts that turned up once". Putting
+  // it in the same column without saying so would be a chart corrected by its
+  // own caption.
+  const rows = [...ladder, { k: -1, share: singletonShare }];
+  const ROW = 20;
+  const LABEL = 132;
+  const W = 720;
+  const H = rows.length * ROW + 4;
+  const label = (k: number) => (k === -1 ? "one-plugin accounts" : k === 1 ? "largest account" : `largest ${k}`);
+  return (
+    <Plot>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        role="img"
+        aria-label={`Share of the ${fmt(total)} plugins held by the largest accounts. ${rows
+          .map((r) => `${label(r.k)}: ${Math.round(r.share * 100)}%`)
+          .join("; ")}.`}
+      >
+        {rows.map((r, i) => {
+          const y = i * ROW;
+          const w = Math.max(1, (W - LABEL - 84) * r.share);
+          return (
+            <g key={r.k} style={{ ["--i" as string]: i }}>
+              <text className="ch-label dim" x={LABEL - 8} y={y + 13} textAnchor="end">
+                {label(r.k)}
+              </text>
+              <rect
+                className={r.k === -1 ? "ch-bar ch-run is-accent" : "ch-bar ch-run"}
+                x={LABEL}
+                y={y + 4}
+                width={w}
+                height={ROW - 9}
+                rx="1"
+              >
+                <title>{`${Math.round(r.share * 100)}% of ${fmt(total)} plugins (${fmt(
+                  Math.round(r.share * total),
+                )} entries)`}</title>
+              </rect>
+              <text className="ch-axis" x={LABEL + w + 6} y={y + 13}>
+                {Math.round(r.share * 100)}%
+                <tspan className="ch-axis">
+                  {" · "}
+                  {fmt(Math.round(r.share * total))}
+                </tspan>
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </Plot>
+  );
+}
+
 // --- what the ecosystem built on, and what it did not -----------------------
 
 export type Seam = {

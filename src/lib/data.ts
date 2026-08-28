@@ -73,6 +73,14 @@ export type Ecosystem = {
   built: string;
   counts: Meta["counts"];
   authors: number;
+  /** How the count is spread across the accounts behind it. Thresholds, not names. */
+  concentration?: {
+    owners: number;
+    singletons: number;
+    singletonShare: number;
+    largest: number;
+    ladder: { k: number; share: number }[];
+  };
   stars: { ladder: { min: number; count: number }[]; median: number };
   tags: { tag: string; count: number }[];
   age: {

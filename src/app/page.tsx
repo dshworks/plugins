@@ -5,7 +5,7 @@ import { PICK } from "@/lib/pick";
 import Console from "./console";
 import Seats from "./seats";
 import Reveal from "./reveal";
-import { AgeChart, SeamMap, ShelfMap, StarLadder } from "./charts";
+import { AgeChart, OwnerLadder, SeamMap, ShelfMap, StarLadder } from "./charts";
 
 /* THE PROMISE
  *
@@ -351,6 +351,65 @@ export default async function Home() {
             Carried so you can sort, printed so you can see what sorting by it would do. In an
             ecosystem this young a star mostly records who posted first, not what works — which is
             why nothing on this site is ordered by it.
+          </p>
+        </>
+      )}
+
+      {eco?.concentration && (
+        <>
+          <h2 id="who">Who the count is made of</h2>
+          <p>
+            {meta.counts.plugins.toLocaleString()} plugins reads as{" "}
+            {meta.counts.plugins.toLocaleString()} decisions by{" "}
+            {meta.counts.plugins.toLocaleString()} people. It is{" "}
+            <strong>{eco.concentration.owners.toLocaleString()} accounts</strong>, and one of them
+            holds {eco.concentration.largest.toLocaleString()} of the entries &mdash; one plugin in{" "}
+            {Math.round(1 / eco.concentration.ladder[0].share)}.
+          </p>
+          <div className="figure" data-reveal="owners">
+            <div className="figure-head">
+              <span className="figure-stat">
+                {Math.round(eco.concentration.ladder[0].share * 100)}%
+              </span>
+              <span className="figure-unit">
+                of the shelf comes from one account; the other{" "}
+                {(eco.concentration.owners - 1).toLocaleString()} share the rest
+              </span>
+            </div>
+            <OwnerLadder
+              ladder={eco.concentration.ladder}
+              total={meta.counts.plugins}
+              singletonShare={eco.concentration.singletonShare}
+            />
+            <div className="figure-foot">
+              <span>
+                The first five are cumulative &mdash; each contains the ones above it. The last
+                bar is not: it is everyone who turned up once, drawn in the other colour.
+                Counted from the registry on {eco.built}; no account is named.
+              </span>
+              <a href="/api/plugins">the data</a>
+            </div>
+          </div>
+          <p>
+            Every one of those entries is real. They were proven the same way as everything else
+            here &mdash; a manifest fetched from the repo, a receipt you can click &mdash; and
+            they install. That is the point: this is not spam, and no filter would or should
+            remove it.
+          </p>
+          <p>
+            It is a <em>catalogue</em>, and a catalogue and a community are different things that
+            one number cannot tell apart. Someone shipping{" "}
+            {eco.concentration.largest.toLocaleString()} small tools from one template moves a
+            directory&rsquo;s headline by {Math.round(eco.concentration.ladder[0].share * 100)}%
+            and moves what you can actually do with dsh by roughly one tool. Meanwhile{" "}
+            {eco.concentration.singletons.toLocaleString()} accounts published exactly one thing,
+            which is {Math.round(eco.concentration.singletonShare * 100)}% of the shelf and almost
+            certainly the half you came for.
+          </p>
+          <p className="fine">
+            We publish the count because you will compare us on it. We publish this next to it
+            because a count nobody decomposes is the easiest number on the internet to inflate,
+            and we would be inflating ours by simply saying nothing.
           </p>
         </>
       )}

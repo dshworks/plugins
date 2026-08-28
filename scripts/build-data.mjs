@@ -293,10 +293,40 @@ try {
   process.exit(1);
 }
 
+// How the plugin count is spread across the accounts that produced it.
+//
+// "11,690 plugins" reads as eleven thousand decisions by eleven thousand
+// people, and it is not: the top account holds one entry in eight. Those
+// entries are real -- each was proven, each installs, none of it is spam --
+// but a catalogue and a community are different things, and only one of them
+// is what a count implies. This is the same argument as the star ladder, on
+// the axis nobody publishes.
+//
+// Thresholds again rather than a top-N list. The question is "how much of the
+// shelf comes from how few accounts", and naming the accounts would turn a
+// fact about the denominator into a fact about a person.
+const byOwner = new Map();
+for (const e of entries) {
+  const owner = e.repo.split("/")[0].toLowerCase();
+  byOwner.set(owner, (byOwner.get(owner) ?? 0) + 1);
+}
+const ownerCounts = [...byOwner.values()].sort((a, b) => b - a);
+const shareOfTop = (k) =>
+  entries.length ? ownerCounts.slice(0, k).reduce((n, v) => n + v, 0) / entries.length : 0;
+const concentration = {
+  owners: byOwner.size,
+  /** Accounts that published exactly one plugin, and their share of the shelf. */
+  singletons: ownerCounts.filter((v) => v === 1).length,
+  singletonShare: entries.length ? ownerCounts.filter((v) => v === 1).length / entries.length : 0,
+  largest: ownerCounts[0] ?? 0,
+  ladder: [1, 5, 10, 50, 100].map((k) => ({ k, share: shareOfTop(k) })),
+};
+
 const ecosystemBytes = write("ecosystem.json", {
   built: TODAY,
   counts: meta.counts,
   authors: new Set(entries.map((e) => e.repo.split("/")[0].toLowerCase())).size,
+  concentration,
   stars: {
     ladder: starLadder,
     median: entries.length

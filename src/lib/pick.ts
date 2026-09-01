@@ -22,6 +22,18 @@ export type Pick = {
   npm?: string;
   /** Their words, from the repo. */
   their: string;
+  /**
+   * The numeric case, as a template. `{seam}`, `{total}` and `{memory}` are
+   * filled from data/seams.json at render time.
+   *
+   * These started life as three literals typed on the day the pick was
+   * written, and five days later all three were wrong. The `picked` date makes
+   * a stale *choice* visible, which is what it is for -- but a count of what
+   * the shelf holds is not a fact about the choice, and the shelf moves every
+   * day. So the sentence is a template and the numbers come from the same
+   * census the chart on the page renders.
+   */
+  claim: string;
   /** Mine. Why this one, in a sentence a reader can disagree with. */
   note: string;
   /** The specific thing worth looking at, and the file it is in. */
@@ -37,8 +49,10 @@ export const PICK: Pick = {
   npm: "billion-context-dsh",
   their:
     "Model-driven context management (Active Context Pruning) for the DeepSeek Harness — the model decides when and what to compress.",
+  claim:
+    "Almost nobody builds on ctx.compaction: {seam} plugins in {total} mention the context window at all, while {memory} are tagged memory.",
   note:
-    "Almost nobody builds on ctx.compaction: 126 plugins in 11,197 mention the context window at all, while 1,898 are tagged memory. This is one of the few that went at the problem from inside the engine instead of keeping notes beside it — and the design earns the position. The model itself marks what to compress, so there is no second summarization call to pay for, and the originals stay in the append-only session log, which is why decompress, search and replay still work afterwards. Most compaction is lossy and hopes you do not notice.",
+    "This is one of the few that went at the problem from inside the engine instead of keeping notes beside it — and the design earns the position. The model itself marks what to compress, so there is no second summarization call to pay for, and the originals stay in the append-only session log, which is why decompress, search and replay still work afterwards. Most compaction is lossy and hopes you do not notice.",
   detail: [
     {
       what: "It registers a real CompactionEngine, not a wrapper — the harness's own backend interface.",

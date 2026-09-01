@@ -72,10 +72,39 @@ export default async function Home() {
   // afternoon this page was built and would have been a lie by the weekend,
   // and a stale number in the headline of a page arguing for dated claims is
   // the worst possible place to have one.
+  //
+  // That was written, and then the heading three lines below it said "built
+  // last week" in prose for nineteen days. Deriving the number and leaving the
+  // word is not deriving the claim. scripts/check-claims.mjs fails the build
+  // now if either comes back.
+  //
+  // And it was derived from the wrong end. `age.measured` is the day the
+  // census ran, not today, and nothing in the deploy re-ran the census -- so
+  // the page rebuilt daily and went on saying "dsh shipped 7 days ago" for
+  // nineteen days, beside a repo count that had grown 44% since. Two different
+  // dates, and the copy needs both: how old the ecosystem is, which is a fact
+  // about now, and how many repos were counted, which is a fact about the day
+  // someone counted. The figure foot already prints the second one.
   const sinceLaunch = age
-    ? Math.max(1, Math.round((Date.parse(age.measured) - Date.parse(age.launch)) / 86400000))
+    ? Math.max(1, Math.round((Date.now() - Date.parse(age.launch)) / 86400000))
+    : 0;
+  const censusAge = age
+    ? Math.max(0, Math.round((Date.now() - Date.parse(age.measured)) / 86400000))
     : 0;
   const launchPct = age ? Math.round((age.sinceLaunch / age.total) * 100) : 0;
+
+  // The pick's note argues from three registry counts. They were typed in as
+  // literals on 2026-08-26 and were all three wrong five days later: 126 ->
+  // 127, 11,197 -> 11,690, 1,898 -> 1,831. The `picked` date is printed so a
+  // stale *choice* is visible as one, but these are not facts about the
+  // choice; they are facts about the shelf, and the shelf moves daily. Filled
+  // from the same seams census the chart below renders.
+  const pickClaim = seams
+    ? PICK.claim
+        .replace("{seam}", (seams.seams.find((x) => x.ctx === PICK.seam.ctx)?.count ?? 0).toLocaleString())
+        .replace("{total}", seams.total.toLocaleString())
+        .replace("{memory}", seams.memoryTagged.toLocaleString())
+    : null;
 
   return (
     <main className="wrap">
@@ -186,14 +215,19 @@ export default async function Home() {
 
       {age && (
         <>
-          <h2>Almost all of this was built last week</h2>
+          <h2>Almost all of this was built in the last {sinceLaunch} days</h2>
           <p className="lede">
             This is the fact that should govern every install decision here, and no other
             directory prints it. dsh shipped on {age.launch}, {sinceLaunch} days ago.{" "}
             <strong>{age.sinceLaunch.toLocaleString()}</strong> of the{" "}
             {age.total.toLocaleString()} repositories carrying the <code>{age.topic}</code> topic
             — {launchPct}% of them — were created on or after that day. Only{" "}
-            {age.beforeFirstDay.toLocaleString()} existed before any of this started.
+            {age.beforeFirstDay.toLocaleString()} existed before any of this started.{" "}
+            {censusAge > 1 && (
+              <span className="fine">
+                Counted {age.measured}, {censusAge} days ago; the ecosystem has moved since.
+              </span>
+            )}
           </p>
           <div className="figure" data-reveal="age">
             <div className="figure-head">
@@ -219,10 +253,11 @@ export default async function Home() {
           </div>
           <p className="fine">
             So &ldquo;is it maintained?&rdquo; barely discriminates here. Nearly every one of
-            these repos was pushed this week because nearly every one was <em>written</em> this
-            week — a push date cannot separate a project from a weekend upload when nothing is old
-            enough to have gone stale. That is precisely why every row on this site carries a file
-            you can open instead of a badge you have to believe.
+            these repos has been pushed since dsh shipped {sinceLaunch} days ago, because nearly
+            every one was <em>written</em> inside that window — a push date cannot separate a
+            project from a weekend upload when nothing is old enough to have gone stale. That is
+            precisely why every row on this site carries a file you can open instead of a badge
+            you have to believe.
           </p>
         </>
       )}
@@ -260,7 +295,10 @@ export default async function Home() {
             <span className="fine">{PICK.repo.split("/")[0]}</span>
           </h3>
           <p className="pick-their">&ldquo;{PICK.their}&rdquo;</p>
-          <p className="pick-note">{PICK.note}</p>
+          <p className="pick-note">
+            {pickClaim ? `${pickClaim} ` : ""}
+            {PICK.note}
+          </p>
           <ul className="pick-why">
             {PICK.detail.map((d) => (
               <li key={d.label}>

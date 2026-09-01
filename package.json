@@ -7,10 +7,11 @@
   "scripts": {
     "data": "node scripts/build-data.mjs",
     "dev": "vinext dev",
-    "build": "npm run data && vinext build",
+    "build": "npm run data && npm run check:claims && vinext build",
     "start": "vinext start",
-    "deploy": "npm run data && vinext deploy",
-    "lint": "vinext lint"
+    "deploy": "npm run data && npm run check:claims && vinext deploy",
+    "lint": "vinext lint",
+    "check:claims": "node scripts/check-claims.mjs"
   },
   "dependencies": {
     "next": "^16.0.7",

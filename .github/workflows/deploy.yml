@@ -71,6 +71,25 @@ jobs:
 
       - run: npm ci
 
+      # The two censuses the front page argues from. Neither was in this job,
+      # so `npm run data` refreshed the registry projection every night while
+      # data/ecosystem.json stayed frozen at the day a human last ran the
+      # script -- twelve days, over which the topic grew from 9,016 repos to
+      # 13,007 and the page went on printing the smaller number under a fresh
+      # `built:` date. Exactly the failure the header of this file names.
+      #
+      # continue-on-error, because a bad day at the GitHub search API should
+      # not block a deploy of otherwise-current data. scripts/check-claims.mjs
+      # turns the build red once either census passes 14 days, which is the
+      # difference between one flaky run and a step that has quietly stopped.
+      - name: Re-measure the ecosystem and the seams
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/measure-ecosystem.mjs
+          node scripts/measure-seams.mjs
+
       # Fetches both registries over the network. DATA_SOURCE is deliberately
       # unset: a `local` build publishes `source: "local checkout"` on
       # /api/plugins, and production said exactly that once already.
@@ -95,6 +114,11 @@ jobs:
       # vinext build bakes the routes into dist/server/wrangler.json and
       # .wrangler/deploy/config.json points wrangler there, so the build must
       # run before the deploy or wrangler.jsonc edits are ignored in silence.
+      # npm run check:claims, not `npm run deploy`: the deploy script re-runs
+      # `npm run data` and this job has already done it above.
+      - name: Check the copy against the data
+        run: npm run check:claims
+
       - name: Build and deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

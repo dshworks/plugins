@@ -83,6 +83,25 @@ export type Ecosystem = {
   };
   stars: { ladder: { min: number; count: number }[]; median: number };
   tags: { tag: string; count: number }[];
+  /**
+   * Whether the published shelf still installs beside the dsh npm serves.
+   * A fact about other people's packages, measured off registry.npmjs.org --
+   * not a transform of our own rows dressed up as one.
+   */
+  installability?: {
+    measured: string;
+    dshLatest: string;
+    /** npm packages in the registry declaring any `@deepseek-ai/dsh*` range. */
+    declaring: number;
+    /** ...of which admit `dshLatest`. */
+    current: number;
+    /** ...whose newest admissible dsh is still on the 0.1.0 line. */
+    stuckOn010: number;
+    /** ...that admit no published dsh at all. */
+    neverAny: number;
+    /** ...that use `*` somewhere: never breaks, never protects. */
+    wildcard: number;
+  } | null;
   age: {
     measured: string;
     topic: string;

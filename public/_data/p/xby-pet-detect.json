@@ -1,0 +1,1 @@
+{"slug":"xby-pet-detect","name":"xby-pet-detect","repo":"xby-skill/xby-pet-detect","description":"识别宠物面部表情，输出 4 类情绪: Angry / Happy / Relaxed / Sad。","category":"plugin","tags":["fun"],"stars":0,"pushedAt":"2026-08-28","official":false,"status":"verified","verifiedAgainst":"0.1.1-rc.2","lastVerified":"2026-09-01","proof":null,"pulse":{"band":"this-fortnight","days":7},"tag":"fun"}

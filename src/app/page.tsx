@@ -5,7 +5,7 @@ import { PICK } from "@/lib/pick";
 import Console from "./console";
 import Seats from "./seats";
 import Reveal from "./reveal";
-import { AgeChart, OwnerLadder, SeamMap, ShelfMap, StarLadder } from "./charts";
+import { AgeChart, InstallLadder, OwnerLadder, SeamMap, ShelfMap, StarLadder } from "./charts";
 
 /* THE PROMISE
  *
@@ -448,6 +448,85 @@ export default async function Home() {
             We publish the count because you will compare us on it. We publish this next to it
             because a count nobody decomposes is the easiest number on the internet to inflate,
             and we would be inflating ours by simply saying nothing.
+          </p>
+        </>
+      )}
+
+      {eco?.installability && (
+        <>
+          <h2 id="installs">Most of the shelf no longer installs</h2>
+          <p>
+            Every other number on this page counts plugins. This one counts whether they still
+            work, and it is the only measurement here that changed our own answer: three of the
+            four plugins we ship were in the broken column until{" "}
+            {eco.installability.measured}.
+          </p>
+          <div className="figure" data-reveal="installs">
+            <div className="figure-head">
+              <span className="figure-stat">
+                {Math.round(
+                  (eco.installability.current / eco.installability.declaring) * 100,
+                )}
+                %
+              </span>
+              <span className="figure-unit">
+                of the {eco.installability.declaring.toLocaleString()} published packages that
+                name a dsh version accept dsh {eco.installability.dshLatest} &mdash; what{" "}
+                <code>npx @deepseek-ai/dsh</code> gives you
+              </span>
+            </div>
+            <InstallLadder
+              rows={[
+                {
+                  label: `accept dsh ${eco.installability.dshLatest}`,
+                  count: eco.installability.current,
+                },
+                {
+                  label: "newest dsh they accept is on the 0.1.0 line",
+                  count: eco.installability.stuckOn010,
+                },
+                {
+                  label: "accept no published dsh at all",
+                  count: eco.installability.neverAny,
+                },
+                {
+                  label: "use a wildcard: never breaks, never protects",
+                  count: eco.installability.wildcard,
+                },
+              ]}
+              total={eco.installability.declaring}
+            />
+            <div className="figure-foot">
+              <span>
+                Read off registry.npmjs.org on {eco.installability.measured}, every published dsh
+                version tested
+              </span>
+              <a href="https://github.com/dshworks/plugins/blob/main/scripts/measure-installability.mjs">
+                the method
+              </a>
+            </div>
+          </div>
+          <p>
+            Nobody wrote a bad range. npm semver simply never lets a{" "}
+            <em>prerelease</em> satisfy a caret with a different version tuple, and dsh has only
+            ever shipped prereleases. <code>^0.1.1-rc.1</code> matches 0.1.1-rc.2 and stops dead.{" "}
+            <code>^0.1.2-alpha.1</code> matches 0.1.2-rc.1, because the tuple is the same. The
+            rule is the tuple, not the caret, and it is invisible in a diff.
+          </p>
+          <p>
+            The loud failure is <code>ERESOLVE</code>, and you would fix that. The quiet one is
+            what actually reaches people: install a stale plugin on its own and npm satisfies it
+            by hoisting the old <code>@deepseek-ai/dsh-*</code> copies to the root and pushing the
+            harness&rsquo;s own into nested <code>node_modules</code>. The install succeeds. The
+            plugin then imports a different harness than the host is running &mdash; on one
+            package we measured, thirteen harness packages resolved to two versions at once, with
+            no warning of any kind.
+          </p>
+          <p className="fine">
+            This is not a fact about our registry, and we did not come out of it well. We found it
+            because dsh {eco.installability.dshLatest} shipped and our own plugins stopped
+            resolving; the fix is one <code>||</code> per release, and a check that installs for
+            real and asserts one version of every harness package.
           </p>
         </>
       )}

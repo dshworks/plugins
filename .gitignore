@@ -19,5 +19,8 @@ data/*.json
 !data/ecosystem.json
 !data/directories.json
 !data/seams.json
+# and the installability census, which is the receipt for the one claim on the
+# front page that is about other people's packages rather than our own rows.
+!data/installability.json
 !data/sponsors.json
 .vinext/

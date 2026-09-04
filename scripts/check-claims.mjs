@@ -78,6 +78,10 @@ check(!/\d{1,3},\d{3}/.test(pick.split("export const PICK")[1] ?? ""),
 for (const [file, field, script] of [
   ["data/seams.json", "built", "scripts/measure-seams.mjs"],
   ["data/ecosystem.json", "measured", "scripts/measure-ecosystem.mjs"],
+  // The one census whose subject moves without warning: it is measured against
+  // whatever dsh's `latest` dist-tag points at, and that changed under us on
+  // 2026-09-03 with the shelf's answer changing the same day.
+  ["data/installability.json", "measured", "scripts/measure-installability.mjs"],
 ]) {
   const data = JSON.parse(read(file));
   const days = Math.round((Date.now() - Date.parse(data[field])) / 86400000);
@@ -86,12 +90,27 @@ for (const [file, field, script] of [
     + `The copy quotes it as current; re-run ${script}.`);
 }
 
+// A census measured against a dsh version that is no longer `latest` is not
+// stale by date and is still wrong: the whole claim is "beside the dsh npm
+// serves you". Checked against the file the site itself publishes rather than
+// the network, so the build stays offline; measure-installability re-reads npm.
+{
+  const inst = JSON.parse(read("data/installability.json"));
+  const eco = JSON.parse(read("data/ecosystem.json"));
+  const shipping = eco.release?.version ?? null;
+  check(!shipping || shipping === inst.dshLatest,
+    `data/installability.json was measured against dsh ${inst.dshLatest}, but the site says `
+    + `${shipping} is what npx installs. Re-run scripts/measure-installability.mjs.`);
+  check(inst.declaring > 0 && inst.current <= inst.declaring,
+    `data/installability.json is not internally consistent: ${inst.current} of ${inst.declaring}.`);
+}
+
 if (fail.length) {
   console.error("check-claims: FAILED");
   for (const f of fail) console.error(`  - ${f}`);
   process.exit(1);
 }
-const ages = ["data/seams.json:built", "data/ecosystem.json:measured"].map((spec) => {
+const ages = ["data/seams.json:built", "data/ecosystem.json:measured", "data/installability.json:measured"].map((spec) => {
   const [file, field] = spec.split(":");
   const on = JSON.parse(read(file))[field];
   return `${file.replace("data/", "").replace(".json", "")} ${on}`;

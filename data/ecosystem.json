@@ -1,24 +1,17 @@
 {
   "$comment": "Measured from the GitHub search API. total_count is exact even though the result list caps at 1000. Re-derive with scripts/measure-ecosystem.mjs.",
-  "measured": "2026-09-01",
+  "measured": "2026-09-04",
   "topic": "dsh-plugin",
   "launch": "2026-08-13",
   "query": "topic:dsh-plugin created:<DATE",
-  "total": 13007,
-  "withStars": 8388,
+  "total": 13474,
+  "withStars": 8626,
   "release": {
-    "version": "0.1.1-rc.2",
-    "published": "2026-08-21",
-    "ahead": [
-      {
-        "tag": "alpha",
-        "version": "0.1.2-alpha.3",
-        "published": "2026-08-31"
-      }
-    ]
+    "version": "0.1.2-rc.1",
+    "published": "2026-09-03"
   },
-  "beforeFirstDay": 425,
-  "sinceLaunch": 12423,
+  "beforeFirstDay": 439,
+  "sinceLaunch": 12875,
   "series": [
     {
       "date": "2026-08-06",
@@ -42,7 +35,7 @@
     },
     {
       "date": "2026-08-11",
-      "created": 22
+      "created": 23
     },
     {
       "date": "2026-08-12",
@@ -54,19 +47,19 @@
     },
     {
       "date": "2026-08-14",
-      "created": 1891
+      "created": 1882
     },
     {
       "date": "2026-08-15",
-      "created": 1580
+      "created": 1581
     },
     {
       "date": "2026-08-16",
-      "created": 1515
+      "created": 1514
     },
     {
       "date": "2026-08-17",
-      "created": 959
+      "created": 962
     },
     {
       "date": "2026-08-18",
@@ -74,7 +67,7 @@
     },
     {
       "date": "2026-08-19",
-      "created": 739
+      "created": 740
     },
     {
       "date": "2026-08-20",
@@ -82,7 +75,7 @@
     },
     {
       "date": "2026-08-21",
-      "created": 581
+      "created": 580
     },
     {
       "date": "2026-08-22",
@@ -90,43 +83,55 @@
     },
     {
       "date": "2026-08-23",
-      "created": 304
+      "created": 305
     },
     {
       "date": "2026-08-24",
-      "created": 285
+      "created": 286
     },
     {
       "date": "2026-08-25",
-      "created": 294
+      "created": 298
     },
     {
       "date": "2026-08-26",
-      "created": 267
+      "created": 276
     },
     {
       "date": "2026-08-27",
-      "created": 224
+      "created": 233
     },
     {
       "date": "2026-08-28",
-      "created": 375
+      "created": 383
     },
     {
       "date": "2026-08-29",
-      "created": 187
+      "created": 191
     },
     {
       "date": "2026-08-30",
-      "created": 138
+      "created": 149
     },
     {
       "date": "2026-08-31",
-      "created": 148
+      "created": 166
     },
     {
       "date": "2026-09-01",
-      "created": 11
+      "created": 145
+    },
+    {
+      "date": "2026-09-02",
+      "created": 132
+    },
+    {
+      "date": "2026-09-03",
+      "created": 113
+    },
+    {
+      "date": "2026-09-04",
+      "created": 14
     }
   ]
 }

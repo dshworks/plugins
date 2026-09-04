@@ -1,0 +1,29 @@
+{
+  "measured": "2026-09-04",
+  "method": "registry.npmjs.org latest manifest per npm name; semver.satisfies over every published @deepseek-ai/dsh version",
+  "dshLatest": "0.1.2-rc.1",
+  "dshVersions": [
+    "0.0.1-rc.1",
+    "0.0.1-rc.2",
+    "0.0.1-rc.5",
+    "0.1.0-rc.2",
+    "0.1.0-rc.3",
+    "0.1.0-rc.6",
+    "0.1.0-rc.7",
+    "0.1.0-rc.8",
+    "0.1.1-rc.1",
+    "0.1.1-rc.2",
+    "0.1.2-alpha.2",
+    "0.1.2-alpha.3",
+    "0.1.2-alpha.4",
+    "0.1.2-alpha.5",
+    "0.1.2-rc.1"
+  ],
+  "npmNames": 2002,
+  "unreadable": 0,
+  "declaring": 1280,
+  "current": 79,
+  "stuckOn010": 818,
+  "neverAny": 182,
+  "wildcard": 138
+}

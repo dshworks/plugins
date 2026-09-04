@@ -190,6 +190,60 @@ export function StarLadder({ ladder, total }: { ladder: { min: number; count: nu
   );
 }
 
+// --- can you still install it -----------------------------------------------
+
+/**
+ * Where the published shelf sits relative to the dsh npm serves today.
+ *
+ * Not a ladder: these categories overlap by construction (a wildcard range is
+ * also, usually, one that accepts an old dsh) and stacking them would imply a
+ * partition that does not exist. Each bar is measured against the same
+ * denominator and says so, which is the honest shape for overlapping sets.
+ */
+export function InstallLadder({
+  rows,
+  total,
+}: {
+  rows: { label: string; count: number }[];
+  total: number;
+}) {
+  const ROW = 26;
+  const LABEL = 300;
+  const W = 720;
+  const H = rows.length * ROW + 4;
+  return (
+    <Plot>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        role="img"
+        aria-label={`Published packages declaring a dsh version, out of ${fmt(total)}. ${rows.map((r) => `${fmt(r.count)} ${r.label}`).join("; ")}.`}
+      >
+        {rows.map((r, i) => {
+          const y = i * ROW;
+          const w = Math.max(1, ((W - LABEL - 70) * r.count) / total);
+          return (
+            <g key={r.label} style={{ ["--i" as string]: i }}>
+              <text className="ch-label dim" x={LABEL - 8} y={y + 16} textAnchor="end">
+                {r.label}
+              </text>
+              <rect className="ch-bar ch-run" x={LABEL} y={y + 6} width={w} height={ROW - 13} rx="1">
+                <title>{`${fmt(r.count)} of ${fmt(total)} ${r.label}`}</title>
+              </rect>
+              <text className="ch-axis" x={LABEL + w + 6} y={y + 16}>
+                {fmt(r.count)}
+                <tspan className="ch-axis">
+                  {" \u00b7 "}
+                  {r.count / total < 0.005 ? "<1" : Math.round((r.count / total) * 100)}%
+                </tspan>
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+    </Plot>
+  );
+}
+
 // --- who the count is actually made of --------------------------------------
 
 /**

@@ -89,6 +89,11 @@ jobs:
         run: |
           node scripts/measure-ecosystem.mjs
           node scripts/measure-seams.mjs
+          # Reads registry.npmjs.org only, and its subject moves whenever dsh
+          # publishes: a census against yesterday's `latest` is not stale by
+          # date and is still wrong. check-claims fails the build when this
+          # file and the ecosystem census disagree about what npx installs.
+          node scripts/measure-installability.mjs
 
       # Fetches both registries over the network. DATA_SOURCE is deliberately
       # unset: a `local` build publishes `source: "local checkout"` on

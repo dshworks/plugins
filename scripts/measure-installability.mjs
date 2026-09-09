@@ -96,6 +96,16 @@ const stuckOn010 = declaring.filter((e) => {
 });
 const wildcard = declaring.filter((e) => Object.values(e.ranges).some((r) => r === "*" || r === "" || r === "latest"));
 
+// The same question asked forward. npm publishes ahead of the `latest` tag —
+// on the day this was added, `latest` was 0.1.2-rc.1 and 0.1.5-alpha.1 was
+// already on the registry. Because the rule is the TUPLE, the day the tag
+// moves to a new tuple every range written against the old one stops
+// resolving at once. This counts who survives that move, and it is the number
+// that says whether the shelf is one release away from breaking or already
+// broken.
+const newest = versions.at(-1);
+const admitsNewest = declaring.filter((e) => admits(e, newest));
+
 await writeFile(OUT, `${JSON.stringify({
   measured: new Date().toISOString().slice(0, 10),
   method: "registry.npmjs.org latest manifest per npm name; semver.satisfies over every published @deepseek-ai/dsh version",
@@ -105,6 +115,8 @@ await writeFile(OUT, `${JSON.stringify({
   unreadable,
   declaring: declaring.length,
   current: current.length,
+  dshNewest: newest,
+  admitsNewest: admitsNewest.length,
   stuckOn010: stuckOn010.length,
   neverAny: neverAny.length,
   wildcard: wildcard.length,
@@ -112,3 +124,4 @@ await writeFile(OUT, `${JSON.stringify({
 
 console.log(`installability: ${current.length} of ${declaring.length} declaring packages admit dsh ${latest}`);
 console.log(`  stuck on the 0.1.0 line: ${stuckOn010.length}, satisfied by no published dsh: ${neverAny.length}, wildcard: ${wildcard.length}`);
+console.log(`  and ${admitsNewest.length} admit ${newest}, the newest published version — what the tag moving would leave standing`);

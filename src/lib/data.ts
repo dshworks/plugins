@@ -101,6 +101,10 @@ export type Ecosystem = {
     neverAny: number;
     /** ...that use `*` somewhere: never breaks, never protects. */
     wildcard: number;
+    /** The newest version npm serves, which may be ahead of the `latest` tag. */
+    dshNewest: string;
+    /** ...admitted by this many of `declaring`: what the tag moving would leave standing. */
+    admitsNewest: number;
   } | null;
   age: {
     measured: string;

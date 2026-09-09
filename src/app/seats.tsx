@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Money, Sponsors } from "@/lib/data";
+import { daysUntil, liveSale } from "@/lib/sale";
 
 // The four seats, as a departure board.
 //
@@ -44,12 +45,6 @@ const SPECIMEN = "YOUR PRODUCT";
 // into the browser bundle and fails the build. Types are erased, so
 // `import type` from there is fine; a function is not.
 //
-/** Days from today until an ISO date, floored at 0. */
-function daysUntil(iso: string): number {
-  const today = new Date().toISOString().slice(0, 10);
-  return Math.max(0, Math.round((Date.parse(iso) - Date.parse(today)) / 86400000));
-}
-
 // "2026-08-31" -> "31 Aug". Printed rather than relative-only, because a
 // countdown without a date is a pressure tactic and a date can be checked.
 function said(iso: string): string {
@@ -163,10 +158,9 @@ export default function Seats({ data, site }: { data: Sponsors; site: string }) 
   const priceOf = (s: Sponsors["seats"][number]): Money => s.price ?? data.price;
   const annual = seats.find((s) => s.price)?.price;
   // A lapsed sale is not a sale. Once the date passes the whole block stops
-  // rendering rather than shouting a deadline that already went.
-  const sale = data.sale && daysUntil(data.sale.until) >= 0 && Date.now() <= Date.parse(data.sale.until) + 86400000
-    ? data.sale
-    : null;
+  // rendering rather than shouting a deadline that already went. The rule
+  // lives in @/lib/sale so the terms page cannot drift from it again.
+  const sale = liveSale(data.sale);
   const left = sale ? daysUntil(sale.until) : 0;
 
   return (

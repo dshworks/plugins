@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getMeta, getSponsors } from "@/lib/data";
+import { liveSale } from "@/lib/sale";
 
 export const metadata: Metadata = {
   title: "Sponsor a seat",
@@ -35,6 +36,7 @@ export default async function Sponsor() {
   }
 
   const open = sponsors.seats.filter((s) => !s.sponsor).length;
+  const sale = liveSale(sponsors.sale);
   const taken = sponsors.seats.length - open;
 
   return (
@@ -50,11 +52,11 @@ export default async function Sponsor() {
         </p>
       </header>
 
-      {sponsors.sale && (
+      {sale && (
         <p className="lede" style={{ marginTop: "-0.4rem" }}>
-          <strong>Intro pricing until {longDate(sponsors.sale.until)}.</strong>{" "}
-          {sponsors.sale.was ? `It was ${sponsors.sale.was.said} a seat. ` : ""}
-          {sponsors.sale.why} After that the rate goes back up; a seat taken before then keeps
+          <strong>Intro pricing until {longDate(sale.until)}.</strong>{" "}
+          {sale.was ? `It was ${sale.was.said} a seat. ` : ""}
+          {sale.why} After that the rate goes back up; a seat taken before then keeps
           what it paid for its current term.
         </p>
       )}

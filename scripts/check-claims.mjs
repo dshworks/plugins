@@ -114,6 +114,24 @@ for (const [file, field, script] of [
     `data/installability.json says ${inst.admitsNewest} of ${inst.declaring} admit the newest dsh.`);
 }
 
+// A deadline that has passed is not urgency. `sponsors.json` says in its own
+// comment that `sale.until` is a real date printed on the page and must be
+// edited when it passes; it was not, and for nine days /sponsor advertised
+// "Intro pricing until 31 August" and "after that the rate goes back up" at a
+// rate that had not gone anywhere. Both surfaces now drop a lapsed sale at
+// render time, so this is about the published file rather than the pixels:
+// data/sponsors.json is linked from the site as the public record of the term.
+{
+  const sponsors = JSON.parse(read("data/sponsors.json"));
+  if (sponsors.sale) {
+    const ends = Date.parse(sponsors.sale.until);
+    check(Number.isFinite(ends) && Date.now() <= ends + 86_400_000,
+      `data/sponsors.json still carries an intro that ended ${sponsors.sale.until}. `
+      + "Remove the `sale` block or give it a new date — the file is published as the "
+      + "record of what a seat costs.");
+  }
+}
+
 if (fail.length) {
   console.error("check-claims: FAILED");
   for (const f of fail) console.error(`  - ${f}`);

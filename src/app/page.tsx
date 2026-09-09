@@ -528,6 +528,23 @@ export default async function Home() {
             resolving; the fix is one <code>||</code> per release, and a check that installs for
             real and asserts one version of every harness package.
           </p>
+          {eco.installability.dshNewest !== eco.installability.dshLatest && (
+            <p>
+              <strong>
+                The same question asked forward:{" "}
+                {eco.installability.admitsNewest.toLocaleString()} of{" "}
+                {eco.installability.declaring.toLocaleString()}.
+              </strong>{" "}
+              npm already serves dsh {eco.installability.dshNewest}, ahead of the{" "}
+              <code>latest</code> tag. Because the rule is the tuple, the day that tag moves,
+              every range written against {eco.installability.dshLatest} stops resolving at
+              once &mdash; so the{" "}
+              {eco.installability.current.toLocaleString()} packages that install today become{" "}
+              {eco.installability.admitsNewest.toLocaleString()}. Ours are not among them
+              either. This is not a prediction about whether dsh will ship; it is what is
+              already published on both sides, read on {eco.installability.measured}.
+            </p>
+          )}
         </>
       )}
 

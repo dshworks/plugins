@@ -1,5 +1,5 @@
 {
-  "measured": "2026-09-04",
+  "measured": "2026-09-09",
   "method": "registry.npmjs.org latest manifest per npm name; semver.satisfies over every published @deepseek-ai/dsh version",
   "dshLatest": "0.1.2-rc.1",
   "dshVersions": [
@@ -17,13 +17,17 @@
     "0.1.2-alpha.3",
     "0.1.2-alpha.4",
     "0.1.2-alpha.5",
-    "0.1.2-rc.1"
+    "0.1.2-rc.1",
+    "0.1.3-alpha.2",
+    "0.1.5-alpha.1"
   ],
-  "npmNames": 2002,
+  "npmNames": 2000,
   "unreadable": 0,
-  "declaring": 1280,
-  "current": 79,
-  "stuckOn010": 818,
-  "neverAny": 182,
-  "wildcard": 138
+  "declaring": 1278,
+  "current": 174,
+  "dshNewest": "0.1.5-alpha.1",
+  "admitsNewest": 4,
+  "stuckOn010": 751,
+  "neverAny": 175,
+  "wildcard": 134
 }

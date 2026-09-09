@@ -103,6 +103,15 @@ for (const [file, field, script] of [
     + `${shipping} is what npx installs. Re-run scripts/measure-installability.mjs.`);
   check(inst.declaring > 0 && inst.current <= inst.declaring,
     `data/installability.json is not internally consistent: ${inst.current} of ${inst.declaring}.`);
+  // The forward-looking paragraph only renders when npm is serving a version
+  // ahead of the tag, and it quotes both counts. An older census has neither
+  // field, and a census that dropped them would render the paragraph with
+  // `undefined` in two places rather than not at all.
+  check(typeof inst.dshNewest === "string" && Number.isInteger(inst.admitsNewest),
+    "data/installability.json has no dshNewest/admitsNewest; the copy that quotes them "
+    + "would print undefined. Re-run scripts/measure-installability.mjs.");
+  check(inst.admitsNewest <= inst.declaring,
+    `data/installability.json says ${inst.admitsNewest} of ${inst.declaring} admit the newest dsh.`);
 }
 
 if (fail.length) {

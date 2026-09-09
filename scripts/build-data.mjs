@@ -350,6 +350,8 @@ const ecosystemBytes = write("ecosystem.json", {
     stuckOn010: installability.stuckOn010,
     neverAny: installability.neverAny,
     wildcard: installability.wildcard,
+    dshNewest: installability.dshNewest,
+    admitsNewest: installability.admitsNewest,
   },
   age: ecosystem && {
     measured: ecosystem.measured,

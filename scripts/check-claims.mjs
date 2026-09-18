@@ -12,13 +12,13 @@
 //      All three literals were wrong; none of them was a fact about the pick.
 //
 // Both are the same defect: a number that moves, written as text that does
-// not. So this checks the two places prose is allowed to carry a figure, and
-// nothing else -- a tripwire that fires on everything is a tripwire that gets
-// switched off.
+// not. So this checks the places prose carries a figure, each check named for
+// the defect that put it here, and nothing else -- a tripwire that fires on
+// everything is a tripwire that gets switched off.
 //
 // Usage: node scripts/check-claims.mjs   (run before build; exits 1 on failure)
 
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -129,6 +129,89 @@ for (const [file, field, script] of [
       `data/sponsors.json still carries an intro that ended ${sponsors.sale.until}. `
       + "Remove the `sale` block or give it a new date — the file is published as the "
       + "record of what a seat costs.");
+  }
+}
+
+// --- 4. what the page says about OUR plugins comes from the census ----------
+//
+// "three of the four plugins we ship were in the broken column until
+// {measured}" was typed on 2026-09-04 with the census date glued on. On
+// 2026-09-17 dsh's `latest` moved to the 0.1.5 line, all four went broken, and
+// the sentence read as though they had just been fixed. The same paragraph
+// said "Ours are not among them either" about the forward census. Both are
+// derived from installability.json's `ours` now; a count written beside the
+// phrase comes back red.
+{
+  const src = page.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+  const NUM = "(?:no|none|one|two|three|four|five|six|seven|eight|nine|ten|all|\\d+)";
+  const typed = src.match(new RegExp(`\\b${NUM}\\s+of\\s+(?:the\\s+|our\\s+)?(?:${NUM}\\s+)?plugins\\s+we\\s+ship`, "i"))
+    ?? src.match(/\bOurs are (?:not )?among\b/);
+  check(!typed,
+    `page.tsx says "${typed?.[0].replace(/\s+/g, " ")}" — a typed claim about our own plugins. `
+    + "Derive it from eco.installability.ours.");
+
+  const listed = [...read("src/lib/ours.ts").matchAll(/\bnpm:\s*"([^"]+)"/g)].map((m) => m[1]);
+  const measured = (JSON.parse(read("data/installability.json")).ours ?? []).map((o) => o.name);
+  const missing = listed.filter((n) => !measured.includes(n));
+  check(listed.length > 0 && missing.length === 0,
+    `data/installability.json does not measure ${missing.join(", ") || "any of ours"}; `
+    + "the sentence about our plugins would be built from nothing. Re-run scripts/measure-installability.mjs.");
+}
+
+// --- 5. no hand-typed percentage in the copy ---------------------------------
+//
+// "with 98.8% of the dsh-plugin topic decided" was typed on 2026-08-19. The
+// registry widened its denominator to eleven topics the next day and was
+// publishing 86% by 2026-09-17; this page never moved. Same for "a category
+// that is 0.14% of the population". A percentage with a decimal point is a
+// measurement, and a measurement belongs in data. Whole-number thresholds
+// ("under 1%") are rules, not readings, and are left alone.
+{
+  const text = page
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "")
+    .match(/[>}][^<>{}]*(?=[<{])/g) ?? [];
+  for (const t of text) {
+    const hit = t.match(/\d+\.\d+%/);
+    if (hit) fail.push(`page.tsx types "${hit[0]}" into the copy ("${t.slice(1).replace(/\s+/g, " ").trim().slice(0, 70)}"). Template it from the census it came from.`);
+  }
+}
+
+// --- 6. llms.txt says what the page says -------------------------------------
+//
+// The page narrowed "Nothing here is sold, sponsored, or promoted" the day the
+// seats went on sale (2026-08-19). llms.txt -- the one surface written for
+// agents, which quote it back verbatim -- kept the blanket sentence for a
+// month, and carried "11k plugins" while the registry passed 13,000.
+{
+  const llms = read("src/app/llms.txt/route.ts");
+  const body = llms.slice(llms.indexOf("const body"));
+  const sponsors = JSON.parse(read("data/sponsors.json"));
+  check(!(sponsors.seats?.length && /nothing\s+here\s+is\s+sold/i.test(body)),
+    "llms.txt says nothing here is sold while data/sponsors.json lists seats for sale. "
+    + "Say what the page says: the seats are the one thing for sale.");
+  const literal = body.replace(/\$\{[^}]*\}/g, "").match(/\b\d+(?:\.\d+)?k\b|\b\d{1,3},\d{3}\b/);
+  check(!literal,
+    `llms.txt types the count "${literal?.[0]}". Fill it from the data it describes.`);
+}
+
+// --- 7. every note links its sources ------------------------------------------
+//
+// A note is the one place a number may be written down rather than read, so it
+// has to carry the date in its filename and at least one link a reader can
+// follow to check it. A note that asks to be believed is the thing this site
+// exists to argue against.
+{
+  const dir = join(ROOT, "content", "notes");
+  const notes = existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith(".md")) : [];
+  for (const f of notes) {
+    const text = read(`content/notes/${f}`);
+    check(/^\d{4}-\d{2}-\d{2}-[a-z0-9-]+\.md$/.test(f),
+      `content/notes/${f}: name it YYYY-MM-DD-slug.md; the date in the name is the note's date.`);
+    check(/^---\n[\s\S]*?\btitle:\s*\S[\s\S]*?\bsummary:\s*\S[\s\S]*?\n---\n/.test(text),
+      `content/notes/${f}: frontmatter needs a title and a summary.`);
+    check(/\]\(https:\/\/[^)\s]+\)/.test(text),
+      `content/notes/${f}: links no source. Every note must cite something a reader can open.`);
   }
 }
 

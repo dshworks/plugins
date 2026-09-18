@@ -768,3 +768,24 @@ input[type="search"]:focus { outline: 2px solid var(--cyan); outline-offset: 1px
   .adbar-when { margin-left: 0; width: 100%; }
   .adbar-go { display: none; }
 }
+
+/* --- notes: dated prose, same material as the rest of the site ------------ */
+.note-body { max-width: var(--measure); }
+.note-body h3 { margin: 1.8rem 0 0.5rem; }
+.note-body ul, .note-body ol { padding-left: 1.2rem; margin: 0 0 0.9rem; max-width: var(--measure); }
+.note-body li { margin: 0 0 0.35rem; }
+.note-body pre {
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: 3px;
+  padding: 0.7rem 0.9rem; margin: 0 0 0.9rem; overflow-x: auto; font-size: 0.85rem;
+}
+.note-body pre code { background: none; padding: 0; overflow-wrap: normal; }
+.note-body blockquote {
+  margin: 0 0 0.9rem; padding: 0 0 0 0.9rem; border-left: 3px solid var(--line); color: var(--muted);
+}
+.note-table { overflow-x: auto; margin: 0 0 0.9rem; }
+.note-body table { border-collapse: collapse; font-size: 0.85rem; }
+.note-body th, .note-body td {
+  border-bottom: 1px solid var(--line); padding: 0.3rem 0.9rem 0.3rem 0; text-align: left;
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.note-body th { color: var(--muted); font-weight: 400; }

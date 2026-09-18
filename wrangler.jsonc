@@ -57,7 +57,10 @@
     // hostname, a page that is not on this list never reaches it and falls
     // through to the Pages origin as a 404 — which is exactly what /sponsor
     // did on its first deploy, with four gold boxes pointing at it.
-    { "pattern": "dsh.works/sponsor*", "zone_name": "dsh.works" }
+    { "pattern": "dsh.works/sponsor*", "zone_name": "dsh.works" },
+    // Dated notes and their RSS feed. No Pages project site is named notes*,
+    // so nothing falls out from under this.
+    { "pattern": "dsh.works/notes*", "zone_name": "dsh.works" }
   ],
   "observability": { "enabled": true }
 }

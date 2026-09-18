@@ -58,7 +58,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <span className="sitebar-links">
             <a href="/" aria-current="page">plugins</a>
             <a href="/awesome-dsh-themes/">themes</a>
-            <a href="https://github.com/dshworks/howto-dsh">notes</a>
+            <a href="/notes">notes</a>
             <a href="#ours">ours</a>
             <a href="/api/plugins">api</a>
             <a href="https://github.com/dshworks">github</a>

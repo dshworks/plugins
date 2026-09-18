@@ -24,10 +24,12 @@ const LOCAL = process.env.DATA_SOURCE === "local";
 const REMOTE = {
   plugins: "https://raw.githubusercontent.com/dshworks/awesome-dsh-plugins/main/data/plugins.json",
   themes: "https://raw.githubusercontent.com/dshworks/awesome-dsh-themes/main/data/themes.json",
+  coverage: "https://raw.githubusercontent.com/dshworks/awesome-dsh-plugins/main/data/coverage.json",
 };
 const LOCAL_PATHS = {
   plugins: join(ROOT, "../awesome-dsh-plugins/data/plugins.json"),
   themes: join(ROOT, "../awesome-dsh-themes/data/themes.json"),
+  coverage: join(ROOT, "../awesome-dsh-plugins/data/coverage.json"),
 };
 
 async function load(which) {
@@ -68,6 +70,16 @@ function proof(entry) {
 // --- run --------------------------------------------------------------------
 
 const [pluginsFile, themesFile] = await Promise.all([load("plugins"), load("themes")]);
+// The registry's own coverage figure: how much of the dsh discovery topics has
+// been opened and decided. The front page quoted "98.8% of the dsh-plugin
+// topic decided" as typed text from 2026-08-19 onward; the registry widened
+// its denominator to eleven topics the next day and published 86% on
+// 2026-09-17 while this page still said 98.8. Read, never typed. Optional: a
+// missing file drops the clause, it does not fail a deploy.
+const coverage = await load("coverage").catch((err) => {
+  console.log(`data: no registry coverage (${err.message}); the registries paragraph will omit it`);
+  return null;
+});
 const raw = pluginsFile.plugins ?? [];
 const themes = themesFile.themes ?? [];
 
@@ -352,6 +364,13 @@ const ecosystemBytes = write("ecosystem.json", {
     wildcard: installability.wildcard,
     dshNewest: installability.dshNewest,
     admitsNewest: installability.admitsNewest,
+    ours: installability.ours ?? [],
+  },
+  coverage: coverage && {
+    measured: coverage.measured,
+    topics: Object.keys(coverage.topics ?? {}).length,
+    unique: coverage.unique,
+    decided: coverage.decided,
   },
   age: ecosystem && {
     measured: ecosystem.measured,

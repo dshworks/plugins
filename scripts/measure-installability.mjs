@@ -106,6 +106,27 @@ const wildcard = declaring.filter((e) => Object.values(e.ranges).some((r) => r =
 const newest = versions.at(-1);
 const admitsNewest = declaring.filter((e) => admits(e, newest));
 
+// Our own four, measured by the same rule and named. The page used to say
+// "three of the four plugins we ship were in the broken column until
+// {measured}" -- a count typed once on 2026-09-04 with the census date glued
+// on, so on 2026-09-17 it read as though they had just been fixed while all
+// four still declared ^0.1.2-rc.1 against a 0.1.5-rc.2 `latest`. The npm
+// names are read out of src/lib/ours.ts, the list both surfaces render, so a
+// fifth plugin is measured the day it is listed.
+const oursSrc = await readFile(join(ROOT, "src", "lib", "ours.ts"), "utf8");
+const oursNames = [...oursSrc.matchAll(/\bnpm:\s*"([^"]+)"/g)].map((m) => m[1]);
+if (!oursNames.length) throw new Error("src/lib/ours.ts lists no npm names; the ours census would be empty");
+const ours = [];
+for (const name of oursNames) {
+  const r = await ranges(name);
+  ours.push({
+    name,
+    version: r?.version ?? null,
+    admitsLatest: r ? admits(r, latest) : null,
+    admitsNewest: r ? admits(r, newest) : null,
+  });
+}
+
 await writeFile(OUT, `${JSON.stringify({
   measured: new Date().toISOString().slice(0, 10),
   method: "registry.npmjs.org latest manifest per npm name; semver.satisfies over every published @deepseek-ai/dsh version",
@@ -120,8 +141,10 @@ await writeFile(OUT, `${JSON.stringify({
   stuckOn010: stuckOn010.length,
   neverAny: neverAny.length,
   wildcard: wildcard.length,
+  ours,
 }, null, 2)}\n`);
 
 console.log(`installability: ${current.length} of ${declaring.length} declaring packages admit dsh ${latest}`);
 console.log(`  stuck on the 0.1.0 line: ${stuckOn010.length}, satisfied by no published dsh: ${neverAny.length}, wildcard: ${wildcard.length}`);
 console.log(`  and ${admitsNewest.length} admit ${newest}, the newest published version — what the tag moving would leave standing`);
+console.log(`  ours: ${ours.map((o) => `${o.name}@${o.version} ${o.admitsLatest ? "ok" : "BROKEN"}`).join(", ")}`);

@@ -14,6 +14,9 @@ export type OurPlugin = {
   /** Path on this site when we host a page, else the repo. */
   href: string;
   name: string;
+  /** The published package. scripts/measure-installability.mjs reads these
+   *  names out of this file and measures ours by the same rule as everyone's. */
+  npm: string;
   /** The one-word shelf shown beside the name. */
   kind: string;
   what: string;
@@ -23,6 +26,7 @@ export const OURS: OurPlugin[] = [
   {
     href: "/dsh-meter/",
     name: "dsh-meter",
+    npm: "@dshworks/dsh-meter",
     kind: "cost",
     what:
       "DeepSeek bills by the hour now. One line under the composer: what this session cost, " +
@@ -32,6 +36,7 @@ export const OURS: OurPlugin[] = [
   {
     href: "https://github.com/dshworks/dsh-watch",
     name: "dsh-watch",
+    npm: "@dshworks/dsh-watch",
     kind: "unattended",
     what:
       "Background stream listeners that wake the agent: matching lines from a command or a " +
@@ -41,6 +46,7 @@ export const OURS: OurPlugin[] = [
   {
     href: "/dsh-crew/",
     name: "dsh-crew",
+    npm: "@dshworks/dsh-crew",
     kind: "crew",
     what:
       "Claude Code and Codex, each in a real terminal pane inside your dsh session — " +
@@ -50,6 +56,7 @@ export const OURS: OurPlugin[] = [
   {
     href: "/dsh-ego-browser/",
     name: "dsh-ego-browser",
+    npm: "@dshworks/dsh-ego-browser",
     kind: "browser",
     what:
       "A browser agent with a memory it writes itself. ego lite brings your real logins; this " +
@@ -59,6 +66,9 @@ export const OURS: OurPlugin[] = [
 ];
 
 const WORDS = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+
+/** "four" — a small count spelled, because prose counts read badly as digits. */
+export const spell = (n: number): string => (WORDS[n] ?? String(n)).toLowerCase();
 
 /** "Four" — spelled, because prose counts read badly as digits. */
 export const oursCount = (): string => WORDS[OURS.length] ?? String(OURS.length);

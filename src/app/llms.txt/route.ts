@@ -1,11 +1,11 @@
-import { getMeta } from "@/lib/data";
-import { oursCount, oursHosted } from "@/lib/ours";
+import { getMeta, getSeams, getSponsors } from "@/lib/data";
+import { oursCount, oursHosted, spell } from "@/lib/ours";
 
 // The audience for a plugin directory is people running agents, so the site
 // publishes a map an agent can read in one fetch. One of the twenty-four
 // competing directories offers a machine surface at all; none publish this.
 export async function GET() {
-  const meta = await getMeta();
+  const [meta, seams, sponsors] = await Promise.all([getMeta(), getSeams(), getSponsors()]);
   const c = meta?.counts;
   const n = (v?: number) => (v === undefined ? "?" : v.toLocaleString());
   const body = `# dsh.works
@@ -40,7 +40,8 @@ dropped or quietly badged.
 ## Human surfaces
 
 - / — this page: search, the crowded shelves, what nobody has built, what we ship
-- /#unbuilt — the seam map: 11k plugins measured against the harness's extension points
+- /#unbuilt — the seam map: ${seams ? n(seams.total) : "every"} plugins measured against the harness's extension points
+- /notes — dated notes on what changed: dsh releases, DeepSeek prices, the censuses (RSS at /notes/feed.xml)
 - /p/{slug} — the decision page for one plugin
 - /tag/{tag} — everything on one shelf, freshest first
 - /awesome-dsh-plugins/ — the same registry as a filterable gallery
@@ -62,8 +63,10 @@ dropped or quietly badged.
 
 Not official. Not a security review — an install path was checked, not a
 codebase; git installs run code at install time, outside any sandbox. Not a
-quality ranking — stars are a dated snapshot carried so you can sort. Nothing
-here is sold, sponsored, or promoted.
+quality ranking — stars are a dated snapshot carried so you can sort. Not for
+sale, except the ${sponsors ? `${spell(sponsors.seats.length)} ` : ""}advertising seats at the top of the front page,
+marked rel="sponsored": they buy the box, never a row, a rank, a receipt, a
+tag or a listing decision. Terms: /sponsor.
 `;
   return new Response(body, {
     headers: {

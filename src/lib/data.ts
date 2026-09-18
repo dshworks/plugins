@@ -105,7 +105,11 @@ export type Ecosystem = {
     dshNewest: string;
     /** ...admitted by this many of `declaring`: what the tag moving would leave standing. */
     admitsNewest: number;
+    /** The plugins this org ships (src/lib/ours.ts), measured by the same rule. */
+    ours: { name: string; version: string | null; admitsLatest: boolean | null; admitsNewest: boolean | null }[];
   } | null;
+  /** The registry's own coverage.json: repos across its discovery topics, and how many are decided. */
+  coverage?: { measured: string; topics: number; unique: number; decided: number } | null;
   age: {
     measured: string;
     topic: string;

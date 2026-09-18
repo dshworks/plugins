@@ -1,6 +1,6 @@
 import { getEcosystem, getMeta, getSeams, getSpecimen, getSponsors, getTag, saidPulse } from "@/lib/data";
 import { tagLabel } from "@/lib/tags";
-import { OURS, oursCount } from "@/lib/ours";
+import { OURS, oursCount, spell } from "@/lib/ours";
 import { PICK } from "@/lib/pick";
 import Console from "./console";
 import Seats from "./seats";
@@ -92,6 +92,36 @@ export default async function Home() {
     ? Math.max(0, Math.round((Date.now() - Date.parse(age.measured)) / 86400000))
     : 0;
   const launchPct = age ? Math.round((age.sinceLaunch / age.total) * 100) : 0;
+
+  // Our own plugins, measured by the same census as everyone else's. This was
+  // typed as "three of the four plugins we ship were in the broken column
+  // until {measured}" -- true on 2026-09-04, and by 2026-09-17 it read as a
+  // fix while all four were broken against the new `latest`. Every word of
+  // the claim about ours now comes from data/installability.json.
+  const inst = eco?.installability ?? null;
+  const ours = inst?.ours ?? [];
+  const oursOk = ours.filter((o) => o.admitsLatest).length;
+  const oursAhead = ours.filter((o) => o.admitsNewest).length;
+  const oursSaid =
+    ours.length === 0
+      ? null
+      : oursOk === ours.length
+        ? `On ${inst!.measured}, all ${spell(ours.length)} plugins we ship accepted dsh ${inst!.dshLatest}.`
+        : oursOk === 0
+          ? `On ${inst!.measured}, none of the ${spell(ours.length)} plugins we ship accepted dsh ${inst!.dshLatest}.`
+          : `On ${inst!.measured}, ${spell(oursOk)} of the ${spell(ours.length)} plugins we ship accepted dsh ${inst!.dshLatest}; ${ours
+              .filter((o) => !o.admitsLatest)
+              .map((o) => o.name.replace(/^@dshworks\//, ""))
+              .join(", ")} did not.`;
+  const oursAheadSaid =
+    ours.length === 0
+      ? ""
+      : oursAhead === ours.length
+        ? "All of ours are among them."
+        : oursAhead === 0
+          ? "None of ours are among them."
+          : `${spell(oursAhead).replace(/^./, (c) => c.toUpperCase())} of our ${spell(ours.length)} ${oursAhead === 1 ? "is" : "are"} among them.`;
+  const cov = eco?.coverage ?? null;
 
   // The pick's note argues from three registry counts. They were typed in as
   // literals on 2026-08-26 and were all three wrong five days later: 126 ->
@@ -457,9 +487,8 @@ export default async function Home() {
           <h2 id="installs">Most of the shelf no longer installs</h2>
           <p>
             Every other number on this page counts plugins. This one counts whether they still
-            work, and it is the only measurement here that changed our own answer: three of the
-            four plugins we ship were in the broken column until{" "}
-            {eco.installability.measured}.
+            work, and it is the only measurement here that has put our own plugins in the broken
+            column. {oursSaid}
           </p>
           <div className="figure" data-reveal="installs">
             <div className="figure-head">
@@ -524,9 +553,9 @@ export default async function Home() {
           </p>
           <p className="fine">
             This is not a fact about our registry, and we did not come out of it well. We found it
-            because dsh {eco.installability.dshLatest} shipped and our own plugins stopped
-            resolving; the fix is one <code>||</code> per release, and a check that installs for
-            real and asserts one version of every harness package.
+            when dsh 0.1.2-rc.1 shipped on 2026-09-03 and our own plugins stopped resolving; the
+            fix is one <code>||</code> per release, and a check that installs for real and asserts
+            one version of every harness package.
           </p>
           {eco.installability.dshNewest !== eco.installability.dshLatest && (
             <p>
@@ -540,8 +569,8 @@ export default async function Home() {
               every range written against {eco.installability.dshLatest} stops resolving at
               once &mdash; so the{" "}
               {eco.installability.current.toLocaleString()} packages that install today become{" "}
-              {eco.installability.admitsNewest.toLocaleString()}. Ours are not among them
-              either. This is not a prediction about whether dsh will ship; it is what is
+              {eco.installability.admitsNewest.toLocaleString()}. {oursAheadSaid} This is not a
+              prediction about whether dsh will ship; it is what is
               already published on both sides, read on {eco.installability.measured}.
             </p>
           )}
@@ -580,9 +609,9 @@ export default async function Home() {
             </div>
           </div>
           <p>
-            Seventeen of these seams change what the agent <em>does</em> &mdash; how it plans,
-            what it forgets, when it wakes up, whether it can hold a terminal or spawn a child.
-            Eleven are under one percent.{" "}
+            {seams.deepCount} of these seams change what the agent <em>does</em> &mdash; how it
+            plans, what it forgets, when it wakes up, whether it can hold a terminal or spawn a
+            child. {seams.underOnePct} are under one percent.{" "}
             {seams.seams.find((x) => x.id === "e2b")?.count} plugins in{" "}
             {seams.total.toLocaleString()} use <code>ctx.e2b</code>.{" "}
             {seams.seams.find((x) => x.id === "invariants")?.count} use{" "}
@@ -631,8 +660,10 @@ export default async function Home() {
           <p className="fine">
             We got this wrong first. The original version sampled 227 plugins&rsquo; source, found
             no <code>ctx.lsp</code>, and nearly announced that nobody had built code intelligence
-            &mdash; the registry has sixteen, one an explicit language-server provider. A sample
-            cannot see a category that is 0.14% of the population. So this is a census over every
+            &mdash; the registry has {seams.seams.find((x) => x.id === "lsp")?.count}, one an
+            explicit language-server provider. A sample cannot see a category that is{" "}
+            {(((seams.seams.find((x) => x.id === "lsp")?.count ?? 0) / seams.total) * 100).toFixed(2)}%
+            of the population. So this is a census over every
             name and description we hold, each row carries the regex that counted it and the
             harness file that proves the seam exists, and both are in{" "}
             <a href="https://github.com/dshworks/plugins/blob/main/data/seams.json">seams.json</a>{" "}
@@ -749,8 +780,16 @@ export default async function Home() {
       <p>
         <a href="https://github.com/dshworks/awesome-dsh-plugins">awesome-dsh-plugins</a> is the
         open dataset every page here is rendered from: {meta.counts.plugins.toLocaleString()}{" "}
-        entries, MIT, with 98.8% of the <code>dsh-plugin</code> topic decided and the rejections
-        published. <a href="/awesome-dsh-plugins/">The reef</a> browses the same data as a
+        entries, MIT, with the rejections published
+        {cov && cov.unique > 0 && (
+          <>
+            {" "}and its own coverage printed: {cov.decided.toLocaleString()} of the{" "}
+            {cov.unique.toLocaleString()} repositories carrying one of its {cov.topics} discovery
+            topics opened and decided, {Math.round((cov.decided / cov.unique) * 100)}%, counted{" "}
+            {cov.measured}
+          </>
+        )}
+        . <a href="/awesome-dsh-plugins/">The reef</a> browses the same data as a
         gallery.
       </p>
       <p>

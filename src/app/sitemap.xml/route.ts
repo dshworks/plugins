@@ -1,4 +1,5 @@
 import { getMeta, getSlugs } from "@/lib/data";
+import { getNotes } from "@/lib/notes";
 
 // A crawlable URL per plugin is the thing this site has and the single-page
 // galleries do not. The sitemap is how a crawler learns those 6,290 URLs exist
@@ -21,6 +22,8 @@ export async function GET(req: Request) {
 
   const urls = [
     { loc: base, priority: "1.0" },
+    { loc: `${base}/notes`, priority: "0.8" },
+    ...getNotes().map((n) => ({ loc: `${base}/notes/${n.slug}`, priority: "0.7" })),
     ...meta.tags.map((t) => ({ loc: `${base}/tag/${t.tag}`, priority: "0.8" })),
     ...slugs.map((slug) => ({ loc: `${base}/p/${encodeURIComponent(slug)}`, priority: "0.5" })),
   ];

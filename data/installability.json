@@ -29,7 +29,7 @@
   "npmNames": 2002,
   "unreadable": 0,
   "declaring": 1276,
-  "current": 128,
+  "current": 132,
   "dshNewest": "0.1.6-alpha.2",
   "admitsNewest": 16,
   "stuckOn010": 710,
@@ -38,26 +38,26 @@
   "ours": [
     {
       "name": "@dshworks/dsh-meter",
-      "version": "0.4.1",
-      "admitsLatest": false,
+      "version": "0.5.0",
+      "admitsLatest": true,
       "admitsNewest": false
     },
     {
       "name": "@dshworks/dsh-watch",
-      "version": "0.2.1",
-      "admitsLatest": false,
+      "version": "0.2.2",
+      "admitsLatest": true,
       "admitsNewest": false
     },
     {
       "name": "@dshworks/dsh-crew",
-      "version": "0.2.1",
-      "admitsLatest": false,
+      "version": "0.2.2",
+      "admitsLatest": true,
       "admitsNewest": false
     },
     {
       "name": "@dshworks/dsh-ego-browser",
-      "version": "0.1.1",
-      "admitsLatest": false,
+      "version": "0.1.2",
+      "admitsLatest": true,
       "admitsNewest": false
     }
   ]

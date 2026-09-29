@@ -130,7 +130,7 @@ export default async function Home() {
     ours.length === 0
       ? ""
       : oursShadow.length === 0
-        ? "None of ours does."
+        ? "None of ours lists one there."
         : oursShadow.length === ours.length
           ? `All ${spell(ours.length)} of ours do, with `
           : `${cap(spell(oursShadow.length))} of ours ${oursShadow.length === 1 ? "does" : "do"} (${oursShadow.map(short).join(", ")}), with `;

@@ -72,7 +72,7 @@ The file is byte-identical in 0.1.7-rc.2 and 0.2.0-rc.1.
   `dsh plugin allow-version`.
 
 Applied line for line to the npm manifest of every package in the registry
-on 2026-09-29
+on 2026-09-29 at 08:17 UTC
 ([the method](https://github.com/dshworks/plugins/blob/main/scripts/measure-installability.mjs),
 [the data](https://github.com/dshworks/plugins/blob/main/data/installability.json)):
 
@@ -90,7 +90,11 @@ dsh 0.2.0-rc.1 was published on npm's `next` tag on 2026-09-28. The same gate
 there refuses 743, and 618 of those are admitted by 0.1.7-rc.2. A caret
 anywhere on the 0.1 line stops short of 0.2.0, prereleases included, so the
 day `latest` moves, those 618 are refused at install and switched off at
-startup. Our four are among them.
+startup. Our four were among them at 08:17 UTC. Between 08:18 and 08:32 all
+four shipped a release whose dsh peer ranges include `^0.2.0-rc.1`
+(dsh-meter 0.5.5, dsh-watch 0.2.3, dsh-crew 0.2.3, dsh-ego-browser 0.1.3),
+which is the fix the next paragraph describes. The front page re-measures
+every night and counts them as admitted.
 
 This one can be met ahead of time, which the 2026-09-18 note said it could
 not: adding `|| ^0.2.0-rc.1` to a dsh peer range admits both lines, and
@@ -110,8 +114,9 @@ packages list an `@deepseek-ai/*` package the 0.1.7-rc.2 host already ships:
 - 155 list a `@deepseek-ai/dsh-*` package, and 81 of those declare no dsh peer
   range for the gate to read.
 
-That is a count of manifests, not of observed breakage. All four of ours list
-`@deepseek-ai/schemastery` there.
+That is a count of manifests, not of observed breakage. At 08:17 UTC all four
+of ours listed `@deepseek-ai/schemastery` there; the releases above moved it to
+`peerDependencies`, where dsh hands them the host's copy.
 
 ## What changed here
 

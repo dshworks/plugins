@@ -84,6 +84,9 @@ jobs:
       # difference between one flaky run and a step that has quietly stopped.
       - name: Re-measure the ecosystem and the seams
         continue-on-error: true
+        # The installability census retries npm's 429s with backoff; a stuck
+        # run must fail this step, not eat the whole job's twenty minutes.
+        timeout-minutes: 12
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -92,7 +95,9 @@ jobs:
           # Reads registry.npmjs.org only, and its subject moves whenever dsh
           # publishes: a census against yesterday's `latest` is not stale by
           # date and is still wrong. check-claims fails the build when this
-          # file and the ecosystem census disagree about what npx installs.
+          # file and the ecosystem census disagree about what npx installs,
+          # and when dsh's compatibility gate no longer hashes to the file the
+          # census mirrors.
           node scripts/measure-installability.mjs
 
       # Fetches both registries over the network. DATA_SOURCE is deliberately

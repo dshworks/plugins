@@ -84,29 +84,47 @@ export type Ecosystem = {
   stars: { ladder: { min: number; count: number }[]; median: number };
   tags: { tag: string; count: number }[];
   /**
-   * Whether the published shelf still installs beside the dsh npm serves.
-   * A fact about other people's packages, measured off registry.npmjs.org --
-   * not a transform of our own rows dressed up as one.
+   * Which published plugins dsh's own compatibility gate refuses, on npm's
+   * `latest` and `next` tags. A fact about other people's packages, measured
+   * off registry.npmjs.org -- not a transform of our own rows dressed up as one.
    */
   installability?: {
     measured: string;
-    dshLatest: string;
-    /** npm packages in the registry declaring any `@deepseek-ai/dsh*` range. */
+    /** Links to the dsh source lines the census mirrors, and to its inputs. */
+    sources: Record<string, string>;
+    /** The first dsh version with a gate; before it nothing reads a range. */
+    gateSince: string;
+    /** Published dsh versions, and how many predate the gate. */
+    versions: number;
+    ungatedVersions: number;
+    /** Registry npm names npm serves a `latest` manifest for. */
+    packages: number;
+    /** ...declaring a peer range on `@deepseek-ai/dsh` or `@deepseek-ai/dsh-*`. */
     declaring: number;
-    /** ...of which admit `dshLatest`. */
-    current: number;
-    /** ...whose newest admissible dsh is still on the 0.1.0 line. */
-    stuckOn010: number;
-    /** ...that admit no published dsh at all. */
-    neverAny: number;
-    /** ...that use `*` somewhere: never breaks, never protects. */
-    wildcard: number;
-    /** The newest version npm serves, which may be ahead of the `latest` tag. */
-    dshNewest: string;
-    /** ...admitted by this many of `declaring`: what the tag moving would leave standing. */
-    admitsNewest: number;
+    /** ...declaring none: the gate admits them without reading anything. */
+    noRange: number;
+    /** `latest` first, then `next` when npm serves one ahead of it. */
+    hosts: { tag: string; version: string; admitted: number; refused: number; pinned: number }[];
+    /** Admitted by `latest`, refused by `next`; null without a `next`. */
+    cliff: number | null;
+    /** `dependencies` that name a package the `latest` host already supplies. */
+    shadow: {
+      host: string;
+      supplied: number;
+      packages: number;
+      harness: number;
+      unseen: number;
+      names: { name: string; count: number }[];
+    };
     /** The plugins this org ships (src/lib/ours.ts), measured by the same rule. */
-    ours: { name: string; version: string | null; admitsLatest: boolean | null; admitsNewest: boolean | null }[];
+    ours: {
+      name: string;
+      version: string;
+      peers: Record<string, string>;
+      latest: "admitted" | "refused" | "ungated";
+      next?: "admitted" | "refused" | "ungated";
+      shadows: string[];
+    }[];
   } | null;
   /** The registry's own coverage.json: repos across its discovery topics, and how many are decided. */
   coverage?: { measured: string; topics: number; unique: number; decided: number } | null;

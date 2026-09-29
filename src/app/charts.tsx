@@ -190,13 +190,14 @@ export function StarLadder({ ladder, total }: { ladder: { min: number; count: nu
   );
 }
 
-// --- can you still install it -----------------------------------------------
+// --- what dsh refuses to install --------------------------------------------
 
 /**
- * Where the published shelf sits relative to the dsh npm serves today.
+ * What dsh's own compatibility gate does to the published shelf.
  *
- * Not a ladder: these categories overlap by construction (a wildcard range is
- * also, usually, one that accepts an old dsh) and stacking them would imply a
+ * Not a ladder: these categories overlap by construction (everything `latest`
+ * refuses, `next` mostly refuses too, and a package can declare no range and
+ * still list a host package in dependencies) and stacking them would imply a
  * partition that does not exist. Each bar is measured against the same
  * denominator and says so, which is the honest shape for overlapping sets.
  */
@@ -216,7 +217,7 @@ export function InstallLadder({
       <svg
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label={`Published packages declaring a dsh version, out of ${fmt(total)}. ${rows.map((r) => `${fmt(r.count)} ${r.label}`).join("; ")}.`}
+        aria-label={`Published plugin packages on npm, out of ${fmt(total)}. ${rows.map((r) => `${fmt(r.count)} ${r.label}`).join("; ")}.`}
       >
         {rows.map((r, i) => {
           const y = i * ROW;

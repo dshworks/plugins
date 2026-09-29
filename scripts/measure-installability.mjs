@@ -56,9 +56,13 @@
 //   every earlier tag. On those hosts no dsh code reads a plugin's range.
 //
 // Method: for every npm name in the registry, read the manifest npm serves
-// for its `latest` tag (registry.npmjs.org/<name>/latest -- the same
-// peerDependencies `pnpm view` returns) and apply the gate above, line for
-// line, to the dsh versions on npm's `latest` and `next` tags. The census
+// for its `latest` tag and apply the gate above, line for line, to the dsh
+// versions on npm's `latest` and `next` tags. The manifest comes out of the
+// abbreviated packument pnpm itself resolves from; its peerDependencies and
+// dependencies were identical to registry.npmjs.org/<name>/latest (what
+// `pnpm view` reads) on 298 of 298 packages on 2026-09-29, and unlike that
+// endpoint it is served from npm's CDN -- the first nightly run against
+// /latest spent its whole 12-minute step budget and wrote nothing. The census
 // reads each package's own manifest; a bundle's component manifests, which
 // the post-install check also reads, are not fetched. Exemptions are per
 // user and per profile, so none are assumed.
@@ -94,21 +98,40 @@ const GATE_FILE = "packages/boot/app-boot/src/plugin-compatibility.ts";
 // the page would be quoting a rule dsh may no longer apply. To clear it,
 // re-read the new file, bring gate() in line, then update this hash.
 const GATE_SHA256 = "ab688efec2beb165e2a0917b36fa72bfd5c8b96b8be3a1e6121b76ba24748135";
-const CONCURRENCY = 8;
+const CONCURRENCY = 16;
+const ABBREVIATED = "application/vnd.npm.install-v1+json";
 
 // npm answers a burst with 429. A 429 counted as "unreadable" silently shrinks
 // the denominator, so it is retried; after that, anything but a 404 fails the
 // run and the committed census stays (check-claims turns it red at 14 days).
+let retries = 0;
 const json = async (url, accept = "application/json") => {
   for (let attempt = 0; ; attempt++) {
     const res = await fetch(url, { headers: { accept, "user-agent": "dsh.works-installability" } });
     if (res.ok) return res.json();
     if (res.status === 404) throw Object.assign(new Error(`${url} -> 404`), { notFound: true });
     if (attempt >= 6 || !(res.status === 429 || res.status >= 500)) throw new Error(`${url} -> ${res.status}`);
-    const wait = Number(res.headers.get("retry-after")) * 1000 || 1000 * 2 ** attempt;
+    retries += 1;
+    const wait = Math.min(Number(res.headers.get("retry-after")) * 1000 || 1000 * 2 ** attempt, 20_000);
     await new Promise((r) => setTimeout(r, wait));
   }
 };
+
+/** fn over items, CONCURRENCY at a time; results in input order. */
+async function pool(items, fn) {
+  const out = new Array(items.length);
+  let next = 0;
+  await Promise.all(Array.from({ length: CONCURRENCY }, async () => {
+    while (next < items.length) { const i = next++; out[i] = await fn(items[i]); }
+  }));
+  return out;
+}
+
+/** The manifest npm serves for `name`'s `latest` tag, or null if it serves none. */
+async function latestManifest(name) {
+  const doc = await json(pkgUrl(name), ABBREVIATED);
+  return doc.versions?.[doc["dist-tags"]?.latest] ?? null;
+}
 const pkgUrl = (name) => `${REGISTRY}/${encodeURIComponent(name).replace("%40", "@")}`;
 
 /** Every npm name the registry lists, deduped. */
@@ -149,25 +172,32 @@ const dshPeers = (m) => (isObject(m.peerDependencies)
   ? Object.fromEntries(Object.entries(m.peerDependencies).filter(([k]) => isDshName(k)))
   : {});
 
-/** The `@deepseek-ai/*` names the host at `version` supplies to every profile. */
+/**
+ * The `@deepseek-ai/*` names the host at `version` supplies to every profile.
+ * Breadth-first, one level at a time: a level is fetched in parallel and then
+ * merged in order, so the result is the same as a one-at-a-time walk.
+ */
 async function hostSupplies(version) {
   const seen = new Map([["@deepseek-ai/dsh", version]]);
-  const docs = new Map();
-  const queue = [["@deepseek-ai/dsh", version]];
-  while (queue.length) {
-    const [name, range] = queue.shift();
-    if (!docs.has(name)) docs.set(name, await json(pkgUrl(name), "application/vnd.npm.install-v1+json"));
-    const doc = docs.get(name);
-    const v = semver.maxSatisfying(Object.keys(doc.versions), range, { includePrerelease: true })
-      ?? doc["dist-tags"]?.[range];
-    const m = v && doc.versions[v];
-    if (!m) continue;
-    // profile.ts:333-334 / :358-359: dependencies and peerDependencies both.
-    for (const [dep, r] of Object.entries({ ...(m.dependencies ?? {}), ...(m.peerDependencies ?? {}) })) {
-      if (!dep.startsWith("@deepseek-ai/") || seen.has(dep)) continue;
-      seen.set(dep, r);
-      queue.push([dep, r]);
+  let level = [["@deepseek-ai/dsh", version]];
+  while (level.length) {
+    const manifests = await pool(level, async ([name, range]) => {
+      const doc = await json(pkgUrl(name), ABBREVIATED);
+      const v = semver.maxSatisfying(Object.keys(doc.versions), range, { includePrerelease: true })
+        ?? doc["dist-tags"]?.[range];
+      return (v && doc.versions[v]) || null;
+    });
+    const next = [];
+    for (const m of manifests) {
+      if (!m) continue;
+      // profile.ts:333-334 / :358-359: dependencies and peerDependencies both.
+      for (const [dep, r] of Object.entries({ ...(m.dependencies ?? {}), ...(m.peerDependencies ?? {}) })) {
+        if (!dep.startsWith("@deepseek-ai/") || seen.has(dep)) continue;
+        seen.set(dep, r);
+        next.push([dep, r]);
+      }
     }
+    level = next;
   }
   return new Set(seen.keys());
 }
@@ -188,32 +218,33 @@ for (const h of hosts.filter((x) => x.gated)) {
   h.gateSource = { url, sha256, mirrored: sha256 === GATE_SHA256 };
 }
 
+let t0 = Date.now();
 const supplied = await hostSupplies(tags.latest);
+console.log(`host closure: ${supplied.size} @deepseek-ai names under dsh ${tags.latest} in ${((Date.now() - t0) / 1000).toFixed(1)}s`);
 
+t0 = Date.now();
 const names = await npmNames();
 const rows = [];
 let unreadable = 0;
-const queue = [...names];
-await Promise.all(Array.from({ length: CONCURRENCY }, async () => {
-  while (queue.length) {
-    const name = queue.pop();
-    try {
-      const m = await json(`${pkgUrl(name)}/latest`);
-      const shadows = Object.keys(isObject(m.dependencies) ? m.dependencies : {}).filter((d) => supplied.has(d));
-      rows.push({
-        name,
-        version: m.version,
-        peers: dshPeers(m),
-        verdicts: Object.fromEntries(hosts.map((h) => [h.tag, h.gated ? gate(m, h.version) : undefined])),
-        shadows,
-      });
-    } catch (err) {
-      // A name the registry lists that npm does not serve. Anything else is ours to fix.
-      if (!err.notFound) throw err;
-      unreadable += 1;
-    }
+await pool(names, async (name) => {
+  let m = null;
+  try {
+    m = await latestManifest(name);
+  } catch (err) {
+    // A name the registry lists that npm does not serve. Anything else is ours to fix.
+    if (!err.notFound) throw err;
   }
-}));
+  if (!m) { unreadable += 1; return; }
+  const shadows = Object.keys(isObject(m.dependencies) ? m.dependencies : {}).filter((d) => supplied.has(d));
+  rows.push({
+    name,
+    version: m.version,
+    peers: dshPeers(m),
+    verdicts: Object.fromEntries(hosts.map((h) => [h.tag, h.gated ? gate(m, h.version) : undefined])),
+    shadows,
+  });
+});
+console.log(`manifests: ${rows.length} of ${names.length} in ${((Date.now() - t0) / 1000).toFixed(1)}s, ${retries} retries after 429/5xx`);
 
 const declaring = rows.filter((r) => Object.keys(r.peers).length > 0);
 const noRange = rows.length - declaring.length;
@@ -249,7 +280,8 @@ const oursNames = [...oursSrc.matchAll(/\bnpm:\s*"([^"]+)"/g)].map((m) => m[1]);
 if (!oursNames.length) throw new Error("src/lib/ours.ts lists no npm names; the ours census would be empty");
 const ours = [];
 for (const name of oursNames) {
-  const m = await json(`${pkgUrl(name)}/latest`);
+  const m = await latestManifest(name);
+  if (!m) throw new Error(`npm serves no latest manifest for ${name}, which src/lib/ours.ts lists as ours`);
   ours.push({
     name,
     version: m.version,
@@ -264,12 +296,12 @@ const now = new Date();
 await writeFile(OUT, `${JSON.stringify({
   measured: now.toISOString().slice(0, 10),
   measuredAt: now.toISOString(),
-  method: "registry.npmjs.org/<name>/latest for every npm name in the registry; dsh's own compatibility gate "
+  method: "npm's latest manifest for every npm name in the registry; dsh's own compatibility gate "
     + "(plugin-compatibility.ts:61-88, semver.satisfies with includePrerelease) applied to the dsh versions on "
     + "npm's latest and next tags; no exemptions assumed",
   sources: {
     registry: REGISTRY_LIST,
-    npm: `${REGISTRY}/<name>/latest`,
+    npm: `${REGISTRY}/<name> (abbreviated packument, its dist-tags.latest version)`,
     gate: src("packages/boot/app-boot/src/plugin-compatibility.ts", "L61-L88"),
     install: src("packages/boot/plugin-manager/src/operations.ts", "L332-L357"),
     profile: src("packages/boot/app-boot/src/profile.ts", "L226-L235"),

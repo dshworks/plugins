@@ -1,10 +1,10 @@
 {
   "measured": "2026-09-29",
-  "measuredAt": "2026-09-29T08:17:34.349Z",
-  "method": "registry.npmjs.org/<name>/latest for every npm name in the registry; dsh's own compatibility gate (plugin-compatibility.ts:61-88, semver.satisfies with includePrerelease) applied to the dsh versions on npm's latest and next tags; no exemptions assumed",
+  "measuredAt": "2026-09-29T08:45:53.916Z",
+  "method": "npm's latest manifest for every npm name in the registry; dsh's own compatibility gate (plugin-compatibility.ts:61-88, semver.satisfies with includePrerelease) applied to the dsh versions on npm's latest and next tags; no exemptions assumed",
   "sources": {
     "registry": "https://raw.githubusercontent.com/dshworks/awesome-dsh-plugins/main/data/plugins.json",
-    "npm": "https://registry.npmjs.org/<name>/latest",
+    "npm": "https://registry.npmjs.org/<name> (abbreviated packument, its dist-tags.latest version)",
     "gate": "https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.2.0-rc.1/packages/boot/app-boot/src/plugin-compatibility.ts#L61-L88",
     "install": "https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.2.0-rc.1/packages/boot/plugin-manager/src/operations.ts#L332-L357",
     "profile": "https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.2.0-rc.1/packages/boot/app-boot/src/profile.ts#L226-L235",
@@ -73,8 +73,8 @@
       "tag": "next",
       "version": "0.2.0-rc.1",
       "gated": true,
-      "admitted": 1246,
-      "refused": 743,
+      "admitted": 1251,
+      "refused": 738,
       "pinned": 94,
       "malformed": 0,
       "gateSource": {
@@ -84,17 +84,17 @@
       }
     }
   ],
-  "cliff": 618,
+  "cliff": 613,
   "shadow": {
     "host": "0.1.7-rc.2",
     "supplied": 282,
-    "packages": 486,
+    "packages": 482,
     "harness": 155,
     "unseen": 81,
     "names": [
       {
         "name": "@deepseek-ai/schemastery",
-        "count": 410
+        "count": 406
       },
       {
         "name": "@deepseek-ai/dsh-tools",
@@ -110,7 +110,7 @@
       },
       {
         "name": "@deepseek-ai/dsh-settings",
-        "count": 27
+        "count": 26
       },
       {
         "name": "@deepseek-ai/dsh-llm",
@@ -137,54 +137,46 @@
   "ours": [
     {
       "name": "@dshworks/dsh-meter",
-      "version": "0.5.4",
+      "version": "0.5.5",
       "peers": {
-        "@deepseek-ai/dsh-session-projection": "^0.1.0-rc.6 || ^0.1.1-rc.1 || ^0.1.2-rc.1 || ^0.1.5-rc.1"
+        "@deepseek-ai/dsh-session-projection": "^0.1.5-rc.1 || ^0.1.7-rc.2 || ^0.2.0-rc.1"
       },
       "latest": "admitted",
-      "next": "refused",
-      "shadows": [
-        "@deepseek-ai/schemastery"
-      ]
+      "next": "admitted",
+      "shadows": []
     },
     {
       "name": "@dshworks/dsh-watch",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "peers": {
-        "@deepseek-ai/dsh-llm": "^0.1.0-rc.6 || ^0.1.1-rc.1 || ^0.1.2-rc.1 || ^0.1.5-rc.1",
-        "@deepseek-ai/dsh-tools": "^0.1.0-rc.6 || ^0.1.1-rc.1 || ^0.1.2-rc.1 || ^0.1.5-rc.1"
+        "@deepseek-ai/dsh-llm": "^0.1.7-alpha.1 || ^0.2.0-rc.1",
+        "@deepseek-ai/dsh-tools": "^0.1.7-alpha.1 || ^0.2.0-rc.1"
       },
       "latest": "admitted",
-      "next": "refused",
-      "shadows": [
-        "@deepseek-ai/schemastery"
-      ]
+      "next": "admitted",
+      "shadows": []
     },
     {
       "name": "@dshworks/dsh-crew",
-      "version": "0.2.2",
+      "version": "0.2.3",
       "peers": {
-        "@deepseek-ai/dsh-tools": "^0.1.0-rc.6 || ^0.1.1-rc.1 || ^0.1.2-rc.1 || ^0.1.5-rc.1",
-        "@deepseek-ai/dsh-subprocess": "^0.1.0-rc.6 || ^0.1.1-rc.1 || ^0.1.2-rc.1 || ^0.1.5-rc.1"
+        "@deepseek-ai/dsh-tools": "^0.1.7-alpha.1 || ^0.2.0-rc.1",
+        "@deepseek-ai/dsh-subprocess": "^0.1.7-alpha.1 || ^0.2.0-rc.1"
       },
       "latest": "admitted",
-      "next": "refused",
-      "shadows": [
-        "@deepseek-ai/schemastery"
-      ]
+      "next": "admitted",
+      "shadows": []
     },
     {
       "name": "@dshworks/dsh-ego-browser",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "peers": {
-        "@deepseek-ai/dsh-tools": "^0.1.0-rc.6 || ^0.1.1-rc.1 || ^0.1.2-rc.1 || ^0.1.5-rc.1",
-        "@deepseek-ai/dsh-subprocess": "^0.1.0-rc.6 || ^0.1.1-rc.1 || ^0.1.2-rc.1 || ^0.1.5-rc.1"
+        "@deepseek-ai/dsh-tools": "^0.1.0-rc.6 || ^0.1.1-rc.1 || ^0.1.2-rc.1 || ^0.1.5-rc.1 || ^0.1.7-rc.2 || ^0.2.0-rc.1",
+        "@deepseek-ai/dsh-subprocess": "^0.1.0-rc.6 || ^0.1.1-rc.1 || ^0.1.2-rc.1 || ^0.1.5-rc.1 || ^0.1.7-rc.2 || ^0.2.0-rc.1"
       },
       "latest": "admitted",
-      "next": "refused",
-      "shadows": [
-        "@deepseek-ai/schemastery"
-      ]
+      "next": "admitted",
+      "shadows": []
     }
   ]
 }

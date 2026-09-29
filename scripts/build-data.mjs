@@ -268,10 +268,10 @@ const directories = readLocal("directories.json", null);
 // Measured by scripts/measure-seams.mjs against a named harness release, and
 // committed, so the map of what is unbuilt carries the version it was true for.
 const seams = readLocal("seams.json", null);
-// Measured by scripts/measure-installability.mjs off registry.npmjs.org: how
-// much of the published shelf still names a dsh version that npm will actually
-// resolve. The one question this site exists to answer, asked of the shelf
-// rather than of one plugin.
+// Measured by scripts/measure-installability.mjs off registry.npmjs.org: which
+// published plugins dsh's own compatibility gate refuses, on the dsh `latest`
+// and `next` tags. The one question this site exists to answer, asked of the
+// shelf rather than of one plugin, under the rule dsh actually applies.
 const installability = readLocal("installability.json", null);
 
 // Stars are a dated popularity snapshot, not a quality signal, and the whole
@@ -354,16 +354,18 @@ const ecosystemBytes = write("ecosystem.json", {
   },
   tags: tags.map(({ tag, count }) => ({ tag, count })),
   // Not a fact about our registry: a fact about the packages it points at.
-  installability: installability && {
+  installability: installability?.hosts && {
     measured: installability.measured,
-    dshLatest: installability.dshLatest,
+    sources: installability.sources,
+    gateSince: installability.gateSince,
+    versions: installability.dshVersions.length,
+    ungatedVersions: installability.ungatedVersions,
+    packages: installability.packages,
     declaring: installability.declaring,
-    current: installability.current,
-    stuckOn010: installability.stuckOn010,
-    neverAny: installability.neverAny,
-    wildcard: installability.wildcard,
-    dshNewest: installability.dshNewest,
-    admitsNewest: installability.admitsNewest,
+    noRange: installability.noRange,
+    hosts: installability.hosts.map(({ tag, version, admitted, refused, pinned }) => ({ tag, version, admitted, refused, pinned })),
+    cliff: installability.cliff,
+    shadow: installability.shadow,
     ours: installability.ours ?? [],
   },
   coverage: coverage && {

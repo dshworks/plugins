@@ -93,34 +93,49 @@ export default async function Home() {
     : 0;
   const launchPct = age ? Math.round((age.sinceLaunch / age.total) * 100) : 0;
 
-  // Our own plugins, measured by the same census as everyone else's. This was
-  // typed as "three of the four plugins we ship were in the broken column
-  // until {measured}" -- true on 2026-09-04, and by 2026-09-17 it read as a
-  // fix while all four were broken against the new `latest`. Every word of
-  // the claim about ours now comes from data/installability.json.
+  // What dsh's own compatibility gate does to the published shelf, on npm's
+  // `latest` and (when it is ahead) `next`. Until 2026-09-29 this section
+  // modelled a fresh npm install that dsh never runs; see
+  // scripts/measure-installability.mjs for the source lines the census
+  // mirrors. Every word about our own plugins comes from the same census --
+  // a count typed beside "plugins we ship" was wrong within two weeks once.
   const inst = eco?.installability ?? null;
+  const onLatest = inst?.hosts.find((h) => h.tag === "latest") ?? null;
+  const onNext = inst?.hosts.find((h) => h.tag === "next") ?? null;
+  const nextPublished = age?.release?.ahead?.find((a) => a.tag === "next")?.published ?? null;
   const ours = inst?.ours ?? [];
-  const oursOk = ours.filter((o) => o.admitsLatest).length;
-  const oursAhead = ours.filter((o) => o.admitsNewest).length;
+  const short = (o: { name: string }) => o.name.replace(/^@dshworks\//, "");
+  const cap = (s: string) => s.replace(/^./, (c) => c.toUpperCase());
+  const oursRefused = ours.filter((o) => o.latest === "refused");
   const oursSaid =
-    ours.length === 0
-      ? null
-      : oursOk === ours.length
-        ? `On ${inst!.measured}, all ${spell(ours.length)} plugins we ship accepted dsh ${inst!.dshLatest}.`
-        : oursOk === 0
-          ? `On ${inst!.measured}, none of the ${spell(ours.length)} plugins we ship accepted dsh ${inst!.dshLatest}.`
-          : `On ${inst!.measured}, ${spell(oursOk)} of the ${spell(ours.length)} plugins we ship accepted dsh ${inst!.dshLatest}; ${ours
-              .filter((o) => !o.admitsLatest)
-              .map((o) => o.name.replace(/^@dshworks\//, ""))
-              .join(", ")} did not.`;
-  const oursAheadSaid =
+    ours.length === 0 || !onLatest
+      ? ""
+      : oursRefused.length === 0
+        ? `dsh ${onLatest.version} admits all ${spell(ours.length)} plugins we ship.`
+        : oursRefused.length === ours.length
+          ? `dsh ${onLatest.version} refuses all ${spell(ours.length)} plugins we ship.`
+          : `dsh ${onLatest.version} refuses ${oursRefused.map(short).join(", ")}, ${spell(oursRefused.length)} of the ${spell(ours.length)} plugins we ship.`;
+  const oursCliff = ours.filter((o) => o.latest !== "refused" && o.next === "refused");
+  const oursNextSaid =
+    ours.length === 0 || !onNext
+      ? ""
+      : oursCliff.length === ours.length
+        ? `All ${spell(ours.length)} of ours are among them.`
+        : oursCliff.length === 0
+          ? `None of ours is among them.`
+          : `${cap(spell(oursCliff.length))} of ours ${oursCliff.length === 1 ? "is" : "are"} among them: ${oursCliff.map(short).join(", ")}.`;
+  const oursShadow = ours.filter((o) => o.shadows.length);
+  const oursShadowNames = [...new Set(oursShadow.flatMap((o) => o.shadows))];
+  const oursShadowSaid =
     ours.length === 0
       ? ""
-      : oursAhead === ours.length
-        ? "All of ours are among them."
-        : oursAhead === 0
-          ? "None of ours are among them."
-          : `${spell(oursAhead).replace(/^./, (c) => c.toUpperCase())} of our ${spell(ours.length)} ${oursAhead === 1 ? "is" : "are"} among them.`;
+      : oursShadow.length === 0
+        ? "None of ours does."
+        : oursShadow.length === ours.length
+          ? `All ${spell(ours.length)} of ours do, with `
+          : `${cap(spell(oursShadow.length))} of ours ${oursShadow.length === 1 ? "does" : "do"} (${oursShadow.map(short).join(", ")}), with `;
+  const shadowTop = inst?.shadow.names[0] ?? null;
+  const shadowCordis = inst?.shadow.names.find((n) => n.name === "@deepseek-ai/cordis") ?? null;
   const cov = eco?.coverage ?? null;
 
   // The pick's note argues from three registry counts. They were typed in as
@@ -482,98 +497,134 @@ export default async function Home() {
         </>
       )}
 
-      {eco?.installability && (
+      {/* Corrected 2026-09-29. This section was "Most of the shelf no longer
+          installs", built on a fresh-npm-tree model of an install that dsh
+          never runs. Every claim below is about dsh's own gate and install
+          path, and every number is read from data/installability.json. */}
+      {inst && onLatest && (
         <>
-          <h2 id="installs">Most of the shelf no longer installs</h2>
+          <h2 id="installs">What dsh refuses to install</h2>
           <p>
-            Every other number on this page counts plugins. This one counts whether they still
-            work, and it is the only measurement here that has put our own plugins in the broken
-            column. {oursSaid}
+            <strong>Corrected on 2026-09-29.</strong> This section used to say most of the shelf
+            no longer installs, that a stale plugin splits the harness into two versions, and that
+            our own plugins broke when dsh 0.1.2-rc.1 shipped. It modelled an install as a fresh
+            npm tree, and dsh does not install plugins that way, so none of that is what a user
+            runs into. <a href="/notes/installs-correction">What we got wrong, and the sources</a>.
+          </p>
+          <p>
+            What dsh does: <code>dsh plugin add</code> runs pnpm inside your profile and never
+            installs a peer, and when a plugin imports a harness package the profile does not
+            hold, dsh hands it the copy the host is running. Since dsh {inst.gateSince} one check
+            stands in front of that. It reads the <code>peerDependencies</code> a plugin declares
+            on <code>@deepseek-ai/dsh</code> or <code>@deepseek-ai/dsh-*</code> and nothing else,
+            and tests them with prereleases included, so <code>^0.1.5-rc.1</code> admits
+            0.1.7-rc.2 and refuses 0.2.0-rc.1. A plugin that fails is not installed, and one
+            already in a profile is switched off at startup with a line on stderr, unless you grant
+            that exact version an exemption. {oursSaid}
           </p>
           <div className="figure" data-reveal="installs">
             <div className="figure-head">
-              <span className="figure-stat">
-                {Math.round(
-                  (eco.installability.current / eco.installability.declaring) * 100,
-                )}
-                %
-              </span>
+              <span className="figure-stat">{onLatest.refused.toLocaleString()}</span>
               <span className="figure-unit">
-                of the {eco.installability.declaring.toLocaleString()} published packages that
-                name a dsh version accept dsh {eco.installability.dshLatest} &mdash; what{" "}
+                of {inst.packages.toLocaleString()} published plugin packages are refused by dsh{" "}
+                {onLatest.version}, npm&rsquo;s <code>latest</code> and what{" "}
                 <code>npx @deepseek-ai/dsh</code> gives you
               </span>
             </div>
             <InstallLadder
               rows={[
-                {
-                  label: `accept dsh ${eco.installability.dshLatest}`,
-                  count: eco.installability.current,
-                },
-                {
-                  label: "newest dsh they accept is on the 0.1.0 line",
-                  count: eco.installability.stuckOn010,
-                },
-                {
-                  label: "accept no published dsh at all",
-                  count: eco.installability.neverAny,
-                },
-                {
-                  label: "use a wildcard: never breaks, never protects",
-                  count: eco.installability.wildcard,
-                },
+                { label: `refused by dsh ${onLatest.version}, on latest`, count: onLatest.refused },
+                ...(onNext
+                  ? [{ label: `refused by dsh ${onNext.version}, on next`, count: onNext.refused }]
+                  : []),
+                { label: "declare no dsh range: admitted unread", count: inst.noRange },
+                { label: "list a host package in dependencies", count: inst.shadow.packages },
               ]}
-              total={eco.installability.declaring}
+              total={inst.packages}
             />
             <div className="figure-foot">
               <span>
-                Read off registry.npmjs.org on {eco.installability.measured}, every published dsh
-                version tested
+                dsh&rsquo;s own gate, applied to every registry package&rsquo;s npm manifest on{" "}
+                {inst.measured}; no exemptions assumed
               </span>
               <a href="https://github.com/dshworks/plugins/blob/main/scripts/measure-installability.mjs">
                 the method
               </a>
             </div>
           </div>
-          <p>
-            Nobody wrote a bad range. npm semver simply never lets a{" "}
-            <em>prerelease</em> satisfy a caret with a different version tuple, and dsh has only
-            ever shipped prereleases. <code>^0.1.1-rc.1</code> matches 0.1.1-rc.2 and stops dead.{" "}
-            <code>^0.1.2-alpha.1</code> matches 0.1.2-rc.1, because the tuple is the same. The
-            rule is the tuple, not the caret, and it is invisible in a diff.
-          </p>
-          <p>
-            The loud failure is <code>ERESOLVE</code>, and you would fix that. The quiet one is
-            what actually reaches people: install a stale plugin on its own and npm satisfies it
-            by hoisting the old <code>@deepseek-ai/dsh-*</code> copies to the root and pushing the
-            harness&rsquo;s own into nested <code>node_modules</code>. The install succeeds. The
-            plugin then imports a different harness than the host is running &mdash; on one
-            package we measured, thirteen harness packages resolved to two versions at once, with
-            no warning of any kind.
-          </p>
-          <p className="fine">
-            This is not a fact about our registry, and we did not come out of it well. We found it
-            when dsh 0.1.2-rc.1 shipped on 2026-09-03 and our own plugins stopped resolving; the
-            fix is one <code>||</code> per release, and a check that installs for real and asserts
-            one version of every harness package.
-          </p>
-          {eco.installability.dshNewest !== eco.installability.dshLatest && (
+          {onNext && inst.cliff !== null && (
             <p>
               <strong>
-                The same question asked forward:{" "}
-                {eco.installability.admitsNewest.toLocaleString()} of{" "}
-                {eco.installability.declaring.toLocaleString()}.
+                The cliff is dsh 0.2.0: {onNext.refused.toLocaleString()} of{" "}
+                {inst.packages.toLocaleString()}.
               </strong>{" "}
-              npm already serves dsh {eco.installability.dshNewest}, ahead of the{" "}
-              <code>latest</code> tag. Because the rule is the tuple, the day that tag moves,
-              every range written against {eco.installability.dshLatest} stops resolving at
-              once &mdash; so the{" "}
-              {eco.installability.current.toLocaleString()} packages that install today become{" "}
-              {eco.installability.admitsNewest.toLocaleString()}. {oursAheadSaid} This is not a
-              prediction about whether dsh will ship; it is what is
-              already published on both sides, read on {eco.installability.measured}.
+              dsh {onNext.version} is already on npm&rsquo;s <code>next</code> tag
+              {nextPublished ? `, published ${nextPublished}` : ""}. The same gate there refuses{" "}
+              {onNext.refused.toLocaleString()}, and {inst.cliff.toLocaleString()} of them are
+              plugins dsh {onLatest.version} admits. A caret written anywhere on the 0.1 line stops
+              short of 0.2.0 even with prereleases included, so the day <code>latest</code> moves,
+              anyone who upgrades has those refused at install and switched off at startup.{" "}
+              {oursNextSaid} Unlike the
+              rule this section used to describe, this one can be met ahead of time: adding{" "}
+              <code>|| ^0.2.0-rc.1</code> to a dsh peer range admits both lines, and because dsh
+              never installs a peer, a wider range cannot pull a newer harness into an older host.
             </p>
           )}
+          <p>
+            Of the {onLatest.refused.toLocaleString()} refused by dsh {onLatest.version},{" "}
+            {onLatest.pinned.toLocaleString()} pin an exact dsh version, which can only ever match
+            one release. {inst.noRange.toLocaleString()} packages declare no dsh range at all. The
+            gate admits them without reading anything, and that is all admitted means: dsh will
+            load it. Whether it works against the harness you run is a question no range answers,
+            and this census does not test it. On any dsh before {inst.gateSince}, which is{" "}
+            {inst.ungatedVersions} of the {inst.versions} versions npm has published, no dsh code
+            reads a plugin&rsquo;s range, and nothing is refused for one.
+          </p>
+          <p>
+            What can put a second copy of a host package into a profile is{" "}
+            <code>dependencies</code>.
+            pnpm installs what a plugin lists there into the profile, and dsh prefers a copy it
+            finds in the profile over its own. {inst.shadow.packages.toLocaleString()} published
+            packages list a package the dsh {inst.shadow.host} host already ships
+            {shadowTop ? (
+              <>
+                {" "}&mdash; {shadowTop.count.toLocaleString()} of them <code>{shadowTop.name}</code>
+                {shadowCordis && shadowCordis !== shadowTop ? (
+                  <>
+                    , {shadowCordis.count.toLocaleString()} <code>{shadowCordis.name}</code>, which
+                    dsh sets up so that every plugin shares one instance
+                  </>
+                ) : null}{" "}
+                &mdash;
+              </>
+            ) : (
+              ","
+            )}{" "}
+            and {inst.shadow.harness.toLocaleString()} list a <code>@deepseek-ai/dsh-*</code>{" "}
+            package, {inst.shadow.unseen.toLocaleString()} of them with no dsh peer range for the
+            gate to read. That is a count of manifests, not of observed breakage.{" "}
+            {oursShadowSaid}
+            {oursShadowNames.length > 0 && (
+              <>
+                {oursShadowNames.map((n, i) => (
+                  <span key={n}>
+                    {i > 0 && ", "}
+                    <code>{n}</code>
+                  </span>
+                ))}
+                .
+              </>
+            )}
+          </p>
+          <p className="fine">
+            Each rule above is a line in the harness, read at <code>dsh-v0.1.7-rc.1</code> and{" "}
+            <code>dsh-v0.2.0-rc.1</code>: <a href={inst.sources.gate}>the gate</a>,{" "}
+            <a href={inst.sources.install}>the install</a>,{" "}
+            <a href={inst.sources.profile}>the profile&rsquo;s pnpm settings</a>,{" "}
+            <a href={inst.sources.resolver}>the resolver</a>,{" "}
+            <a href={inst.sources.startup}>the startup check</a>. The census hashes the gate file
+            at every tag it measures and fails the build if dsh changes it.
+          </p>
         </>
       )}
 

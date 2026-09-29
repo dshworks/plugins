@@ -91,27 +91,81 @@ for (const [file, field, script] of [
 }
 
 // A census measured against a dsh version that is no longer `latest` is not
-// stale by date and is still wrong: the whole claim is "beside the dsh npm
-// serves you". Checked against the file the site itself publishes rather than
-// the network, so the build stays offline; measure-installability re-reads npm.
+// stale by date and is still wrong: the whole claim is "what the dsh npm
+// serves you refuses". Checked against the file the site itself publishes
+// rather than the network, so the build stays offline; measure-installability
+// re-reads npm.
+//
+// Until 2026-09-29 this census modelled a fresh npm install that dsh never
+// runs, and the page built "most of the shelf no longer installs" on it. It
+// now applies dsh's own compatibility gate, so the check that matters most is
+// that the gate is still the one the census mirrors: the measure script hashes
+// plugin-compatibility.ts at every gated host and writes `mirrored: false`
+// when dsh has changed it. The page would otherwise go on quoting a rule dsh
+// no longer applies, which is the same defect in a new place.
 {
   const inst = JSON.parse(read("data/installability.json"));
   const eco = JSON.parse(read("data/ecosystem.json"));
   const shipping = eco.release?.version ?? null;
-  check(!shipping || shipping === inst.dshLatest,
-    `data/installability.json was measured against dsh ${inst.dshLatest}, but the site says `
+  const hosts = Array.isArray(inst.hosts) ? inst.hosts : [];
+  const latest = hosts.find((h) => h.tag === "latest");
+  const next = hosts.find((h) => h.tag === "next");
+  check(latest,
+    "data/installability.json has no `latest` host: it is the old npm-tree census or a broken run. "
+    + "Re-run scripts/measure-installability.mjs.");
+  check(!shipping || shipping === latest?.version,
+    `data/installability.json was measured against dsh ${latest?.version}, but the site says `
     + `${shipping} is what npx installs. Re-run scripts/measure-installability.mjs.`);
-  check(inst.declaring > 0 && inst.current <= inst.declaring,
-    `data/installability.json is not internally consistent: ${inst.current} of ${inst.declaring}.`);
-  // The forward-looking paragraph only renders when npm is serving a version
-  // ahead of the tag, and it quotes both counts. An older census has neither
-  // field, and a census that dropped them would render the paragraph with
-  // `undefined` in two places rather than not at all.
-  check(typeof inst.dshNewest === "string" && Number.isInteger(inst.admitsNewest),
-    "data/installability.json has no dshNewest/admitsNewest; the copy that quotes them "
-    + "would print undefined. Re-run scripts/measure-installability.mjs.");
-  check(inst.admitsNewest <= inst.declaring,
-    `data/installability.json says ${inst.admitsNewest} of ${inst.declaring} admit the newest dsh.`);
+  check(!latest || latest.gated,
+    `dsh ${latest?.version} predates the gate (${inst.gateSince}); the #installs copy describes a `
+    + "refusal that host never makes.");
+  for (const h of hosts) {
+    check(h.admitted + h.refused === inst.packages && h.pinned + h.malformed <= h.refused,
+      `data/installability.json: dsh ${h.version} admits ${h.admitted} and refuses ${h.refused} `
+      + `(${h.pinned} pinned, ${h.malformed} malformed) of ${inst.packages}; those do not add up.`);
+    check(!h.gated || h.gateSource?.mirrored === true,
+      `dsh ${h.version}'s plugin-compatibility.ts ${h.gateSource?.sha256 ? "no longer matches" : "could not be read at"} `
+      + `the file the census mirrors (${h.gateSource?.url}). Re-read it, bring gate() in `
+      + "scripts/measure-installability.mjs in line, then update GATE_SHA256.");
+  }
+  check(inst.declaring + inst.noRange === inst.packages,
+    `data/installability.json: ${inst.declaring} declaring + ${inst.noRange} with no range != ${inst.packages}.`);
+  // The cliff paragraph renders only with a `next` ahead of `latest`, and quotes both.
+  check(next ? Number.isInteger(inst.cliff) && inst.cliff <= next.refused : inst.cliff === null,
+    `data/installability.json: cliff ${inst.cliff} against ${next ? `${next.refused} refused by ${next.version}` : "no next host"}.`);
+  const sh = inst.shadow ?? {};
+  check(sh.unseen <= sh.harness && sh.harness <= sh.packages && sh.packages <= inst.packages
+    && Array.isArray(sh.names) && sh.names.every((n) => n.count <= sh.packages),
+    "data/installability.json: the dependencies-shadow counts do not nest "
+    + `(${sh.unseen} <= ${sh.harness} <= ${sh.packages} <= ${inst.packages}).`);
+}
+
+// The npm-tree model does not come back, and the #installs copy types no count.
+//
+// "thirteen harness packages resolved to two versions at once" was one npm
+// install of one plugin, written into the page as a fact about the shelf, and
+// "three of the four plugins we ship" was a count typed beside a date. Every
+// figure in the section is read from data/installability.json; a digit run of
+// two or more, or a count spelled out, is a measurement typed as text. The
+// whole section source is scanned, code and chart labels included, because a
+// count can be typed into a string as easily as into JSX. Version strings and
+// dates are stripped first, since those are names, not counts.
+{
+  const src = page.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+  const MODEL = /version tuple|thirteen harness|hoisting the old|\bERESOLVE\b/i;
+  const model = src.match(MODEL);
+  check(!model,
+    `page.tsx says "${model?.[0]}" — the fresh-npm-tree model of an install, which dsh does not run. `
+    + "See content/notes/2026-09-29-installs-correction.md.");
+  const at = src.indexOf('id="installs"');
+  const section = at < 0 ? "" : src.slice(at, src.indexOf("<h2", at + 1));
+  check(at >= 0, 'page.tsx has no id="installs"; the notes link to it.');
+  const text = section
+    .replace(/\^?\d+\.\d+(?:\.\d+)?(?:-[\w.]+)?/g, " ")
+    .replace(/\d{4}-\d{2}-\d{2}/g, " ");
+  const typed = text.match(/\b\d{2,}\b|\b(?:three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|twenty|thirty|forty|fifty|hundred|thousand)\b/i);
+  check(!typed,
+    `the #installs copy types "${typed?.[0]}". Read it from data/installability.json.`);
 }
 
 // A deadline that has passed is not urgency. `sponsors.json` says in its own

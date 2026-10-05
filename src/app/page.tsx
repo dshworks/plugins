@@ -85,11 +85,15 @@ export default async function Home() {
   // dates, and the copy needs both: how old the ecosystem is, which is a fact
   // about now, and how many repos were counted, which is a fact about the day
   // someone counted. The figure foot already prints the second one.
+  //
+  // Whole days, floored. The page renders per request and both dates are UTC
+  // midnights, so rounding put "54 days ago" on the page every afternoon of
+  // what was still day 53.
   const sinceLaunch = age
-    ? Math.max(1, Math.round((Date.now() - Date.parse(age.launch)) / 86400000))
+    ? Math.max(1, Math.floor((Date.now() - Date.parse(age.launch)) / 86400000))
     : 0;
   const censusAge = age
-    ? Math.max(0, Math.round((Date.now() - Date.parse(age.measured)) / 86400000))
+    ? Math.max(0, Math.floor((Date.now() - Date.parse(age.measured)) / 86400000))
     : 0;
   const launchPct = age ? Math.round((age.sinceLaunch / age.total) * 100) : 0;
 

@@ -520,11 +520,19 @@ export default async function Home() {
             installs a peer, and when a plugin imports a harness package the profile does not
             hold, dsh hands it the copy the host is running. Since dsh {inst.gateSince} one check
             stands in front of that. It reads the <code>peerDependencies</code> a plugin declares
-            on <code>@deepseek-ai/dsh</code> or <code>@deepseek-ai/dsh-*</code> and nothing else,
-            and tests them with prereleases included, so <code>^0.1.5-rc.1</code> admits
-            0.1.7-rc.2 and refuses 0.2.0-rc.1. A plugin that fails is not installed, and one
-            already in a profile is switched off at startup with a line on stderr, unless you grant
-            that exact version an exemption. {oursSaid}
+            on <code>@deepseek-ai/dsh</code> or <code>@deepseek-ai/dsh-*</code> and tests them with
+            prereleases included, so <code>^0.1.5-rc.1</code> admits 0.1.7-rc.2 and refuses
+            0.2.0-rc.1.
+            {inst.enginesSince && (
+              <>
+                {" "}From dsh {inst.enginesSince} it reads a plugin&rsquo;s own{" "}
+                <code>engines.dsh</code> first: when there is one, that range decides alone and the
+                peers are not read.
+              </>
+            )}{" "}
+            A plugin that fails is not installed, and one already in a profile is switched off at
+            startup with a line on stderr, unless you grant that exact version an exemption.{" "}
+            {oursSaid}
           </p>
           <div className="figure" data-reveal="installs">
             <div className="figure-head">
@@ -559,19 +567,27 @@ export default async function Home() {
           {onNext && inst.cliff !== null && (
             <p>
               <strong>
-                The cliff is dsh 0.2.0: {onNext.refused.toLocaleString()} of{" "}
+                The next cliff is dsh {onNext.version}: {onNext.refused.toLocaleString()} of{" "}
                 {inst.packages.toLocaleString()}.
               </strong>{" "}
               dsh {onNext.version} is already on npm&rsquo;s <code>next</code> tag
-              {nextPublished ? `, published ${nextPublished}` : ""}. The same gate there refuses{" "}
+              {nextPublished ? `, published ${nextPublished}` : ""}. Its gate refuses{" "}
               {onNext.refused.toLocaleString()}, and {inst.cliff.toLocaleString()} of them are
-              plugins dsh {onLatest.version} admits. A caret written anywhere on the 0.1 line stops
-              short of 0.2.0 even with prereleases included, so the day <code>latest</code> moves,
-              anyone who upgrades has those refused at install and switched off at startup.{" "}
-              {oursNextSaid} Unlike the
-              rule this section used to describe, this one can be met ahead of time: adding{" "}
-              <code>|| ^0.2.0-rc.1</code> to a dsh peer range admits both lines, and because dsh
-              never installs a peer, a wider range cannot pull a newer harness into an older host.
+              plugins dsh {onLatest.version} admits, so the day <code>latest</code> moves, anyone
+              who upgrades has those refused at install and switched off at startup.
+              {inst.cliffCause && onLatest.rule !== onNext.rule && (
+                <>
+                  {" "}{inst.cliffCause.engines.toLocaleString()} of them declare an{" "}
+                  <code>engines.dsh</code> that dsh {onLatest.version} never reads and dsh{" "}
+                  {onNext.version} reads first, and {inst.cliffCause.peers.toLocaleString()} carry a
+                  dsh peer range that stops short of it, {inst.cliffCause.pinned.toLocaleString()}{" "}
+                  of those an exact pin.
+                </>
+              )}{" "}
+              {oursNextSaid} This one can be met ahead of time: widen the one range dsh reads,{" "}
+              <code>engines.dsh</code> when the plugin declares it and its dsh peers otherwise.
+              Because dsh never installs a peer, a wider range cannot pull a newer harness into an
+              older host.
             </p>
           )}
           <p>
@@ -605,7 +621,7 @@ export default async function Home() {
               ","
             )}{" "}
             and {inst.shadow.harness.toLocaleString()} list a <code>@deepseek-ai/dsh-*</code>{" "}
-            package, {inst.shadow.unseen.toLocaleString()} of them with no dsh peer range for the
+            package, {inst.shadow.unseen.toLocaleString()} of them with no dsh range for the
             gate to read. That is a count of manifests, not of observed breakage.{" "}
             {oursShadowSaid}
             {oursShadowNames.length > 0 && (
@@ -623,6 +639,12 @@ export default async function Home() {
           <p className="fine">
             Each rule above is a line in the harness, read at <code>dsh-v0.1.7-rc.1</code> and{" "}
             <code>dsh-v0.2.0-rc.1</code>: <a href={inst.sources.gate}>the gate</a>,{" "}
+            {inst.sources.enginesGate && (
+              <>
+                <a href={inst.sources.enginesGate}>its <code>engines.dsh</code> rule</a> at{" "}
+                <code>dsh-v0.2.1-rc.2</code>,{" "}
+              </>
+            )}
             <a href={inst.sources.install}>the install</a>,{" "}
             <a href={inst.sources.profile}>the profile&rsquo;s pnpm settings</a>,{" "}
             <a href={inst.sources.resolver}>the resolver</a>,{" "}

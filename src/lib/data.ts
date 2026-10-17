@@ -94,19 +94,25 @@ export type Ecosystem = {
     sources: Record<string, string>;
     /** The first dsh version with a gate; before it nothing reads a range. */
     gateSince: string;
+    /** From this dsh version an own `engines.dsh` decides alone and the dsh peers are ignored. */
+    enginesSince: string | null;
     /** Published dsh versions, and how many predate the gate. */
     versions: number;
     ungatedVersions: number;
     /** Registry npm names npm serves a `latest` manifest for. */
     packages: number;
-    /** ...declaring a peer range on `@deepseek-ai/dsh` or `@deepseek-ai/dsh-*`. */
+    /** ...declaring a dsh range: a peer on `@deepseek-ai/dsh` or `@deepseek-ai/dsh-*`, or `engines.dsh`. */
     declaring: number;
     /** ...declaring none: the gate admits them without reading anything. */
     noRange: number;
-    /** `latest` first, then `next` when npm serves one ahead of it. */
-    hosts: { tag: string; version: string; admitted: number; refused: number; pinned: number }[];
+    /** ...declaring `engines.dsh`, which hosts from `enginesSince` read first. */
+    engines: number;
+    /** `latest` first, then `next` when npm serves one ahead of it. `rule` is the gate that host runs. */
+    hosts: { tag: string; version: string; rule: "peers" | "engines" | null; admitted: number; refused: number; pinned: number }[];
     /** Admitted by `latest`, refused by `next`; null without a `next`. */
     cliff: number | null;
+    /** The cliff by cause: `engines.dsh`, a dsh peer (`pinned` of those an exact version), a malformed manifest. */
+    cliffCause: { engines: number; peers: number; pinned: number; malformed: number } | null;
     /** `dependencies` that name a package the `latest` host already supplies. */
     shadow: {
       host: string;

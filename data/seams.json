@@ -1,15 +1,15 @@
 {
-  "built": "2026-09-18",
+  "built": "2026-10-17",
   "harness": "0.1.1-rc.2",
-  "total": 13756,
+  "total": 18565,
   "source": "https://github.com/dshworks/awesome-dsh-plugins/blob/main/data/plugins.json",
   "method": "Case-insensitive regex over every `name` + `description` in the registry. Counts plugins that say they do this, not plugins proven to call the service. A census, not a sample: an earlier sampled version missed a whole category and said nobody had built it.",
-  "loudest": 2108,
-  "medianDeep": 103,
-  "ratio": 20,
+  "loudest": 2746,
+  "medianDeep": 146,
+  "ratio": 19,
   "underOnePct": 11,
   "deepCount": 17,
-  "memoryTagged": 2235,
+  "memoryTagged": 3327,
   "seams": [
     {
       "id": "e2b",
@@ -18,8 +18,8 @@
       "src": "packages/e2b/e2b/src/index.ts",
       "what": "Run the agent's code somewhere that is not your laptop.",
       "rx": "\\be2b\\b|remote sandbox|code runtime|firecracker",
-      "count": 2,
-      "share": 0.00014539110206455364
+      "count": 5,
+      "share": 0.00026932399676811203
     },
     {
       "id": "invariants",
@@ -28,18 +28,8 @@
       "src": "packages/runtime-diagnostics/invariants/src/index.ts",
       "what": "Assert things about a live run and fail loudly when they stop holding.",
       "rx": "invariant|assertion|property test",
-      "count": 9,
-      "share": 0.0006542599592904915
-    },
-    {
-      "id": "spillStore",
-      "ctx": "ctx.spillStore",
-      "deep": true,
-      "src": "packages/spill/spill/src/index.ts",
-      "what": "Push a huge tool result out of the window and hand back a reference.",
-      "rx": "\\bspill\\b|truncat|offload|large output",
-      "count": 17,
-      "share": 0.001235824367548706
+      "count": 12,
+      "share": 0.0006463775922434688
     },
     {
       "id": "planMode",
@@ -48,18 +38,8 @@
       "src": "packages/plan/plan-mode/src/index.ts",
       "what": "Turn plan mode on and off from code, on conditions you choose.",
       "rx": "plan mode|planmode|plan-mode",
-      "count": 17,
-      "share": 0.001235824367548706
-    },
-    {
-      "id": "uiRenderer",
-      "ctx": "ctx.uiRenderer",
-      "deep": true,
-      "src": "packages/client/ui-renderer/src/index.ts",
-      "what": "Draw a message yourself: render a diff, a table, a chart inline.",
-      "rx": "renderer|custom render|markdown render",
-      "count": 18,
-      "share": 0.001308519918580983
+      "count": 24,
+      "share": 0.0012927551844869377
     },
     {
       "id": "lsp",
@@ -68,8 +48,28 @@
       "src": "packages/lsp/lsp/src/index.ts",
       "what": "Register a language server. Real go-to-definition instead of grep.",
       "rx": "\\blsp\\b|language.?server|code.?intel|tree.?sitter",
-      "count": 21,
-      "share": 0.0015266065716778134
+      "count": 25,
+      "share": 0.00134661998384056
+    },
+    {
+      "id": "uiRenderer",
+      "ctx": "ctx.uiRenderer",
+      "deep": true,
+      "src": "packages/client/ui-renderer/src/index.ts",
+      "what": "Draw a message yourself: render a diff, a table, a chart inline.",
+      "rx": "renderer|custom render|markdown render",
+      "count": 26,
+      "share": 0.0014004847831941827
+    },
+    {
+      "id": "spillStore",
+      "ctx": "ctx.spillStore",
+      "deep": true,
+      "src": "packages/spill/spill/src/index.ts",
+      "what": "Push a huge tool result out of the window and hand back a reference.",
+      "rx": "\\bspill\\b|truncat|offload|large output",
+      "count": 27,
+      "share": 0.001454349582547805
     },
     {
       "id": "timer",
@@ -78,8 +78,8 @@
       "src": "packages/extensions/cordis-client-runner/src/client/timer.ts",
       "what": "Wake up on a schedule. A standing agent instead of a reactive one.",
       "rx": "\\btimer\\b|interval|heartbeat",
-      "count": 41,
-      "share": 0.00298051759232335
+      "count": 53,
+      "share": 0.0028548343657419876
     },
     {
       "id": "sandbox",
@@ -88,18 +88,8 @@
       "src": "packages/sandbox/sandbox/src/index.ts",
       "what": "Choose what the agent is allowed to touch, enforced rather than asked.",
       "rx": "sandbox|seatbelt|bubblewrap|firejail",
-      "count": 94,
-      "share": 0.006833381797034022
-    },
-    {
-      "id": "agentTeams",
-      "ctx": "ctx.agentTeams",
-      "deep": true,
-      "src": "packages/experimental/agent-team/src/index.ts",
-      "what": "The experimental team service: durable teammates, a task DAG, a mailbox.",
-      "rx": "agent.?team|teammate|swarm|\\bcrew\\b|multi.?agent",
-      "count": 103,
-      "share": 0.007487641756324513
+      "count": 125,
+      "share": 0.006733099919202801
     },
     {
       "id": "feedback",
@@ -108,8 +98,18 @@
       "src": "packages/feedback/message-feedback/src/index.ts",
       "what": "Collect thumbs up/down on messages — the raw material of an eval set.",
       "rx": "feedback|thumbs|\\brating\\b|eval(uation)?\\b|benchmark",
-      "count": 114,
-      "share": 0.008287292817679558
+      "count": 146,
+      "share": 0.007864260705628871
+    },
+    {
+      "id": "agentTeams",
+      "ctx": "ctx.agentTeams",
+      "deep": true,
+      "src": "packages/experimental/agent-team/src/index.ts",
+      "what": "The experimental team service: durable teammates, a task DAG, a mailbox.",
+      "rx": "agent.?team|teammate|swarm|\\bcrew\\b|multi.?agent",
+      "count": 147,
+      "share": 0.007918125504982493
     },
     {
       "id": "jobs",
@@ -118,28 +118,8 @@
       "src": "packages/jobs/jobs/src/index.ts",
       "what": "Run work in the background, outside a conversation turn.",
       "rx": "\\bjob\\b|scheduled|\\bcron\\b|background task|unattended|daemon",
-      "count": 115,
-      "share": 0.008359988368711834
-    },
-    {
-      "id": "authorization",
-      "ctx": "ctx.authorization",
-      "deep": true,
-      "src": "packages/credentials/authorization/src/index.ts",
-      "what": "Own the credential-authorization flow instead of pasting keys into settings.",
-      "rx": "authoriz|oauth|\\brbac\\b|\\bacl\\b",
-      "count": 149,
-      "share": 0.010831637103809248
-    },
-    {
-      "id": "compaction",
-      "ctx": "ctx.compaction",
-      "deep": true,
-      "src": "packages/compaction/compaction/src/index.ts",
-      "what": "Decide what falls out of the context window and what survives.",
-      "rx": "compact|prun(e|ing)|context window|token budget",
-      "count": 152,
-      "share": 0.011049723756906077
+      "count": 154,
+      "share": 0.00829517910045785
     },
     {
       "id": "tokenMeter",
@@ -148,8 +128,18 @@
       "src": "packages/llm/token-meter/src/index.ts",
       "what": "Ask the harness what a session actually costs, rather than counting characters yourself.",
       "rx": "token (count|meter|usage)|tokenmeter|context usage",
-      "count": 157,
-      "share": 0.011413201512067461
+      "count": 198,
+      "share": 0.010665230272017236
+    },
+    {
+      "id": "authorization",
+      "ctx": "ctx.authorization",
+      "deep": true,
+      "src": "packages/credentials/authorization/src/index.ts",
+      "what": "Own the credential-authorization flow instead of pasting keys into settings.",
+      "rx": "authoriz|oauth|\\brbac\\b|\\bacl\\b",
+      "count": 204,
+      "share": 0.010988419068138971
     },
     {
       "id": "terminals",
@@ -158,8 +148,18 @@
       "src": "packages/terminal/terminal/src/index.ts",
       "what": "Own a real pty. Long-lived shells the agent drives, not one-shot commands.",
       "rx": "terminal|tmux|\\bpty\\b|shell session",
-      "count": 187,
-      "share": 0.013594068043035767
+      "count": 238,
+      "share": 0.012819822246162134
+    },
+    {
+      "id": "compaction",
+      "ctx": "ctx.compaction",
+      "deep": true,
+      "src": "packages/compaction/compaction/src/index.ts",
+      "what": "Decide what falls out of the context window and what survives.",
+      "rx": "compact|prun(e|ing)|context window|token budget",
+      "count": 249,
+      "share": 0.01341233503905198
     },
     {
       "id": "subagents",
@@ -168,8 +168,8 @@
       "src": "packages/subagent/subagent/src/index.ts",
       "what": "Spawn and steer child agents from inside a run.",
       "rx": "sub.?agent",
-      "count": 225,
-      "share": 0.016356498982262286
+      "count": 291,
+      "share": 0.01567465661190412
     },
     {
       "id": "workflowEngine",
@@ -178,8 +178,8 @@
       "src": "packages/workflow/workflow/src/index.ts",
       "what": "Define multi-step runs the harness executes, instead of prompting a plan and hoping.",
       "rx": "workflow|pipeline|orchestrat",
-      "count": 296,
-      "share": 0.02151788310555394
+      "count": 391,
+      "share": 0.021061136547266362
     },
     {
       "id": "webServer",
@@ -188,8 +188,8 @@
       "src": "packages/host/webserver/src/index.ts",
       "what": "Add a page or an endpoint to the Web UI. The second obvious plugin.",
       "rx": "web ?ui|panel|dashboard|web page|settings tab",
-      "count": 1188,
-      "share": 0.08636231462634487
+      "count": 1531,
+      "share": 0.08246700781039591
     },
     {
       "id": "tools",
@@ -198,8 +198,8 @@
       "src": "packages/core/tools/src/index.ts",
       "what": "Add a tool the model can call. The obvious plugin, and the one everybody wrote.",
       "rx": "\\btool\\b|tools|toolkit|mcp",
-      "count": 2108,
-      "share": 0.15324222157603953
+      "count": 2746,
+      "share": 0.14791273902504712
     }
   ]
 }

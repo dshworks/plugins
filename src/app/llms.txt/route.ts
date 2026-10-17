@@ -34,6 +34,7 @@ dropped or quietly badged.
 - /_data/seams.json — which harness extension seams the ecosystem uses, with the counting regex and the harness source path for each
 - /sitemap.xml — every page on this site
 - /awesome-dsh-plugins/plugins.json — the upstream registry, unprojected
+- /awesome-dsh-plugins/market/index.json — a dsh plugin market index (format 1): add it as an index source in dsh 0.2.1+'s Discover tab
 - /awesome-dsh-themes/themes.json — every theme, with preview and CSS pointers
 - /awesome-dsh-plugins/stats.json — counts only, ~150 bytes, for a badge
 

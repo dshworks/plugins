@@ -901,6 +901,26 @@ export default async function Home() {
         ))}
       </ul>
 
+      <h2 id="discover">Browse it inside dsh</h2>
+      <p>
+        dsh 0.2.1 can read a plugin market from one JSON index, in a <strong>Discover</strong>{" "}
+        tab on the Plugins page. It is experimental and ships with no market of its own. The
+        registry publishes one: every entry with a verified npm name whose versions declare{" "}
+        <code>dsh.bundle</code>, each version tagged with the dsh range its manifest declares
+        (<code>engines.dsh</code>, else its dsh peers), computed the way dsh&rsquo;s own reference
+        generator does. Switch on{" "}
+        <strong>Custom plugin markets</strong> under Plugins &rsaquo; More, open{" "}
+        <strong>Discover</strong>, choose <strong>Add index source</strong>, and enter:
+      </p>
+      <pre>
+        <code>https://dsh.works/awesome-dsh-plugins/market/index.json</code>
+      </pre>
+      <p className="fine">
+        Use that address exactly; dsh refuses redirects. Git-only entries are not in it yet.
+        Install still asks you first, and dsh runs its own compatibility check before anything
+        lands. <a href="https://github.com/dshworks/awesome-dsh-plugins/blob/main/scripts/market.mjs">How it is built</a>.
+      </p>
+
       <h2>Use it as an API</h2>
       <p className="fine">
         Open data, MIT, no key, CORS open. The audience for a plugin directory is people running

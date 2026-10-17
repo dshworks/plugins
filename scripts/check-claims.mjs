@@ -133,6 +133,10 @@ for (const [file, field, script] of [
   // The cliff paragraph renders only with a `next` ahead of `latest`, and quotes both.
   check(next ? Number.isInteger(inst.cliff) && inst.cliff <= next.refused : inst.cliff === null,
     `data/installability.json: cliff ${inst.cliff} against ${next ? `${next.refused} refused by ${next.version}` : "no next host"}.`);
+  // The page splits the cliff by cause; the parts must add back up to it.
+  const cc = inst.cliffCause;
+  check(!next || (cc && cc.engines + cc.peers + cc.malformed === inst.cliff && cc.pinned <= cc.peers),
+    `data/installability.json: cliff causes ${JSON.stringify(cc)} do not add up to ${inst.cliff}.`);
   const sh = inst.shadow ?? {};
   check(sh.unseen <= sh.harness && sh.harness <= sh.packages && sh.packages <= inst.packages
     && Array.isArray(sh.names) && sh.names.every((n) => n.count <= sh.packages),

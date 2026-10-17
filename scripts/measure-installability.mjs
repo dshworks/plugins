@@ -91,13 +91,28 @@ const HARNESS_SRC = "https://github.com/deepseek-ai/deepseek-harness/blob";
 const GATE_SINCE = "0.1.7-rc.1";
 const GATE_TAG = "dsh-v0.2.0-rc.1";
 const GATE_FILE = "packages/boot/app-boot/src/plugin-compatibility.ts";
-// sha256 of GATE_FILE at dsh-v0.1.7-rc.1, dsh-v0.1.7-rc.2 and dsh-v0.2.0-rc.1,
-// which are byte-identical. gate() below mirrors exactly this file. Every gated
-// host's copy is fetched and hashed on each run; one that differs is written
-// as `mirrored: false` and scripts/check-claims.mjs fails the build, because
-// the page would be quoting a rule dsh may no longer apply. To clear it,
-// re-read the new file, bring gate() in line, then update this hash.
-const GATE_SHA256 = "ab688efec2beb165e2a0917b36fa72bfd5c8b96b8be3a1e6121b76ba24748135";
+// UPDATE, 2026-10-17. dsh-v0.2.1-alpha.4 rewrote the gate (3de3a977e0): an own
+// `engines.dsh` range decides alone and the dsh peers are ignored; the peer
+// rule above applies only when `engines.dsh` is absent. A non-object
+// `engines`, or a non-string `engines.dsh`, refuses the package. `pnpm view`
+// on install now asks for `engines` as well (plugin-manager/src/operations.ts
+// :178). The file is byte-identical at alpha.4, alpha.5, rc.1 and rc.2, and the
+// upgrade guide sits under docs/upgrade-guide/v0.2.1-alpha.3/plugin-engines-dsh/
+// (the directory names the release you upgrade FROM).
+const ENGINES_SINCE = "0.2.1-alpha.4";
+const ENGINES_TAG = "dsh-v0.2.1-rc.2";
+// sha256 of GATE_FILE for each rule gate() mirrors: the peer rule at
+// dsh-v0.1.7-rc.1 through dsh-v0.2.1-alpha.3, the engines rule from
+// dsh-v0.2.1-alpha.4 on. Every gated host's copy is fetched and hashed on each
+// run; one that differs from its rule's hash is written as `mirrored: false`
+// and scripts/check-claims.mjs fails the build, because the page would be
+// quoting a rule dsh may no longer apply. To clear it, re-read the new file,
+// bring gate() in line, then add or update the hash here.
+const GATE_SHA256 = {
+  peers: "ab688efec2beb165e2a0917b36fa72bfd5c8b96b8be3a1e6121b76ba24748135",
+  engines: "3aaddccc788734dbcea920f078ae7f8209f57b3330e8431d2f4a5936cf65558f",
+};
+const ruleOf = (version) => (semver.gte(version, ENGINES_SINCE) ? "engines" : "peers");
 const CONCURRENCY = 16;
 const ABBREVIATED = "application/vnd.npm.install-v1+json";
 
@@ -148,10 +163,26 @@ const isDshName = (name) => name === "@deepseek-ai/dsh" || name.startsWith("@dee
 const WORKSPACE = ["workspace:^", "workspace:~", "workspace:*"];
 
 /**
- * plugin-compatibility.ts:61-88, without the exemption lookup.
- * @returns undefined when admitted, else the refused peers (or a reason when the gate throws).
+ * plugin-compatibility.ts without the exemption lookup: the peer rule at
+ * dsh-v0.2.0-rc.1 :61-88, and from ENGINES_SINCE the engines rule at
+ * dsh-v0.2.1-rc.2 :55-74 in front of it.
+ * @returns undefined when admitted, else the unmet requirements (keyed
+ *   `engines.dsh` or by peer name, as dsh's own `requirements` record), or a
+ *   reason when the gate throws.
  */
 function gate(manifest, runtime) {
+  if (ruleOf(runtime) === "engines" && Object.hasOwn(manifest, "engines")) {
+    const engines = manifest.engines;
+    if (!isObject(engines)) return { malformed: "engines is not an object" };     // rc.2 :56
+    if (Object.hasOwn(engines, "dsh")) {
+      const range = engines.dsh;
+      if (typeof range !== "string") return { malformed: "engines.dsh is not a string" }; // :59
+      // No workspace: exception here; dsh calls it unmet like any non-range.
+      return range.trim() !== "" && semver.satisfies(runtime, range, { includePrerelease: true })
+        ? undefined
+        : { requirements: { "engines.dsh": range }, by: "engines" };              // :60
+    }
+  }
   if (!Object.hasOwn(manifest, "peerDependencies")) return undefined;              // :68
   const peers = manifest.peerDependencies;
   if (!isObject(peers)) return { malformed: "peerDependencies is not an object" };  // :69
@@ -164,8 +195,11 @@ function gate(manifest, runtime) {
       refused[name] = range;                                                       // :77-78
     }
   }
-  return Object.keys(refused).length ? { peers: refused } : undefined;             // :81
+  return Object.keys(refused).length ? { requirements: refused, by: "peers" } : undefined; // :81
 }
+
+/** The `engines.dsh` a manifest declares, if it is a string; the rule from ENGINES_SINCE reads it first. */
+const enginesDsh = (m) => (isObject(m.engines) && typeof m.engines.dsh === "string" ? m.engines.dsh : undefined);
 
 /** The dsh peer ranges a manifest declares, as the gate would see them. */
 const dshPeers = (m) => (isObject(m.peerDependencies)
@@ -209,13 +243,16 @@ const tags = dsh["dist-tags"];
 // reaches `latest` the forward question disappears until npm serves another.
 const hosts = [{ tag: "latest", version: tags.latest }];
 if (tags.next && semver.gt(tags.next, tags.latest)) hosts.push({ tag: "next", version: tags.next });
-for (const h of hosts) h.gated = semver.gte(h.version, GATE_SINCE);
+for (const h of hosts) {
+  h.gated = semver.gte(h.version, GATE_SINCE);
+  if (h.gated) h.rule = ruleOf(h.version);
+}
 
 for (const h of hosts.filter((x) => x.gated)) {
   const url = `https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v${h.version}/${GATE_FILE}`;
   const res = await fetch(url);
   const sha256 = res.ok ? createHash("sha256").update(Buffer.from(await res.arrayBuffer())).digest("hex") : null;
-  h.gateSource = { url, sha256, mirrored: sha256 === GATE_SHA256 };
+  h.gateSource = { url, sha256, mirrored: sha256 === GATE_SHA256[h.rule] };
 }
 
 let t0 = Date.now();
@@ -240,13 +277,17 @@ await pool(names, async (name) => {
     name,
     version: m.version,
     peers: dshPeers(m),
+    engines: enginesDsh(m),
     verdicts: Object.fromEntries(hosts.map((h) => [h.tag, h.gated ? gate(m, h.version) : undefined])),
     shadows,
   });
 });
 console.log(`manifests: ${rows.length} of ${names.length} in ${((Date.now() - t0) / 1000).toFixed(1)}s, ${retries} retries after 429/5xx`);
 
-const declaring = rows.filter((r) => Object.keys(r.peers).length > 0);
+// A dsh range is a dsh peer or, read by hosts from ENGINES_SINCE, `engines.dsh`.
+const declaring = rows.filter((r) => Object.keys(r.peers).length > 0 || r.engines !== undefined);
+// Declare `engines.dsh`: on a host from ENGINES_SINCE that range alone decides.
+const enginesDeclared = rows.filter((r) => r.engines !== undefined);
 const noRange = rows.length - declaring.length;
 const refusedOn = (tag) => rows.filter((r) => r.verdicts[tag] !== undefined);
 const published = hosts.map((h) => {
@@ -258,15 +299,27 @@ const published = hosts.map((h) => {
     admitted: rows.length - refused.length,
     refused: refused.length,
     // Refused because one refusing range pins an exact dsh version.
-    pinned: refused.filter((r) => Object.values(r.verdicts[h.tag].peers ?? {}).some((x) => semver.valid(x))).length,
+    pinned: refused.filter((r) => Object.values(r.verdicts[h.tag].requirements ?? {}).some((x) => semver.valid(x))).length,
+    // Refused by an `engines.dsh` range, which only hosts from ENGINES_SINCE read.
+    byEngines: refused.filter((r) => r.verdicts[h.tag].by === "engines").length,
     // Refused because the gate throws on the manifest, not because of a range.
     malformed: refused.filter((r) => r.verdicts[h.tag].malformed).length,
+    ...(h.gated ? { rule: h.rule } : {}),
     ...(h.gateSource ? { gateSource: h.gateSource } : {}),
   };
 });
 const next = hosts.find((h) => h.tag === "next");
 // Admitted today, refused by the version already on `next`: what moving the tag would refuse.
-const cliff = next ? rows.filter((r) => !r.verdicts.latest && r.verdicts.next).length : null;
+const cliffRows = next ? rows.filter((r) => !r.verdicts.latest && r.verdicts.next) : null;
+const cliff = cliffRows ? cliffRows.length : null;
+// Why they fall: an `engines.dsh` the older host never read, or a dsh peer
+// range that stops short of `next` (counted again when it is an exact pin).
+const cliffCause = cliffRows && {
+  engines: cliffRows.filter((r) => r.verdicts.next.by === "engines").length,
+  peers: cliffRows.filter((r) => r.verdicts.next.by === "peers").length,
+  pinned: cliffRows.filter((r) => Object.values(r.verdicts.next.requirements ?? {}).some((x) => semver.valid(x))).length,
+  malformed: cliffRows.filter((r) => r.verdicts.next.malformed).length,
+};
 
 const shadowing = rows.filter((r) => r.shadows.length);
 const byShadow = {};
@@ -286,6 +339,7 @@ for (const name of oursNames) {
     name,
     version: m.version,
     peers: dshPeers(m),
+    ...(enginesDsh(m) !== undefined ? { engines: enginesDsh(m) } : {}),
     ...Object.fromEntries(hosts.map((h) => [h.tag, h.gated ? (gate(m, h.version) ? "refused" : "admitted") : "ungated"])),
     shadows: Object.keys(m.dependencies ?? {}).filter((d) => supplied.has(d)),
   });
@@ -297,8 +351,8 @@ await writeFile(OUT, `${JSON.stringify({
   measured: now.toISOString().slice(0, 10),
   measuredAt: now.toISOString(),
   method: "npm's latest manifest for every npm name in the registry; dsh's own compatibility gate "
-    + "(plugin-compatibility.ts:61-88, semver.satisfies with includePrerelease) applied to the dsh versions on "
-    + "npm's latest and next tags; no exemptions assumed",
+    + "(plugin-compatibility.ts, semver.satisfies with includePrerelease; engines.dsh first from "
+    + `${ENGINES_SINCE}) applied to the dsh versions on npm's latest and next tags; no exemptions assumed`,
   sources: {
     registry: REGISTRY_LIST,
     npm: `${REGISTRY}/<name> (abbreviated packument, its dist-tags.latest version)`,
@@ -308,8 +362,11 @@ await writeFile(OUT, `${JSON.stringify({
     resolver: src("packages/boot/app-boot/src/profile-resolution/resolver.ts", "L468-L510"),
     startup: src("packages/boot/app-boot/src/compatibility-preflight.ts", "L74-L83"),
     gateCommit: "https://github.com/deepseek-ai/deepseek-harness/commit/2c67633990",
+    enginesGate: `${HARNESS_SRC}/${ENGINES_TAG}/${GATE_FILE}#L55-L74`,
+    enginesCommit: "https://github.com/deepseek-ai/deepseek-harness/commit/3de3a977e0",
   },
   gateSince: GATE_SINCE,
+  enginesSince: ENGINES_SINCE,
   dshTags: tags,
   dshVersions: versions,
   ungatedVersions: versions.filter((v) => semver.lt(v, GATE_SINCE)).length,
@@ -318,8 +375,10 @@ await writeFile(OUT, `${JSON.stringify({
   packages: rows.length,
   declaring: declaring.length,
   noRange,
+  engines: enginesDeclared.length,
   hosts: published,
   cliff,
+  cliffCause,
   shadow: {
     host: tags.latest,
     supplied: supplied.size,
@@ -327,7 +386,7 @@ await writeFile(OUT, `${JSON.stringify({
     harness: shadowing.filter((r) => r.shadows.some(isDshName)).length,
     // A dsh-* package in dependencies and no dsh peer: the gate admits these
     // without reading anything, and they bring their own copy of the harness.
-    unseen: shadowing.filter((r) => r.shadows.some(isDshName) && !Object.keys(r.peers).length).length,
+    unseen: shadowing.filter((r) => r.shadows.some(isDshName) && !Object.keys(r.peers).length && r.engines === undefined).length,
     // The ten most listed, of `packages`.
     names: Object.entries(byShadow).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([name, count]) => ({ name, count })),
   },
@@ -339,8 +398,12 @@ for (const h of published) {
     + `${h.malformed ? ` (${h.malformed} for a malformed manifest)` : ""}; `
     + `${h.gated ? `gate ${h.gateSource.mirrored ? "matches the mirrored source" : "SOURCE CHANGED OR MISSING"}` : "NO GATE"}`);
 }
-console.log(`  ${declaring.length} declare a dsh peer range; ${noRange} declare none and the gate reads nothing`);
-if (cliff !== null) console.log(`  ${cliff} admitted on latest are refused on next`);
+console.log(`  ${declaring.length} declare a dsh range (peer or engines.dsh); ${noRange} declare none and the gate reads nothing`);
+console.log(`  ${enginesDeclared.length} declare engines.dsh, which decides alone from dsh ${ENGINES_SINCE}`);
+if (cliff !== null) {
+  console.log(`  ${cliff} admitted on latest are refused on next: ${cliffCause.engines} by engines.dsh, `
+    + `${cliffCause.peers} by a dsh peer (${cliffCause.pinned} pinned), ${cliffCause.malformed} malformed`);
+}
 console.log(`  ${shadowing.length} list a host-supplied @deepseek-ai package in dependencies (${supplied.size} supplied by ${tags.latest})`);
 console.log(`  ours: ${ours.map((o) => `${o.name}@${o.version} ${hosts.map((h) => `${h.tag}=${o[h.tag]}`).join(" ")}`).join(", ")}`);
 if (unreadable) console.log(`  unreadable: ${unreadable}`);

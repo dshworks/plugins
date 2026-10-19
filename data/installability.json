@@ -1,6 +1,6 @@
 {
-  "measured": "2026-10-17",
-  "measuredAt": "2026-10-17T10:36:43.673Z",
+  "measured": "2026-10-19",
+  "measuredAt": "2026-10-19T08:58:44.499Z",
   "method": "npm's latest manifest for every npm name in the registry; dsh's own compatibility gate (plugin-compatibility.ts, semver.satisfies with includePrerelease; engines.dsh first from 0.2.1-alpha.4) applied to the dsh versions on npm's latest and next tags; no exemptions assumed",
   "sources": {
     "registry": "https://raw.githubusercontent.com/dshworks/awesome-dsh-plugins/main/data/plugins.json",
@@ -17,7 +17,7 @@
   "gateSince": "0.1.7-rc.1",
   "enginesSince": "0.2.1-alpha.4",
   "dshTags": {
-    "latest": "0.2.0-rc.2",
+    "latest": "0.2.1-rc.2",
     "alpha": "0.2.1-alpha.5",
     "next": "0.2.1-rc.2"
   },
@@ -60,37 +60,21 @@
     "0.2.1-rc.2"
   ],
   "ungatedVersions": 25,
-  "npmNames": 5601,
-  "unreadable": 26,
-  "packages": 5575,
-  "declaring": 3385,
-  "noRange": 2190,
-  "engines": 451,
+  "npmNames": 6314,
+  "unreadable": 32,
+  "packages": 6282,
+  "declaring": 3813,
+  "noRange": 2469,
+  "engines": 752,
   "hosts": [
     {
       "tag": "latest",
-      "version": "0.2.0-rc.2",
-      "gated": true,
-      "admitted": 4280,
-      "refused": 1295,
-      "pinned": 169,
-      "byEngines": 0,
-      "malformed": 0,
-      "rule": "peers",
-      "gateSource": {
-        "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v0.2.0-rc.2/packages/boot/app-boot/src/plugin-compatibility.ts",
-        "sha256": "ab688efec2beb165e2a0917b36fa72bfd5c8b96b8be3a1e6121b76ba24748135",
-        "mirrored": true
-      }
-    },
-    {
-      "tag": "next",
       "version": "0.2.1-rc.2",
       "gated": true,
-      "admitted": 4013,
-      "refused": 1562,
-      "pinned": 241,
-      "byEngines": 65,
+      "admitted": 4805,
+      "refused": 1477,
+      "pinned": 230,
+      "byEngines": 46,
       "malformed": 0,
       "rule": "engines",
       "gateSource": {
@@ -100,35 +84,30 @@
       }
     }
   ],
-  "cliff": 313,
-  "cliffCause": {
-    "engines": 53,
-    "peers": 260,
-    "pinned": 77,
-    "malformed": 0
-  },
+  "cliff": null,
+  "cliffCause": null,
   "shadow": {
-    "host": "0.2.0-rc.2",
-    "supplied": 287,
-    "packages": 1167,
-    "harness": 330,
+    "host": "0.2.1-rc.2",
+    "supplied": 304,
+    "packages": 1234,
+    "harness": 336,
     "unseen": 168,
     "names": [
       {
         "name": "@deepseek-ai/schemastery",
-        "count": 989
+        "count": 1057
       },
       {
         "name": "@deepseek-ai/dsh-tools",
-        "count": 96
+        "count": 99
       },
       {
         "name": "@deepseek-ai/cordis",
-        "count": 81
+        "count": 85
       },
       {
         "name": "@deepseek-ai/dsh-llm",
-        "count": 57
+        "count": 59
       },
       {
         "name": "@deepseek-ai/dsh-home-paths",
@@ -136,23 +115,23 @@
       },
       {
         "name": "@deepseek-ai/dsh-settings",
-        "count": 51
+        "count": 50
       },
       {
         "name": "@deepseek-ai/dsh-session",
-        "count": 43
+        "count": 44
       },
       {
         "name": "@deepseek-ai/dsh-typert-protocol",
-        "count": 34
+        "count": 37
       },
       {
         "name": "@deepseek-ai/dsh-agent",
-        "count": 30
+        "count": 31
       },
       {
         "name": "@deepseek-ai/dsh-atomic-write",
-        "count": 29
+        "count": 30
       }
     ]
   },
@@ -164,7 +143,6 @@
         "@deepseek-ai/dsh-session-projection": "^0.1.5-rc.1 || ^0.1.7-rc.2 || ^0.2.0-rc.1"
       },
       "latest": "admitted",
-      "next": "admitted",
       "shadows": []
     },
     {
@@ -175,7 +153,6 @@
         "@deepseek-ai/dsh-tools": "^0.1.7-alpha.1 || ^0.2.0-rc.1"
       },
       "latest": "admitted",
-      "next": "admitted",
       "shadows": []
     },
     {
@@ -186,7 +163,6 @@
         "@deepseek-ai/dsh-subprocess": "^0.1.7-alpha.1 || ^0.2.0-rc.1"
       },
       "latest": "admitted",
-      "next": "admitted",
       "shadows": []
     },
     {
@@ -197,7 +173,16 @@
         "@deepseek-ai/dsh-subprocess": "^0.1.0-rc.6 || ^0.1.1-rc.1 || ^0.1.2-rc.1 || ^0.1.5-rc.1 || ^0.1.7-rc.2 || ^0.2.0-rc.1"
       },
       "latest": "admitted",
-      "next": "admitted",
+      "shadows": []
+    },
+    {
+      "name": "@dshworks/dsh-solidworks",
+      "version": "0.2.1",
+      "peers": {
+        "@deepseek-ai/dsh-mcp-client": "^0.2.0-rc.1"
+      },
+      "engines": "^0.2.0-rc.1",
+      "latest": "admitted",
       "shadows": []
     }
   ]

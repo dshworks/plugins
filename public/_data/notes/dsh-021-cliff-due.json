@@ -1,0 +1,754 @@
+{
+  "measured": "2026-10-19",
+  "runtime": "0.2.1-rc.2",
+  "latestSince": "2026-10-19 (npm packument modified 06:29:58Z)",
+  "method": "For each of the 311 packages in /_data/notes/dsh-021-engines-gate.json (measured 2026-10-17: admitted by dsh 0.2.0-rc.2, refused by 0.2.1-rc.2), read the manifest npm tags latest today and apply dsh 0.2.1-rc.2 gate, the same gate() as scripts/measure-installability.mjs.",
+  "gate": "https://github.com/deepseek-ai/deepseek-harness/blob/dsh-v0.2.1-rc.2/packages/boot/app-boot/src/plugin-compatibility.ts#L55-L74",
+  "counts": {
+    "total": 311,
+    "admittedNow": 85,
+    "stillRefused": 226,
+    "stillRefusedAfterNewRelease": 5,
+    "unpublished": 0
+  },
+  "admittedNow": [
+    {
+      "npm": "@2jumpsina/dsh-context-guard",
+      "was": "0.4.1",
+      "now": "0.4.5",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "@alexpeng/dsh-custom-plugin",
+      "was": "0.7.1",
+      "now": "0.8.0",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "@anionex/dsh-computer-use",
+      "was": "0.3.3",
+      "now": "0.3.4",
+      "cause": "peer"
+    },
+    {
+      "npm": "@anionex/dsh-eye-care",
+      "was": "0.1.2",
+      "now": "0.1.3",
+      "cause": "peer"
+    },
+    {
+      "npm": "@anionex/dsh-pinned-sessions",
+      "was": "0.1.2",
+      "now": "0.1.3",
+      "cause": "peer"
+    },
+    {
+      "npm": "@anionex/dsh-turn-rewind",
+      "was": "0.3.9",
+      "now": "0.3.10",
+      "cause": "peer"
+    },
+    {
+      "npm": "@anionex/dsh-vision-toolkit",
+      "was": "0.1.46",
+      "now": "0.1.47",
+      "cause": "peer"
+    },
+    {
+      "npm": "@axiaohungry/dsh-llm-workbuddy",
+      "was": "1.3.21",
+      "now": "1.3.22",
+      "cause": "peer"
+    },
+    {
+      "npm": "@benz-ai-x/dsh-24pa",
+      "was": "0.2.1-rc.1.1",
+      "now": "0.2.1-rc.2.9",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "@botharness/browser",
+      "was": "1.3.1",
+      "now": "1.4.0",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "@deepseek-harness-tui/dsh-tui",
+      "was": "0.15.0",
+      "now": "0.16.1",
+      "cause": "peer"
+    },
+    {
+      "npm": "@doitian/dsh-provider-aliyun",
+      "was": "0.4.0",
+      "now": "0.4.1",
+      "cause": "peer"
+    },
+    {
+      "npm": "@dsh-electron/dsh-plugin-git",
+      "was": "0.2.6",
+      "now": "0.2.7",
+      "cause": "peer"
+    },
+    {
+      "npm": "@dsh-electron/dsh-plugin-multi-root-workspace",
+      "was": "0.1.6",
+      "now": "0.1.8",
+      "cause": "peer"
+    },
+    {
+      "npm": "@dsh-sparrow/dsh-archive-manage",
+      "was": "0.2.0-rc.2",
+      "now": "0.2.1-rc.2",
+      "cause": "peer"
+    },
+    {
+      "npm": "@log.li/dsh-automode",
+      "was": "0.16.1",
+      "now": "0.17.0",
+      "cause": "peer"
+    },
+    {
+      "npm": "@lytharalab/dsh-cons-auto-review",
+      "was": "1.2.0",
+      "now": "1.2.1",
+      "cause": "peer"
+    },
+    {
+      "npm": "@mars-sea/dsh-commandcode-provider",
+      "was": "0.13.4",
+      "now": "0.14.2",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "@michengai/dsh-agency-agents",
+      "was": "1.0.20",
+      "now": "1.2.7",
+      "cause": "peer"
+    },
+    {
+      "npm": "@michengai/dsh-archive-manager",
+      "was": "1.0.20",
+      "now": "1.1.5",
+      "cause": "peer"
+    },
+    {
+      "npm": "@michengai/dsh-automation",
+      "was": "0.1.66",
+      "now": "1.0.4",
+      "cause": "peer"
+    },
+    {
+      "npm": "@michengai/dsh-codex-ui",
+      "was": "1.1.40",
+      "now": "1.1.43",
+      "cause": "peer"
+    },
+    {
+      "npm": "@michengai/dsh-im-connect",
+      "was": "0.1.77",
+      "now": "1.0.8",
+      "cause": "peer"
+    },
+    {
+      "npm": "@mimichunterz/agent-compact",
+      "was": "0.2.0",
+      "now": "0.2.1",
+      "cause": "peer"
+    },
+    {
+      "npm": "@nanmicoder/dsh-agent-teams",
+      "was": "0.1.23",
+      "now": "0.1.25",
+      "cause": "peer"
+    },
+    {
+      "npm": "@omdp/dsh-connector",
+      "was": "0.3.8",
+      "now": "0.3.10",
+      "cause": "peer"
+    },
+    {
+      "npm": "@openma/deepseek-harness-acp",
+      "was": "0.4.38",
+      "now": "0.4.39",
+      "cause": "peer"
+    },
+    {
+      "npm": "@sligqoer/dsh-usage-stats",
+      "was": "0.2.3",
+      "now": "0.2.4",
+      "cause": "peer"
+    },
+    {
+      "npm": "@tnnevol/dsh-codebuddy",
+      "was": "0.2.0-rc.2.5",
+      "now": "0.2.1-rc.2.2",
+      "cause": "peer"
+    },
+    {
+      "npm": "@tr1v3r/dsh-ltm",
+      "was": "0.3.1",
+      "now": "0.3.3",
+      "cause": "peer"
+    },
+    {
+      "npm": "@wenaixi/dsh-ponytail",
+      "was": "5.5.0",
+      "now": "5.6.1",
+      "cause": "peer"
+    },
+    {
+      "npm": "@winteries/dsh-turn-fold",
+      "was": "0.7.0",
+      "now": "0.7.1",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-arrowkey-nav",
+      "was": "0.5.3",
+      "now": "0.5.4",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-brief-sidebar",
+      "was": "0.9.13",
+      "now": "0.9.14",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-browser-cdp",
+      "was": "1.2.1",
+      "now": "1.2.3",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-code-index",
+      "was": "0.10.0",
+      "now": "0.10.1",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-codebuddy-cli",
+      "was": "0.3.0",
+      "now": "0.4.3",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-cpa",
+      "was": "0.1.10",
+      "now": "0.1.11",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-date-wrapper",
+      "was": "0.4.1",
+      "now": "0.4.2",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-deeppilot",
+      "was": "0.9.7",
+      "now": "0.9.8",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-diagnostic-tutor",
+      "was": "0.1.0",
+      "now": "0.1.1",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-file-convert",
+      "was": "0.4.6",
+      "now": "0.4.7",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-file-explorer-kit",
+      "was": "0.3.9",
+      "now": "0.3.11",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-git-worktree",
+      "was": "0.10.0",
+      "now": "0.11.0",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-image-viewer",
+      "was": "0.1.14",
+      "now": "0.1.15",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-input-traffic",
+      "was": "0.7.4",
+      "now": "0.7.5",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-insights-kit",
+      "was": "0.10.2",
+      "now": "0.10.4",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-jumpserver",
+      "was": "0.12.0",
+      "now": "0.12.1",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-llm-openai-completions",
+      "was": "0.4.2",
+      "now": "0.4.4",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-loop-engine",
+      "was": "0.2.0-rc1",
+      "now": "0.2.1-rc1",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-mail-notify",
+      "was": "0.5.0",
+      "now": "0.5.1",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-msg9-kit",
+      "was": "0.7.1",
+      "now": "0.7.3",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-next-input",
+      "was": "0.2.1",
+      "now": "0.2.2",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-nexus",
+      "was": "0.2.60",
+      "now": "0.2.62",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-noname-kit",
+      "was": "1.10.0",
+      "now": "1.10.2",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-observational-memory",
+      "was": "0.3.0",
+      "now": "0.4.0",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-on-phone",
+      "was": "0.8.12",
+      "now": "0.8.13",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-opencode-go-plus",
+      "was": "1.1.2",
+      "now": "1.1.3",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-openwrite",
+      "was": "0.2.21",
+      "now": "0.2.23",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-patch-edit-plus",
+      "was": "0.4.1",
+      "now": "0.4.3",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-plugin-garmin-connect",
+      "was": "0.1.15",
+      "now": "0.1.17",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-plugin-subscriptions",
+      "was": "0.9.9",
+      "now": "0.9.10",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-plugin-wsl-env",
+      "was": "0.9.0",
+      "now": "0.13.0",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-project-groups",
+      "was": "0.3.1",
+      "now": "0.3.2",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-pve",
+      "was": "0.2.0",
+      "now": "0.2.1",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-rules",
+      "was": "0.1.5",
+      "now": "0.1.6",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-session-curator",
+      "was": "0.3.0",
+      "now": "0.3.1",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-session-guard",
+      "was": "4.2.1",
+      "now": "4.2.2",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-simple-usage-info",
+      "was": "0.2.3",
+      "now": "0.2.4",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-smart-approval",
+      "was": "0.1.0-rc.11",
+      "now": "0.1.0-rc.12",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-theone",
+      "was": "0.3.36",
+      "now": "0.3.39",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-thinking-levels",
+      "was": "4.3.1",
+      "now": "4.4.2",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-tidy-display",
+      "was": "0.4.0",
+      "now": "0.4.2",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-tool-todo-plus",
+      "was": "0.7.3",
+      "now": "0.7.4",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-trivium",
+      "was": "0.4.19",
+      "now": "0.4.21",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-turn-performance-meter",
+      "was": "0.1.5",
+      "now": "0.1.6",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-workbuddy-console",
+      "was": "2.0.49",
+      "now": "2.0.53",
+      "cause": "peer"
+    },
+    {
+      "npm": "dsh-workspace-kit",
+      "was": "0.1.12",
+      "now": "0.1.14",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "dsh-wsl-projects",
+      "was": "0.2.3",
+      "now": "0.2.4",
+      "cause": "engines.dsh"
+    },
+    {
+      "npm": "euthyna",
+      "was": "0.7.0",
+      "now": "0.8.0",
+      "cause": "peer"
+    },
+    {
+      "npm": "harness-relay-mcp",
+      "was": "0.2.17",
+      "now": "0.2.19",
+      "cause": "peer"
+    },
+    {
+      "npm": "huayu-yuandian-legal-data",
+      "was": "0.1.5",
+      "now": "0.1.6",
+      "cause": "peer"
+    },
+    {
+      "npm": "lunheng-article-pipeline",
+      "was": "19.9.0",
+      "now": "19.19.0",
+      "cause": "peer"
+    },
+    {
+      "npm": "pmp-dsh-tavern",
+      "was": "3.0.3",
+      "now": "3.0.4",
+      "cause": "peer"
+    },
+    {
+      "npm": "stratagate-dsh",
+      "was": "0.3.16",
+      "now": "0.3.17",
+      "cause": "peer"
+    }
+  ],
+  "stillRefused": [
+    "@ahggg/dsh-side-chat",
+    "@akslcw/dsh-negative-ledger",
+    "@all3cn/dsh-better-sidebar-n23",
+    "@anionex/dsh-smarter-edit",
+    "@anweat/dsh-browser",
+    "@avernet-plugin/deepseek-harness-channel-bcn",
+    "@becomeopc/dshx",
+    "@beforewave/dsh-with-chatgpt",
+    "@beibeihk/dsh-agent-observability",
+    "@busabase/dsh-plugin",
+    "@chenjie1129/dsh-remotion-video-plugin",
+    "@choi-p/dsh-deepseek-balance",
+    "@choi-p/dsh-footer-order",
+    "@chrok/dsh-braid",
+    "@chunsi-m/dsh-trajectory-governor",
+    "@clawsjoy/dsh-session-persistence-tolerant",
+    "@ddtcorex/dsh-maestro-dashboard",
+    "@drifter-yh/dsh-tool-policy",
+    "@dsh-enhanced/acp",
+    "@dsh-extension/dsh-vision-bridge",
+    "@dttxorg/deepseekeyes",
+    "@effaf/dsh-plugin-devkit",
+    "@elementor-i/dsh-agentmemory",
+    "@evegoodevening/dsh-llmwiki",
+    "@exagone313/dsh-podman",
+    "@feng0531/dsh-vcs",
+    "@forgeax/dsh-game",
+    "@geebos/dsh-terminal",
+    "@grapecity-software/dsh-spreadjs-editor",
+    "@h2mzzz/dsh-openai-subscription",
+    "@hanamesh/dsh-app-host",
+    "@hank52168/dsh-web-search-prism",
+    "@hoyyang/dsh-code-graph",
+    "@hydrogenoxide18/dsh-plugin-market",
+    "@hytime/dsh-companion",
+    "@jcy2387/dsh-dungeon-party",
+    "@jingyi0605/codingns4dsh",
+    "@kirkchinese/dsh-citeciter",
+    "@kiwifruit/dsh-jit-viewer",
+    "@kriskwok/dsh-feishu-gateway",
+    "@lexmount/dsh-browser",
+    "@lukeknow0/dsh-side-chat",
+    "@memtensor/memos-local-plugin",
+    "@mokuyoaxis/dsh-iris",
+    "@nacocx/dsh-ui-context-menu",
+    "@nanmicoder/dsh-auto-mode",
+    "@nath-vikky/dsh-codekin",
+    "@ndsanes/dsh-rules",
+    "@nexus-aethra/dshell-buffer",
+    "@oh-my-dsh/dsh-accessibility",
+    "@openbkn/dsh-business-context",
+    "@panando/dsh-prompt-optimizer",
+    "@panando/dsh-pua",
+    "@paradoxsch/dsh-worktree",
+    "@pinkbanana/dsh-balance",
+    "@ray1270/dsh-task-stack",
+    "@ryuu-64/dsh-find-all",
+    "@ryuu-64/dsh-session-tools",
+    "@stolyarovmn/dsh-client-ui-schedule-tab",
+    "@sunjuntao/dsh-file-workbench",
+    "@sunjuntao/dsh-qqbot",
+    "@supercarlosluo/dsh-tool-example",
+    "@temotee2103/dsh-ci-co-pilot",
+    "@vigalai/dsh-plugin-zerone",
+    "@visol-456/dsh-llm-fallback",
+    "@wangyong1972/dsh-computer-use-macos",
+    "@wisdoverse/dsh-skills-manager",
+    "@xiaosenho/dsh-plugin-remote-access",
+    "@yejiming/dsh-gomoku",
+    "@yinging/dsh-hme",
+    "@yinging/dsh-plugin-pub-review",
+    "@yunmin311/dsh-universal-palette",
+    "@zaimokuza/dsh-agent-teams-office",
+    "@zilliz/dsh-milvus",
+    "asyoumeant-dsh",
+    "billion-context-dsh",
+    "dsh-agent-message",
+    "dsh-ai-wallet",
+    "dsh-apirevise",
+    "dsh-approval-review",
+    "dsh-approve-for-me",
+    "dsh-archived-chats",
+    "dsh-article-review",
+    "dsh-auth",
+    "dsh-auto-open-web",
+    "dsh-autocompose",
+    "dsh-autoresearch",
+    "dsh-balance-plugin",
+    "dsh-better",
+    "dsh-browser-harness",
+    "dsh-buddy-checkin",
+    "dsh-chat-manager-wide",
+    "dsh-ciel",
+    "dsh-code",
+    "dsh-code-intel",
+    "dsh-codex-connect",
+    "dsh-codex-pet",
+    "dsh-codex-sync",
+    "dsh-composer-layout",
+    "dsh-cost-insights",
+    "dsh-custom-headers",
+    "dsh-dashboard",
+    "dsh-desktop-notifier",
+    "dsh-dictate",
+    "dsh-dingo",
+    "dsh-ditto",
+    "dsh-draft-sessions",
+    "dsh-drill",
+    "dsh-engineering-suite",
+    "dsh-esp-buddy",
+    "dsh-expmem",
+    "dsh-faxin-search",
+    "dsh-file-viewer",
+    "dsh-gateway-provider",
+    "dsh-git-ui",
+    "dsh-gitflow",
+    "dsh-github-copilot",
+    "dsh-handoff-compaction",
+    "dsh-harness-ui",
+    "dsh-hermes-memory",
+    "dsh-http-tools",
+    "dsh-inline-figures",
+    "dsh-iris",
+    "dsh-ivory",
+    "dsh-lazeword",
+    "dsh-left-panel",
+    "dsh-liquid-glass-ui",
+    "dsh-liuli-ui-enhance",
+    "dsh-llm-as-a-verifier",
+    "dsh-llm-auto-route",
+    "dsh-llm-openai-codex",
+    "dsh-llm-xai-oauth",
+    "dsh-local-link",
+    "dsh-local-vector-memory",
+    "dsh-logger-panel",
+    "dsh-mac-vision",
+    "dsh-market-quote",
+    "dsh-mcp-manager-ui",
+    "dsh-md-notes",
+    "dsh-memory-eternal",
+    "dsh-memory-spaces",
+    "dsh-minecraft-ui",
+    "dsh-mnemos",
+    "dsh-model-memory",
+    "dsh-nba-pets",
+    "dsh-nested-followups",
+    "dsh-open-code-review",
+    "dsh-opencode-xdbridge",
+    "dsh-orbital-agents",
+    "dsh-paste-to-path",
+    "dsh-patchouli",
+    "dsh-plan-mode-plus",
+    "dsh-plugin-autoevo",
+    "dsh-plugin-greet",
+    "dsh-plugin-langfuse",
+    "dsh-plugin-model-capability",
+    "dsh-plugin-nexus-sdlc",
+    "dsh-plugin-observatory",
+    "dsh-plugin-slashx-gateway",
+    "dsh-plugin-smart-config",
+    "dsh-plugin-upgrade-015",
+    "dsh-portable-tavern",
+    "dsh-querit",
+    "dsh-recheck",
+    "dsh-remote-server",
+    "dsh-repeat-tool-breaker",
+    "dsh-research-library",
+    "dsh-retry-guard",
+    "dsh-round-table",
+    "dsh-rule-engine",
+    "dsh-run2skill",
+    "dsh-safe-delete",
+    "dsh-safe-web-fetch",
+    "dsh-searxng",
+    "dsh-secret-scrub",
+    "dsh-session-folders",
+    "dsh-session-import-codex",
+    "dsh-signal",
+    "dsh-sleev",
+    "dsh-specflow",
+    "dsh-style-hub",
+    "dsh-subagent-fork-lite",
+    "dsh-subagent-profile",
+    "dsh-subagent-progress",
+    "dsh-tacit",
+    "dsh-task-console",
+    "dsh-telemetry-redactor",
+    "dsh-testkit",
+    "dsh-ticker-jp",
+    "dsh-timeband",
+    "dsh-toolfold",
+    "dsh-turn-budget",
+    "dsh-universe-api",
+    "dsh-us-stocks",
+    "dsh-usage-chart",
+    "dsh-usage-stats",
+    "dsh-user-experience",
+    "dsh-user-prompt",
+    "dsh-vision-adapter",
+    "dsh-vision-fallback",
+    "dsh-vision-proxy-route",
+    "dsh-web-search-brave",
+    "dsh-web-search-pro",
+    "dsh-web-search-tavily",
+    "dsh-web-shell",
+    "dsh-webui-background",
+    "dsh-whale-report",
+    "dsh-whale-usage",
+    "dsh-with-pencil",
+    "dsh-workspace-files",
+    "dsh-worktree-panel",
+    "dsh-write-gate",
+    "dsh-xingtu-skills",
+    "dsh_check_updates",
+    "dshmarketplace-plugin",
+    "hanamesh-core",
+    "hanamesh-usage",
+    "harness-github",
+    "jacky-creator",
+    "jevcore-dsh",
+    "muche-dsh-plugin",
+    "pi2dsh",
+    "routinekit",
+    "seektty",
+    "shidi-dsh-plugin",
+    "spec-wave"
+  ]
+}

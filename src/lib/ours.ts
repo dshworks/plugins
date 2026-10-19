@@ -63,6 +63,17 @@ export const OURS: OurPlugin[] = [
       "adds the site-skill store ego's own README still lists as coming soon, so the second " +
       "scrape of a dashboard calls a tool the agent wrote last week.",
   },
+  {
+    href: "https://github.com/dshworks/dsh-solidworks",
+    name: "dsh-solidworks",
+    npm: "@dshworks/dsh-solidworks",
+    kind: "CAD",
+    what:
+      "The SOLIDWORKS on your desk, 2016 or later, on the PC or in a Windows VM beside your " +
+      "Mac. dsh models a part from a paragraph and checks its volume against its own " +
+      "arithmetic, reads the face you selected, assembles, checks interference and draws it " +
+      "to PDF. Your files open read-only unless you say otherwise.",
+  },
 ];
 
 const WORDS = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];

@@ -42,7 +42,8 @@ exempts that one pair.
 
 The [plugin registry](https://github.com/dshworks/awesome-dsh-plugins) records
 the dsh version each row's install path was checked against. From today it
-stamps 0.2.1-rc.2 on what it proves. Rows proven earlier keep the version and
+stamps 0.2.1-rc.2 on what it proves
+([#173](https://github.com/dshworks/awesome-dsh-plugins/pull/173)). Rows proven earlier keep the version and
 date they were proven on: moving them because a tag moved would claim a check
 nobody ran. The files the prover reads at dsh-v0.2.1-rc.2 say what they said at
 0.2.0-rc.2, apart from the `engines.dsh` rule it already follows: a package

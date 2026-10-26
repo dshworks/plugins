@@ -1,6 +1,6 @@
 {
-  "measured": "2026-10-19",
-  "measuredAt": "2026-10-19T08:58:44.499Z",
+  "measured": "2026-10-26",
+  "measuredAt": "2026-10-26T11:27:05.021Z",
   "method": "npm's latest manifest for every npm name in the registry; dsh's own compatibility gate (plugin-compatibility.ts, semver.satisfies with includePrerelease; engines.dsh first from 0.2.1-alpha.4) applied to the dsh versions on npm's latest and next tags; no exemptions assumed",
   "sources": {
     "registry": "https://raw.githubusercontent.com/dshworks/awesome-dsh-plugins/main/data/plugins.json",
@@ -17,9 +17,9 @@
   "gateSince": "0.1.7-rc.1",
   "enginesSince": "0.2.1-alpha.4",
   "dshTags": {
-    "latest": "0.2.1-rc.2",
     "alpha": "0.2.1-alpha.5",
-    "next": "0.2.1-rc.2"
+    "next": "0.2.1-rc.3",
+    "latest": "0.2.1-rc.2"
   },
   "dshVersions": [
     "0.0.1-rc.1",
@@ -57,61 +57,91 @@
     "0.2.1-alpha.4",
     "0.2.1-alpha.5",
     "0.2.1-rc.1",
-    "0.2.1-rc.2"
+    "0.2.1-rc.2",
+    "0.2.1-rc.3"
   ],
   "ungatedVersions": 25,
-  "npmNames": 6314,
-  "unreadable": 32,
-  "packages": 6282,
-  "declaring": 3813,
-  "noRange": 2469,
-  "engines": 752,
+  "npmNames": 6474,
+  "unreadable": 43,
+  "packages": 6431,
+  "declaring": 3940,
+  "noRange": 2491,
+  "engines": 900,
   "hosts": [
     {
       "tag": "latest",
       "version": "0.2.1-rc.2",
       "gated": true,
-      "admitted": 4805,
-      "refused": 1477,
-      "pinned": 230,
-      "byEngines": 46,
+      "admitted": 4994,
+      "refused": 1437,
+      "pinned": 208,
+      "byEngines": 49,
       "malformed": 0,
       "rule": "engines",
       "gateSource": {
         "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v0.2.1-rc.2/packages/boot/app-boot/src/plugin-compatibility.ts",
         "sha256": "3aaddccc788734dbcea920f078ae7f8209f57b3330e8431d2f4a5936cf65558f",
         "mirrored": true
+      },
+      "discoverToggle": {
+        "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v0.2.1-rc.2/docs/user/guide/plugin-market.md",
+        "name": "Custom plugin markets"
+      }
+    },
+    {
+      "tag": "next",
+      "version": "0.2.1-rc.3",
+      "gated": true,
+      "admitted": 4977,
+      "refused": 1454,
+      "pinned": 233,
+      "byEngines": 62,
+      "malformed": 0,
+      "rule": "engines",
+      "gateSource": {
+        "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v0.2.1-rc.3/packages/boot/app-boot/src/plugin-compatibility.ts",
+        "sha256": "3aaddccc788734dbcea920f078ae7f8209f57b3330e8431d2f4a5936cf65558f",
+        "mirrored": true
+      },
+      "discoverToggle": {
+        "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v0.2.1-rc.3/docs/user/guide/plugin-market.md",
+        "name": "Custom plugin markets"
       }
     }
   ],
-  "cliff": null,
-  "cliffCause": null,
+  "cliff": 52,
+  "cliffCause": {
+    "engines": 19,
+    "peers": 33,
+    "pinned": 29,
+    "malformed": 0
+  },
   "shadow": {
     "host": "0.2.1-rc.2",
     "supplied": 304,
-    "packages": 1234,
-    "harness": 336,
-    "unseen": 168,
+    "packages": 1255,
+    "harness": 332,
+    "unseen": 163,
     "names": [
       {
         "name": "@deepseek-ai/schemastery",
-        "count": 1057
+        "count": 1084
       },
       {
         "name": "@deepseek-ai/dsh-tools",
-        "count": 99
+        "count": 97
       },
       {
         "name": "@deepseek-ai/cordis",
-        "count": 85
+        "count": 84
       },
       {
         "name": "@deepseek-ai/dsh-llm",
-        "count": 59
+        "count": 58
       },
       {
         "name": "@deepseek-ai/dsh-home-paths",
-        "count": 53
+        "count": 52
       },
       {
         "name": "@deepseek-ai/dsh-settings",
@@ -131,7 +161,7 @@
       },
       {
         "name": "@deepseek-ai/dsh-atomic-write",
-        "count": 30
+        "count": 29
       }
     ]
   },
@@ -143,6 +173,7 @@
         "@deepseek-ai/dsh-session-projection": "^0.1.5-rc.1 || ^0.1.7-rc.2 || ^0.2.0-rc.1"
       },
       "latest": "admitted",
+      "next": "admitted",
       "shadows": []
     },
     {
@@ -153,6 +184,7 @@
         "@deepseek-ai/dsh-tools": "^0.1.7-alpha.1 || ^0.2.0-rc.1"
       },
       "latest": "admitted",
+      "next": "admitted",
       "shadows": []
     },
     {
@@ -163,6 +195,7 @@
         "@deepseek-ai/dsh-subprocess": "^0.1.7-alpha.1 || ^0.2.0-rc.1"
       },
       "latest": "admitted",
+      "next": "admitted",
       "shadows": []
     },
     {
@@ -173,6 +206,7 @@
         "@deepseek-ai/dsh-subprocess": "^0.1.0-rc.6 || ^0.1.1-rc.1 || ^0.1.2-rc.1 || ^0.1.5-rc.1 || ^0.1.7-rc.2 || ^0.2.0-rc.1"
       },
       "latest": "admitted",
+      "next": "admitted",
       "shadows": []
     },
     {
@@ -183,6 +217,7 @@
       },
       "engines": "^0.2.0-rc.1",
       "latest": "admitted",
+      "next": "admitted",
       "shadows": []
     }
   ]

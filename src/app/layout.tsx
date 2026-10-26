@@ -33,6 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const THEME_SCRIPT = `try{var t=localStorage.getItem('dsh-theme');if(t&&t!=='auto')document.documentElement.dataset.theme=t}catch(e){}`;
 
 import AdBar from "./adbar";
+import SiteLinks from "./sitelinks";
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -55,14 +56,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <a className="sitebar-brand" href="https://dsh.works/">
             <span className="caret">&gt;</span> dsh<i>.works</i>
           </a>
-          <span className="sitebar-links">
-            <a href="/" aria-current="page">plugins</a>
-            <a href="/awesome-dsh-themes/">themes</a>
-            <a href="/notes">notes</a>
-            <a href="#ours">ours</a>
-            <a href="/api/plugins">api</a>
-            <a href="https://github.com/dshworks">github</a>
-          </span>
+          <SiteLinks />
         </nav>
         {children}
       </body>

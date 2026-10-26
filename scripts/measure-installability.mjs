@@ -255,6 +255,18 @@ for (const h of hosts.filter((x) => x.gated)) {
   h.gateSource = { url, sha256, mirrored: sha256 === GATE_SHA256[h.rule] };
 }
 
+// The #discover copy names the switch that turns on the Discover tab, and
+// dsh's master has renamed it ("Custom plugin markets" -> "Custom plugin
+// indexes") in no release yet. Read the name each host's own guide prints,
+// so check-claims turns the build red the day `latest` carries the rename.
+const DISCOVER_GUIDE = "docs/user/guide/plugin-market.md";
+for (const h of hosts) {
+  const url = `https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v${h.version}/${DISCOVER_GUIDE}`;
+  const res = await fetch(url);
+  const name = res.ok ? ((await res.text()).match(/\*\*(Custom plugin [^*]+)\*\*/)?.[1] ?? null) : null;
+  h.discoverToggle = { url, name };
+}
+
 let t0 = Date.now();
 const supplied = await hostSupplies(tags.latest);
 console.log(`host closure: ${supplied.size} @deepseek-ai names under dsh ${tags.latest} in ${((Date.now() - t0) / 1000).toFixed(1)}s`);
@@ -306,6 +318,7 @@ const published = hosts.map((h) => {
     malformed: refused.filter((r) => r.verdicts[h.tag].malformed).length,
     ...(h.gated ? { rule: h.rule } : {}),
     ...(h.gateSource ? { gateSource: h.gateSource } : {}),
+    discoverToggle: h.discoverToggle,
   };
 });
 const next = hosts.find((h) => h.tag === "next");

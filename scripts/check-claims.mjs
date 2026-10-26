@@ -216,6 +216,24 @@ for (const [file, field, script] of [
     + "the sentence about our plugins would be built from nothing. Re-run scripts/measure-installability.mjs.");
 }
 
+// --- 4b. the Discover switch has the name the shipping dsh prints ------------
+//
+// The #discover section says to switch on "Custom plugin markets". On
+// 2026-10-26 dsh's master called it "Custom plugin indexes" and moved it out
+// of the More menu, but 0.2.1-rc.2 (latest) and rc.3 (next) still printed the
+// old name. The census reads the name from the guide at each host's tag; the
+// copy must name the one `latest` prints.
+{
+  const inst = JSON.parse(read("data/installability.json"));
+  const toggle = (inst.hosts ?? []).find((h) => h.tag === "latest")?.discoverToggle;
+  check(toggle?.name && page.includes(`<strong>${toggle.name}</strong>`),
+    toggle?.name
+      ? `page.tsx #discover does not name "${toggle.name}", the switch dsh ${inst.hosts.find((h) => h.tag === "latest").version} `
+        + `prints (${toggle.url}). Rewrite the steps from that guide, including where the switch now sits.`
+      : `data/installability.json has no Discover switch name for dsh's latest (${toggle?.url ?? "not measured"}). `
+        + "The guide moved or the census is old; re-read it and re-run scripts/measure-installability.mjs.");
+}
+
 // --- 5. no hand-typed percentage in the copy ---------------------------------
 //
 // "with 98.8% of the dsh-plugin topic decided" was typed on 2026-08-19. The

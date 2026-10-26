@@ -62,6 +62,14 @@ export default async function Home() {
   );
 
   const age = eco?.age ?? null;
+  // The headline release is the plurality, not necessarily a majority: on
+  // 2026-10-26 it was 9,909 of 20,769 rows, under a sentence that said "most".
+  const massIsMajority = (meta.verifiedSpread?.[0]?.count ?? 0) * 2 > meta.counts.plugins;
+  // Rows already checked under the release a fresh install gets. The "behind"
+  // note used to say none were while the spread printed above it listed 315.
+  const onRelease = age?.release
+    ? (meta.verifiedSpread?.find((v) => v.version === age.release!.version)?.count ?? 0)
+    : 0;
   const proofPct = Math.round((meta.counts.withProof / meta.counts.plugins) * 100);
   const p = specimen?.plugin ?? null;
   // Printed rather than absorbed. 6,290 with 59 dead rows inside it is exactly
@@ -787,7 +795,8 @@ export default async function Home() {
               Every row carries <code>lastVerified</code> and <code>verifiedAgainst</code> — the
               exact dsh release it was checked under. The harness is a developer preview that has
               already removed one manifest format with no migration, so an undated &ldquo;works
-              with dsh&rdquo; is a rumour. Most rows here were checked against{" "}
+              with dsh&rdquo; is a rumour. {massIsMajority ? "Most rows here were" : "The largest share here was"}{" "}
+              checked against{" "}
               <code>{meta.verifiedAgainst ?? "—"}</code>
               {(meta.verifiedSpread?.length ?? 0) > 1 && (
                 <>
@@ -812,10 +821,18 @@ export default async function Home() {
               <p className="fine" style={{ margin: "0.6rem 0 0" }}>
                 <span className="pill warn">behind</span> dsh{" "}
                 <code>{age.release.version}</code> shipped{" "}
-                {age.release.published ?? "recently"} — newer than the release these rows were
-                checked against. Nothing here has been re-verified under it yet, and we would
-                rather say so than quietly change the label. Treat every install path as checked
-                under <code>{meta.verifiedAgainst}</code> until the next sweep dates it forward.
+                {age.release.published ?? "recently"}.{" "}
+                {onRelease > 0 ? (
+                  <>
+                    {onRelease.toLocaleString()} of {meta.counts.plugins.toLocaleString()} rows have
+                    been checked under it so far; the rest carry
+                  </>
+                ) : (
+                  <>Nothing here has been checked under it yet; every row carries</>
+                )}{" "}
+                the release it was checked against, and we would rather say so than quietly change
+                the label. Treat each install path as checked under the release its own page
+                names until a sweep dates it forward.
               </p>
             )}
             {/* latest and next come apart, and when they do a reader who saw
@@ -912,9 +929,9 @@ export default async function Home() {
         <strong>Custom plugin markets</strong> under Plugins &rsaquo; More, open{" "}
         <strong>Discover</strong>, choose <strong>Add index source</strong>, and enter:
       </p>
-      <pre>
-        <code>https://dsh.works/awesome-dsh-plugins/market/index.json</code>
-      </pre>
+      <code className="cmd" style={{ marginBottom: "0.8rem" }}>
+        https://dsh.works/awesome-dsh-plugins/market/index.json
+      </code>
       <p className="fine">
         Use that address exactly; dsh refuses redirects. Git-only entries are not in it yet.
         Install still asks you first, and dsh runs its own compatibility check before anything

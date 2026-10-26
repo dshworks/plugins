@@ -19,8 +19,9 @@ export async function GET() {
 > publishes. Community-run, MIT, not affiliated with DeepSeek.
 
 Built ${meta?.built ?? "?"} from the open registry at
-https://github.com/dshworks/awesome-dsh-plugins, checked against dsh
-${meta?.verifiedAgainst ?? "?"}. ${n(c?.withProof)} of ${n(c?.plugins)} entries carry an \`evidence\`
+https://github.com/dshworks/awesome-dsh-plugins. Every entry is dated with the
+dsh release it was checked under; the largest share, ${n(meta?.verifiedSpread?.[0]?.count)}, under
+${meta?.verifiedAgainst ?? "?"} (the full spread is in /api/plugins). ${n(c?.withProof)} of ${n(c?.plugins)} entries carry an \`evidence\`
 receipt: the \`path#key\` of a file on the repo's default branch that a reader
 can open. Entries without one say so on their page rather than being quietly
 dropped or quietly badged.

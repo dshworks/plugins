@@ -241,8 +241,15 @@ const versions = Object.keys(dsh.versions).sort(semver.compare);
 const tags = dsh["dist-tags"];
 // `next` is only a second host when it is ahead of `latest`; the day 0.2.0
 // reaches `latest` the forward question disappears until npm serves another.
+// npm also publishes before the git tag exists (0.2.1-rc.4 sat on `next`
+// with no dsh-v0.2.1-rc.4 for hours), and without the tag there is no gate
+// to read. Probe the tag, not GATE_FILE, so a gate that moved still fails.
 const hosts = [{ tag: "latest", version: tags.latest }];
-if (tags.next && semver.gt(tags.next, tags.latest)) hosts.push({ tag: "next", version: tags.next });
+if (tags.next && semver.gt(tags.next, tags.latest)) {
+  const probe = `https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v${tags.next}/package.json`;
+  if ((await fetch(probe, { method: "HEAD" })).ok) hosts.push({ tag: "next", version: tags.next });
+  else console.log(`next ${tags.next} has no git tag dsh-v${tags.next} yet; measuring latest only`);
+}
 for (const h of hosts) {
   h.gated = semver.gte(h.version, GATE_SINCE);
   if (h.gated) h.rule = ruleOf(h.version);

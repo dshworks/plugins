@@ -461,6 +461,9 @@ input[type="search"]:focus { outline: 2px solid var(--cyan); outline-offset: 1px
   .verdict dd { font-size: 0.8rem; line-height: 1.5; }
   .console-body { padding: 0.8rem 0.75rem 0.9rem; }
   .console-foot { font-size: 0.68rem; margin-top: 0.6rem; padding-top: 0.55rem; }
+  /* At rest the count only repeats the placeholder's number, and on a phone it
+   * cut the placeholder to "search 21,928 plu". It comes back as "N shown". */
+  .console-q .count.idle { display: none; }
 }
 
 .console-foot {

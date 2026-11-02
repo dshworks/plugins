@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Sponsor a seat",
   description:
     "Four advertising seats on dsh.works. What a seat buys, what it explicitly cannot buy, what it costs, and how to take one.",
+  alternates: { canonical: "/sponsor" },
 };
 
 // The terms page.
@@ -67,10 +68,10 @@ export default async function Sponsor() {
           <div className="label">The box</div>
           <div className="body">
             <p style={{ marginBottom: 0 }}>
-              One of four gold boxes on the board at the very top of the front page — above the
-              headline, above the console, above every chart and every list. It is the first thing
-              on the page, framed and labelled ADVERTISEMENT so nobody mistakes it for us. Your
-              name, one line of your own copy, and a link. Served from the same static build as
+              One of four rows on the sponsor board on the front page, directly under the search
+              console — above every chart and every list. The board is headed Sponsor board and
+              says Advertising under it, so nobody mistakes it for us. Your name, one line of your
+              own copy, and a link. Served from the same static build as
               everything else: no third-party ad script, no tracker, no auction, nothing loaded
               from a network we do not control.
             </p>

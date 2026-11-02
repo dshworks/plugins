@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--
+  The social card, rendered to public/og.png (1200x630).
+  It carries no count on purpose: a number baked into a PNG is the stale-copy
+  defect scripts/check-claims.mjs exists to catch, in the one place it cannot
+  look. Render: open this file in any Chromium at a 1200x630 viewport and
+  screenshot the page; commit the PNG.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>dsh.works og card</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap">
+<style>
+  html, body { margin: 0; background: #000; color: #e8e8e8; width: 1200px; height: 630px; overflow: hidden; }
+  .og { position: relative; box-sizing: border-box; width: 1200px; height: 630px; padding: 64px 80px;
+        font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 300; }
+  .brand { font-size: 26px; font-weight: 700; color: #fff; }
+  .brand .caret { color: #e41478; }
+  .brand i { font-style: normal; font-weight: 300; color: #9a9a9a; }
+  h1 { margin: 34px 0 0; font-size: 64px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; color: #fff; }
+  .lede { margin: 18px 0 0; max-width: 900px; font-size: 21px; line-height: 1.5; color: #9a9a9a; }
+  .receipt { position: absolute; left: 80px; right: 80px; bottom: 92px; border: 1px solid #262626; border-radius: 3px;
+             background: #0d0d0d; padding: 22px 26px; display: grid; grid-template-columns: 150px 1fr; row-gap: 12px;
+             font-size: 20px; }
+  .receipt dt { color: #e41478; font-size: 14px; letter-spacing: 0.14em; padding-top: 4px; }
+  .receipt dd { margin: 0; color: #e8e8e8; }
+  .receipt code { color: #00c2e9; }
+  .receipt .cmd { background: #141414; border: 1px solid #262626; border-radius: 3px; padding: 2px 10px; }
+  .foot { position: absolute; left: 80px; right: 80px; bottom: 40px; font-size: 16px; color: #9a9a9a; }
+</style>
+</head>
+<body>
+<div class="og">
+  <div class="brand"><span class="caret">&gt;</span> dsh<i>.works</i></div>
+  <h1>Should you install it?</h1>
+  <p class="lede">Every DeepSeek Harness plugin, with the file that proves it installs, whether anyone still maintains it, and how crowded the shelf is.</p>
+  <dl class="receipt">
+    <dt>PROOF</dt><dd><code>package.json#dsh.bundle</code></dd>
+    <dt>INSTALL</dt><dd><span class="cmd">dsh plugin --profile web add &lt;name&gt;</span></dd>
+    <dt>NOT</dt><dd>a security review. Each row names the dsh it was checked against.</dd>
+  </dl>
+  <div class="foot">community-run · not affiliated with DeepSeek</div>
+</div>
+</body>
+</html>

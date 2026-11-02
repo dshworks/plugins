@@ -81,7 +81,7 @@ export default function Console({
             onChange={(e) => setQ(e.target.value)}
             aria-label={`Search ${count} plugins by name or description`}
           />
-          <span className="count">
+          <span className={active && rows ? "count" : "count idle"}>
             {active && rows ? `${matched}${matched >= 60 ? "+" : ""} shown` : `${count.toLocaleString()} indexed`}
           </span>
         </div>

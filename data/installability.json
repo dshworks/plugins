@@ -1,6 +1,6 @@
 {
-  "measured": "2026-10-27",
-  "measuredAt": "2026-10-27T07:19:12.516Z",
+  "measured": "2026-11-02",
+  "measuredAt": "2026-11-02T07:08:35.359Z",
   "method": "npm's latest manifest for every npm name in the registry; dsh's own compatibility gate (plugin-compatibility.ts, semver.satisfies with includePrerelease; engines.dsh first from 0.2.1-alpha.4) applied to the dsh versions on npm's latest and next tags; no exemptions assumed",
   "sources": {
     "registry": "https://raw.githubusercontent.com/dshworks/awesome-dsh-plugins/main/data/plugins.json",
@@ -17,9 +17,9 @@
   "gateSince": "0.1.7-rc.1",
   "enginesSince": "0.2.1-alpha.4",
   "dshTags": {
-    "alpha": "0.2.1-alpha.5",
-    "latest": "0.2.1-rc.2",
-    "next": "0.2.1-rc.4"
+    "latest": "0.2.1-rc.5",
+    "alpha": "0.2.2-alpha.2",
+    "next": "0.2.1-rc.5"
   },
   "dshVersions": [
     "0.0.1-rc.1",
@@ -59,33 +59,35 @@
     "0.2.1-rc.1",
     "0.2.1-rc.2",
     "0.2.1-rc.3",
-    "0.2.1-rc.4"
+    "0.2.1-rc.4",
+    "0.2.1-rc.5",
+    "0.2.2-alpha.2"
   ],
   "ungatedVersions": 25,
-  "npmNames": 6911,
+  "npmNames": 6964,
   "unreadable": 44,
-  "packages": 6867,
-  "declaring": 4231,
-  "noRange": 2636,
-  "engines": 1099,
+  "packages": 6920,
+  "declaring": 4281,
+  "noRange": 2639,
+  "engines": 1161,
   "hosts": [
     {
       "tag": "latest",
-      "version": "0.2.1-rc.2",
+      "version": "0.2.1-rc.5",
       "gated": true,
-      "admitted": 5396,
-      "refused": 1471,
-      "pinned": 207,
-      "byEngines": 71,
+      "admitted": 5454,
+      "refused": 1466,
+      "pinned": 226,
+      "byEngines": 79,
       "malformed": 0,
       "rule": "engines",
       "gateSource": {
-        "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v0.2.1-rc.2/packages/boot/app-boot/src/plugin-compatibility.ts",
+        "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v0.2.1-rc.5/packages/boot/app-boot/src/plugin-compatibility.ts",
         "sha256": "3aaddccc788734dbcea920f078ae7f8209f57b3330e8431d2f4a5936cf65558f",
         "mirrored": true
       },
       "discoverToggle": {
-        "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v0.2.1-rc.2/docs/user/guide/plugin-market.md",
+        "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v0.2.1-rc.5/docs/user/guide/plugin-market.md",
         "name": "Custom plugin markets"
       }
     }
@@ -93,27 +95,27 @@
   "cliff": null,
   "cliffCause": null,
   "shadow": {
-    "host": "0.2.1-rc.2",
-    "supplied": 304,
-    "packages": 1301,
-    "harness": 338,
-    "unseen": 165,
+    "host": "0.2.1-rc.5",
+    "supplied": 305,
+    "packages": 1314,
+    "harness": 336,
+    "unseen": 163,
     "names": [
       {
         "name": "@deepseek-ai/schemastery",
-        "count": 1126
+        "count": 1140
       },
       {
         "name": "@deepseek-ai/dsh-tools",
-        "count": 97
+        "count": 96
       },
       {
         "name": "@deepseek-ai/cordis",
-        "count": 84
+        "count": 85
       },
       {
         "name": "@deepseek-ai/dsh-llm",
-        "count": 57
+        "count": 58
       },
       {
         "name": "@deepseek-ai/dsh-home-paths",
@@ -121,7 +123,7 @@
       },
       {
         "name": "@deepseek-ai/dsh-settings",
-        "count": 50
+        "count": 49
       },
       {
         "name": "@deepseek-ai/dsh-session",

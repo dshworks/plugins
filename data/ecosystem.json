@@ -1,17 +1,17 @@
 {
   "$comment": "Measured from the GitHub search API. total_count is exact even though the result list caps at 1000. Re-derive with scripts/measure-ecosystem.mjs.",
-  "measured": "2026-10-19",
+  "measured": "2026-11-02",
   "topic": "dsh-plugin",
   "launch": "2026-08-13",
   "query": "topic:dsh-plugin created:<DATE",
-  "total": 20845,
-  "withStars": 10517,
+  "total": 25649,
+  "withStars": 12745,
   "release": {
-    "version": "0.2.1-rc.2",
-    "published": "2026-10-17"
+    "version": "0.2.1-rc.5",
+    "published": "2026-10-29"
   },
-  "beforeFirstDay": 477,
-  "sinceLaunch": 20201,
+  "beforeFirstDay": 499,
+  "sinceLaunch": 24984,
   "series": [
     {
       "date": "2026-08-06",
@@ -31,7 +31,7 @@
     },
     {
       "date": "2026-08-10",
-      "created": 31
+      "created": 30
     },
     {
       "date": "2026-08-11",
@@ -43,47 +43,47 @@
     },
     {
       "date": "2026-08-13",
-      "created": 617
+      "created": 614
     },
     {
       "date": "2026-08-14",
-      "created": 1846
+      "created": 1833
     },
     {
       "date": "2026-08-15",
-      "created": 1530
+      "created": 1514
     },
     {
       "date": "2026-08-16",
-      "created": 1479
+      "created": 1464
     },
     {
       "date": "2026-08-17",
-      "created": 935
+      "created": 920
     },
     {
       "date": "2026-08-18",
-      "created": 658
+      "created": 647
     },
     {
       "date": "2026-08-19",
-      "created": 733
+      "created": 728
     },
     {
       "date": "2026-08-20",
-      "created": 1293
+      "created": 1290
     },
     {
       "date": "2026-08-21",
-      "created": 576
+      "created": 579
     },
     {
       "date": "2026-08-22",
-      "created": 306
+      "created": 313
     },
     {
       "date": "2026-08-23",
-      "created": 305
+      "created": 307
     },
     {
       "date": "2026-08-24",
@@ -91,11 +91,11 @@
     },
     {
       "date": "2026-08-25",
-      "created": 311
+      "created": 308
     },
     {
       "date": "2026-08-26",
-      "created": 280
+      "created": 278
     },
     {
       "date": "2026-08-27",
@@ -103,35 +103,35 @@
     },
     {
       "date": "2026-08-28",
-      "created": 392
+      "created": 389
     },
     {
       "date": "2026-08-29",
-      "created": 197
+      "created": 199
     },
     {
       "date": "2026-08-30",
-      "created": 157
+      "created": 158
     },
     {
       "date": "2026-08-31",
-      "created": 190
+      "created": 187
     },
     {
       "date": "2026-09-01",
-      "created": 156
+      "created": 159
     },
     {
       "date": "2026-09-02",
-      "created": 152
+      "created": 156
     },
     {
       "date": "2026-09-03",
-      "created": 144
+      "created": 146
     },
     {
       "date": "2026-09-04",
-      "created": 144
+      "created": 146
     },
     {
       "date": "2026-09-05",
@@ -139,19 +139,19 @@
     },
     {
       "date": "2026-09-06",
-      "created": 107
+      "created": 105
     },
     {
       "date": "2026-09-07",
-      "created": 107
-    },
-    {
-      "date": "2026-09-08",
       "created": 110
     },
     {
+      "date": "2026-09-08",
+      "created": 113
+    },
+    {
       "date": "2026-09-09",
-      "created": 114
+      "created": 116
     },
     {
       "date": "2026-09-10",
@@ -159,7 +159,7 @@
     },
     {
       "date": "2026-09-11",
-      "created": 173
+      "created": 169
     },
     {
       "date": "2026-09-12",
@@ -167,19 +167,19 @@
     },
     {
       "date": "2026-09-13",
-      "created": 133
+      "created": 135
     },
     {
       "date": "2026-09-14",
-      "created": 139
+      "created": 138
     },
     {
       "date": "2026-09-15",
-      "created": 117
+      "created": 115
     },
     {
       "date": "2026-09-16",
-      "created": 108
+      "created": 110
     },
     {
       "date": "2026-09-17",
@@ -195,15 +195,15 @@
     },
     {
       "date": "2026-09-20",
-      "created": 112
+      "created": 115
     },
     {
       "date": "2026-09-21",
-      "created": 128
+      "created": 125
     },
     {
       "date": "2026-09-22",
-      "created": 157
+      "created": 159
     },
     {
       "date": "2026-09-23",
@@ -211,107 +211,163 @@
     },
     {
       "date": "2026-09-24",
-      "created": 94
+      "created": 99
     },
     {
       "date": "2026-09-25",
-      "created": 106
+      "created": 108
     },
     {
       "date": "2026-09-26",
-      "created": 142
+      "created": 144
     },
     {
       "date": "2026-09-27",
-      "created": 140
-    },
-    {
-      "date": "2026-09-28",
-      "created": 130
-    },
-    {
-      "date": "2026-09-29",
-      "created": 165
-    },
-    {
-      "date": "2026-09-30",
-      "created": 242
-    },
-    {
-      "date": "2026-10-01",
-      "created": 159
-    },
-    {
-      "date": "2026-10-02",
-      "created": 201
-    },
-    {
-      "date": "2026-10-03",
-      "created": 197
-    },
-    {
-      "date": "2026-10-04",
-      "created": 159
-    },
-    {
-      "date": "2026-10-05",
-      "created": 148
-    },
-    {
-      "date": "2026-10-06",
-      "created": 129
-    },
-    {
-      "date": "2026-10-07",
-      "created": 202
-    },
-    {
-      "date": "2026-10-08",
-      "created": 188
-    },
-    {
-      "date": "2026-10-09",
-      "created": 152
-    },
-    {
-      "date": "2026-10-10",
-      "created": 190
-    },
-    {
-      "date": "2026-10-11",
       "created": 142
     },
     {
+      "date": "2026-09-28",
+      "created": 134
+    },
+    {
+      "date": "2026-09-29",
+      "created": 169
+    },
+    {
+      "date": "2026-09-30",
+      "created": 251
+    },
+    {
+      "date": "2026-10-01",
+      "created": 164
+    },
+    {
+      "date": "2026-10-02",
+      "created": 204
+    },
+    {
+      "date": "2026-10-03",
+      "created": 195
+    },
+    {
+      "date": "2026-10-04",
+      "created": 160
+    },
+    {
+      "date": "2026-10-05",
+      "created": 145
+    },
+    {
+      "date": "2026-10-06",
+      "created": 138
+    },
+    {
+      "date": "2026-10-07",
+      "created": 205
+    },
+    {
+      "date": "2026-10-08",
+      "created": 194
+    },
+    {
+      "date": "2026-10-09",
+      "created": 159
+    },
+    {
+      "date": "2026-10-10",
+      "created": 193
+    },
+    {
+      "date": "2026-10-11",
+      "created": 145
+    },
+    {
       "date": "2026-10-12",
-      "created": 167
+      "created": 173
     },
     {
       "date": "2026-10-13",
-      "created": 184
+      "created": 189
     },
     {
       "date": "2026-10-14",
-      "created": 196
+      "created": 179
     },
     {
       "date": "2026-10-15",
-      "created": 219
+      "created": 215
     },
     {
       "date": "2026-10-16",
-      "created": 294
+      "created": 252
     },
     {
       "date": "2026-10-17",
-      "created": 373
+      "created": 296
     },
     {
       "date": "2026-10-18",
-      "created": 405
+      "created": 355
     },
     {
       "date": "2026-10-19",
-      "created": 135
+      "created": 367
+    },
+    {
+      "date": "2026-10-20",
+      "created": 383
+    },
+    {
+      "date": "2026-10-21",
+      "created": 383
+    },
+    {
+      "date": "2026-10-22",
+      "created": 317
+    },
+    {
+      "date": "2026-10-23",
+      "created": 400
+    },
+    {
+      "date": "2026-10-24",
+      "created": 353
+    },
+    {
+      "date": "2026-10-25",
+      "created": 334
+    },
+    {
+      "date": "2026-10-26",
+      "created": 344
+    },
+    {
+      "date": "2026-10-27",
+      "created": 316
+    },
+    {
+      "date": "2026-10-28",
+      "created": 425
+    },
+    {
+      "date": "2026-10-29",
+      "created": 371
+    },
+    {
+      "date": "2026-10-30",
+      "created": 379
+    },
+    {
+      "date": "2026-10-31",
+      "created": 388
+    },
+    {
+      "date": "2026-11-01",
+      "created": 253
+    },
+    {
+      "date": "2026-11-02",
+      "created": 82
     }
   ]
 }

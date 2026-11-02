@@ -1,15 +1,15 @@
 {
-  "built": "2026-10-17",
+  "built": "2026-11-02",
   "harness": "0.1.1-rc.2",
-  "total": 18565,
+  "total": 21928,
   "source": "https://github.com/dshworks/awesome-dsh-plugins/blob/main/data/plugins.json",
   "method": "Case-insensitive regex over every `name` + `description` in the registry. Counts plugins that say they do this, not plugins proven to call the service. A census, not a sample: an earlier sampled version missed a whole category and said nobody had built it.",
-  "loudest": 2746,
-  "medianDeep": 146,
+  "loudest": 3109,
+  "medianDeep": 165,
   "ratio": 19,
   "underOnePct": 11,
   "deepCount": 17,
-  "memoryTagged": 3327,
+  "memoryTagged": 4073,
   "seams": [
     {
       "id": "e2b",
@@ -19,7 +19,7 @@
       "what": "Run the agent's code somewhere that is not your laptop.",
       "rx": "\\be2b\\b|remote sandbox|code runtime|firecracker",
       "count": 5,
-      "share": 0.00026932399676811203
+      "share": 0.00022801897117840205
     },
     {
       "id": "invariants",
@@ -28,18 +28,8 @@
       "src": "packages/runtime-diagnostics/invariants/src/index.ts",
       "what": "Assert things about a live run and fail loudly when they stop holding.",
       "rx": "invariant|assertion|property test",
-      "count": 12,
-      "share": 0.0006463775922434688
-    },
-    {
-      "id": "planMode",
-      "ctx": "ctx.planMode",
-      "deep": true,
-      "src": "packages/plan/plan-mode/src/index.ts",
-      "what": "Turn plan mode on and off from code, on conditions you choose.",
-      "rx": "plan mode|planmode|plan-mode",
-      "count": 24,
-      "share": 0.0012927551844869377
+      "count": 13,
+      "share": 0.0005928493250638453
     },
     {
       "id": "lsp",
@@ -48,8 +38,18 @@
       "src": "packages/lsp/lsp/src/index.ts",
       "what": "Register a language server. Real go-to-definition instead of grep.",
       "rx": "\\blsp\\b|language.?server|code.?intel|tree.?sitter",
-      "count": 25,
-      "share": 0.00134661998384056
+      "count": 28,
+      "share": 0.0012769062385990515
+    },
+    {
+      "id": "planMode",
+      "ctx": "ctx.planMode",
+      "deep": true,
+      "src": "packages/plan/plan-mode/src/index.ts",
+      "what": "Turn plan mode on and off from code, on conditions you choose.",
+      "rx": "plan mode|planmode|plan-mode",
+      "count": 28,
+      "share": 0.0012769062385990515
     },
     {
       "id": "uiRenderer",
@@ -58,8 +58,8 @@
       "src": "packages/client/ui-renderer/src/index.ts",
       "what": "Draw a message yourself: render a diff, a table, a chart inline.",
       "rx": "renderer|custom render|markdown render",
-      "count": 26,
-      "share": 0.0014004847831941827
+      "count": 32,
+      "share": 0.001459321415541773
     },
     {
       "id": "spillStore",
@@ -68,8 +68,8 @@
       "src": "packages/spill/spill/src/index.ts",
       "what": "Push a huge tool result out of the window and hand back a reference.",
       "rx": "\\bspill\\b|truncat|offload|large output",
-      "count": 27,
-      "share": 0.001454349582547805
+      "count": 33,
+      "share": 0.0015049252097774535
     },
     {
       "id": "timer",
@@ -78,8 +78,8 @@
       "src": "packages/extensions/cordis-client-runner/src/client/timer.ts",
       "what": "Wake up on a schedule. A standing agent instead of a reactive one.",
       "rx": "\\btimer\\b|interval|heartbeat",
-      "count": 53,
-      "share": 0.0028548343657419876
+      "count": 62,
+      "share": 0.0028274352426121852
     },
     {
       "id": "sandbox",
@@ -88,8 +88,8 @@
       "src": "packages/sandbox/sandbox/src/index.ts",
       "what": "Choose what the agent is allowed to touch, enforced rather than asked.",
       "rx": "sandbox|seatbelt|bubblewrap|firejail",
-      "count": 125,
-      "share": 0.006733099919202801
+      "count": 135,
+      "share": 0.006156512221816855
     },
     {
       "id": "feedback",
@@ -98,18 +98,8 @@
       "src": "packages/feedback/message-feedback/src/index.ts",
       "what": "Collect thumbs up/down on messages — the raw material of an eval set.",
       "rx": "feedback|thumbs|\\brating\\b|eval(uation)?\\b|benchmark",
-      "count": 146,
-      "share": 0.007864260705628871
-    },
-    {
-      "id": "agentTeams",
-      "ctx": "ctx.agentTeams",
-      "deep": true,
-      "src": "packages/experimental/agent-team/src/index.ts",
-      "what": "The experimental team service: durable teammates, a task DAG, a mailbox.",
-      "rx": "agent.?team|teammate|swarm|\\bcrew\\b|multi.?agent",
-      "count": 147,
-      "share": 0.007918125504982493
+      "count": 165,
+      "share": 0.007524626048887267
     },
     {
       "id": "jobs",
@@ -118,8 +108,18 @@
       "src": "packages/jobs/jobs/src/index.ts",
       "what": "Run work in the background, outside a conversation turn.",
       "rx": "\\bjob\\b|scheduled|\\bcron\\b|background task|unattended|daemon",
-      "count": 154,
-      "share": 0.00829517910045785
+      "count": 172,
+      "share": 0.00784385260853703
+    },
+    {
+      "id": "agentTeams",
+      "ctx": "ctx.agentTeams",
+      "deep": true,
+      "src": "packages/experimental/agent-team/src/index.ts",
+      "what": "The experimental team service: durable teammates, a task DAG, a mailbox.",
+      "rx": "agent.?team|teammate|swarm|\\bcrew\\b|multi.?agent",
+      "count": 181,
+      "share": 0.008254286756658154
     },
     {
       "id": "tokenMeter",
@@ -128,8 +128,8 @@
       "src": "packages/llm/token-meter/src/index.ts",
       "what": "Ask the harness what a session actually costs, rather than counting characters yourself.",
       "rx": "token (count|meter|usage)|tokenmeter|context usage",
-      "count": 198,
-      "share": 0.010665230272017236
+      "count": 220,
+      "share": 0.01003283473184969
     },
     {
       "id": "authorization",
@@ -138,8 +138,8 @@
       "src": "packages/credentials/authorization/src/index.ts",
       "what": "Own the credential-authorization flow instead of pasting keys into settings.",
       "rx": "authoriz|oauth|\\brbac\\b|\\bacl\\b",
-      "count": 204,
-      "share": 0.010988419068138971
+      "count": 229,
+      "share": 0.010443268879970814
     },
     {
       "id": "terminals",
@@ -148,8 +148,8 @@
       "src": "packages/terminal/terminal/src/index.ts",
       "what": "Own a real pty. Long-lived shells the agent drives, not one-shot commands.",
       "rx": "terminal|tmux|\\bpty\\b|shell session",
-      "count": 238,
-      "share": 0.012819822246162134
+      "count": 254,
+      "share": 0.011583363735862823
     },
     {
       "id": "compaction",
@@ -158,8 +158,8 @@
       "src": "packages/compaction/compaction/src/index.ts",
       "what": "Decide what falls out of the context window and what survives.",
       "rx": "compact|prun(e|ing)|context window|token budget",
-      "count": 249,
-      "share": 0.01341233503905198
+      "count": 292,
+      "share": 0.01331630791681868
     },
     {
       "id": "subagents",
@@ -168,8 +168,8 @@
       "src": "packages/subagent/subagent/src/index.ts",
       "what": "Spawn and steer child agents from inside a run.",
       "rx": "sub.?agent",
-      "count": 291,
-      "share": 0.01567465661190412
+      "count": 341,
+      "share": 0.01555089383436702
     },
     {
       "id": "workflowEngine",
@@ -178,8 +178,8 @@
       "src": "packages/workflow/workflow/src/index.ts",
       "what": "Define multi-step runs the harness executes, instead of prompting a plan and hoping.",
       "rx": "workflow|pipeline|orchestrat",
-      "count": 391,
-      "share": 0.021061136547266362
+      "count": 445,
+      "share": 0.02029368843487778
     },
     {
       "id": "webServer",
@@ -188,8 +188,8 @@
       "src": "packages/host/webserver/src/index.ts",
       "what": "Add a page or an endpoint to the Web UI. The second obvious plugin.",
       "rx": "web ?ui|panel|dashboard|web page|settings tab",
-      "count": 1531,
-      "share": 0.08246700781039591
+      "count": 1738,
+      "share": 0.07925939438161254
     },
     {
       "id": "tools",
@@ -198,8 +198,8 @@
       "src": "packages/core/tools/src/index.ts",
       "what": "Add a tool the model can call. The obvious plugin, and the one everybody wrote.",
       "rx": "\\btool\\b|tools|toolkit|mcp",
-      "count": 2746,
-      "share": 0.14791273902504712
+      "count": 3109,
+      "share": 0.1417821962787304
     }
   ]
 }

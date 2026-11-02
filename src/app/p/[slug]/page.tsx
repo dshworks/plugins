@@ -133,7 +133,7 @@ export default async function PluginPage({ params }: Props) {
                 others tagged <code>{tag.tag}</code> pushed more recently.
               </>
             )}
-            {tag && fresher.length === 0 && tag.count > 1 && (
+            {tag && fresher.length === 0 && tag.count > 1 && p.pulse.days !== null && (
               <>
                 {" "}— the most recently pushed of the {tag.count.toLocaleString()} plugins tagged{" "}
                 <code>{tag.tag}</code>.

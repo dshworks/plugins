@@ -52,10 +52,16 @@ A dsh bundle, with no new dsh surface and no daemon of its own.
 We ran both install paths on dsh 0.2.1-rc.5, the current `latest`, from
 scratch profiles with no GitHub or Feishu credentials.
 
-| path | result |
-| --- | --- |
-| `dsh plugin add github:deepseek-ai/dsh-superagent-prototype` | The gate admits it. The web profile then reports "2 entries did not activate ... Cannot find module .../dsh-superagent/lib/index.js". |
-| clone, `pnpm install && pnpm build`, `dsh superagent --from-default-profile web`, `dsh plugin --profile superagent add link:$PWD` ([docs/006](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/6337fc823ce20251c8de8085948165c81aaa701e/docs/006-deployment.md)) | Builds and boots with every entry active. The panel reports `paused`, waiting for setup: "The GitHub Source names no repository". That is the expected first-run state. |
+- **Straight from git:** `dsh plugin add github:deepseek-ai/dsh-superagent-prototype`.
+  The gate admits it. The web profile then reports "2 entries did not
+  activate ... Cannot find module .../dsh-superagent/lib/index.js".
+- **The documented path:** clone, `pnpm install && pnpm build`,
+  `dsh superagent --from-default-profile web`, then
+  `dsh plugin --profile superagent add link:$PWD`
+  ([docs/006](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/6337fc823ce20251c8de8085948165c81aaa701e/docs/006-deployment.md)).
+  It builds and boots with every entry active. The panel reports `paused`,
+  waiting for setup: "The GitHub Source names no repository". That is the
+  expected first-run state.
 
 The git install fails because `lib/` is build output, it is not committed, and
 the package has no `prepare` script to build it. The docs pin dsh

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getNote } from "@/lib/notes";
+import { OG_IMAGES } from "@/lib/og";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -12,7 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: n.title,
     description: n.summary.slice(0, 200),
     alternates: { canonical: `/notes/${n.slug}` },
-    openGraph: { type: "article", title: n.title, description: n.summary.slice(0, 200) },
+    openGraph: { type: "article", title: n.title, description: n.summary.slice(0, 200), images: OG_IMAGES },
   };
 }
 

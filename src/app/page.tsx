@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getEcosystem, getMeta, getSeams, getSpecimen, getSponsors, getTag, saidPulse } from "@/lib/data";
 import { tagLabel } from "@/lib/tags";
 import { OURS, oursCount, spell } from "@/lib/ours";
@@ -35,6 +36,10 @@ import { AgeChart, InstallLadder, OwnerLadder, SeamMap, ShelfMap, StarLadder } f
  * FINISH          unreviewed is unfinished: this build ends with the review,
  *                 the verdict, and DESIGN.md.
  */
+// The root is reached as dsh.works/?utm_source=... too, which the Worker's
+// routes cannot catch (see wrangler.jsonc); the canonical names the one URL.
+export const metadata: Metadata = { alternates: { canonical: "/" } };
+
 export default async function Home() {
   const [meta, eco, specimen, sponsors, seams] = await Promise.all([
     getMeta(),

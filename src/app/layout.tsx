@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getMeta } from "@/lib/data";
+import { OG_IMAGES } from "@/lib/og";
 import "./globals.css";
 
 // Derived, not typed in. The count in this description was 6,290 for a week
@@ -15,8 +16,8 @@ export async function generateMetadata(): Promise<Metadata> {
     title: { default: "dsh.works — should you install it?", template: "%s — dsh.works" },
     description:
       `Not another list. For each of ${n} DeepSeek Harness plugins: the file that proves it installs, whether anyone still maintains it, and how crowded the shelf is. Community-run, not affiliated with DeepSeek.`,
-    openGraph: { type: "website", siteName: "dsh.works" },
-    twitter: { card: "summary" },
+    openGraph: { type: "website", siteName: "dsh.works", images: OG_IMAGES },
+    twitter: { card: "summary_large_image" },
     // The front page's design promise lives in a source comment, which the
     // bundler strips — so the one line that makes it auditable against the
     // render is emitted as real markup. Anyone can now check the shipped page

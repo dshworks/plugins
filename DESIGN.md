@@ -49,7 +49,8 @@ sponsor's mark is `--board-ink` at full strength; amber marks what is *available
 
 ## The seats
 
-Four, `$490/yr`, inventory in `data/sponsors.json` (committed on purpose — see
+Four: three at `$29/mo`, one at `$229/yr` (the price lives on the seat, in
+`data/sponsors.json`, which is committed on purpose — see
 `.gitignore`, and note dshthemes.com fetches it from this repo's raw URL).
 
 Built on the staging **Sponsor Seats as a Numbered Plate**, dressed in

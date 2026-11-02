@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPlugin, getTag, installCommand, saidPulse } from "@/lib/data";
 import { tagLabel } from "@/lib/tags";
+import { OG_IMAGES } from "@/lib/og";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: p.name,
     description: desc.slice(0, 200),
     alternates: { canonical: `/p/${p.slug}` },
-    openGraph: { title: `${p.name} — dsh plugins`, description: desc.slice(0, 200) },
+    openGraph: { title: `${p.name} — dsh plugins`, description: desc.slice(0, 200), images: OG_IMAGES },
   };
 }
 

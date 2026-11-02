@@ -56,6 +56,9 @@
     // The favicon (src/app/icon.svg). Its link carries a ?hash, hence the *.
     // Shipped once without this route and 404'd from the Pages origin.
     { "pattern": "dsh.works/icon.svg*", "zone_name": "dsh.works" },
+    // The social card (public/og.png). Same trap as the favicon: unlisted, it
+    // would 404 from the Pages origin while every page's og:image named it.
+    { "pattern": "dsh.works/og.png*", "zone_name": "dsh.works" },
     // The seats link here. Because the Worker owns paths rather than the
     // hostname, a page that is not on this list never reaches it and falls
     // through to the Pages origin as a 404 — which is exactly what /sponsor

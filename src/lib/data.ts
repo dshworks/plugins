@@ -16,6 +16,9 @@ export type Plugin = {
   repo: string;
   path?: string;
   npm?: string;
+  // Hand-set in the registry when the generated line does not work (a git
+  // install of uncommitted build output): the author's steps, shown instead.
+  install?: string;
   description?: string;
   category?: string;
   tags: string[];
@@ -240,6 +243,7 @@ export const getSlugs = () => asset<{ built: string; slugs: string[] }>("slugs.j
 // The install command the registry's README derives, reproduced so the reader
 // can copy it without leaving the page.
 export function installCommand(p: Plugin): string {
+  if (p.install) return p.install;
   if (p.npm) return `dsh plugin --profile web add ${p.npm}`;
   const spec = p.path ? `github:${p.repo}#path=${p.path}` : `github:${p.repo}`;
   return `dsh plugin --profile web add "${spec}"`;

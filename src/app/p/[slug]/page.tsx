@@ -102,9 +102,15 @@ export default async function PluginPage({ params }: Props) {
         </Row>
 
         <Row label="Install">
-          <code className="cmd">{installCommand(p)}</code>
+          {p.install ? <p>{p.install}</p> : <code className="cmd">{installCommand(p)}</code>}
           <p className="fine" style={{ margin: "0.5rem 0 0" }}>
-            {p.npm ? (
+            {p.install ? (
+              <>
+                The generated <code>dsh plugin add</code> line installs this entry and then fails
+                to load it, so these are its author&apos;s steps. They build and run its code on
+                your machine; read them first.
+              </>
+            ) : p.npm ? (
               <>
                 Published to npm as <code>{p.npm}</code>.
               </>

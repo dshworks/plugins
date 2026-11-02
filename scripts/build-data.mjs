@@ -95,6 +95,7 @@ const entries = raw.map((p) => {
     repo: p.repo,
     path: p.path,
     npm: p.npm,
+    install: p.install,
     description: p.description,
     category: p.category,
     tags: p.tags ?? [],

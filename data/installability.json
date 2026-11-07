@@ -1,6 +1,6 @@
 {
-  "measured": "2026-11-02",
-  "measuredAt": "2026-11-02T07:08:35.359Z",
+  "measured": "2026-11-07",
+  "measuredAt": "2026-11-07T08:55:23.502Z",
   "method": "npm's latest manifest for every npm name in the registry; dsh's own compatibility gate (plugin-compatibility.ts, semver.satisfies with includePrerelease; engines.dsh first from 0.2.1-alpha.4) applied to the dsh versions on npm's latest and next tags; no exemptions assumed",
   "sources": {
     "registry": "https://raw.githubusercontent.com/dshworks/awesome-dsh-plugins/main/data/plugins.json",
@@ -17,9 +17,9 @@
   "gateSince": "0.1.7-rc.1",
   "enginesSince": "0.2.1-alpha.4",
   "dshTags": {
-    "latest": "0.2.1-rc.5",
-    "alpha": "0.2.2-alpha.2",
-    "next": "0.2.1-rc.5"
+    "latest": "0.2.2-rc.1",
+    "alpha": "0.2.2-alpha.3",
+    "next": "0.2.2-rc.1"
   },
   "dshVersions": [
     "0.0.1-rc.1",
@@ -61,85 +61,87 @@
     "0.2.1-rc.3",
     "0.2.1-rc.4",
     "0.2.1-rc.5",
-    "0.2.2-alpha.2"
+    "0.2.2-alpha.2",
+    "0.2.2-alpha.3",
+    "0.2.2-rc.1"
   ],
   "ungatedVersions": 25,
-  "npmNames": 6964,
-  "unreadable": 44,
-  "packages": 6920,
-  "declaring": 4281,
-  "noRange": 2639,
-  "engines": 1161,
+  "npmNames": 10768,
+  "unreadable": 54,
+  "packages": 10714,
+  "declaring": 6275,
+  "noRange": 4439,
+  "engines": 2456,
   "hosts": [
     {
       "tag": "latest",
-      "version": "0.2.1-rc.5",
+      "version": "0.2.2-rc.1",
       "gated": true,
-      "admitted": 5454,
-      "refused": 1466,
-      "pinned": 226,
-      "byEngines": 79,
+      "admitted": 9168,
+      "refused": 1546,
+      "pinned": 237,
+      "byEngines": 116,
       "malformed": 0,
       "rule": "engines",
       "gateSource": {
-        "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v0.2.1-rc.5/packages/boot/app-boot/src/plugin-compatibility.ts",
+        "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v0.2.2-rc.1/packages/boot/app-boot/src/plugin-compatibility.ts",
         "sha256": "3aaddccc788734dbcea920f078ae7f8209f57b3330e8431d2f4a5936cf65558f",
         "mirrored": true
       },
       "discoverToggle": {
-        "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v0.2.1-rc.5/docs/user/guide/plugin-market.md",
-        "name": "Custom plugin markets"
+        "url": "https://raw.githubusercontent.com/deepseek-ai/deepseek-harness/dsh-v0.2.2-rc.1/docs/user/guide/plugin-market.md",
+        "name": "Custom plugin indexes"
       }
     }
   ],
   "cliff": null,
   "cliffCause": null,
   "shadow": {
-    "host": "0.2.1-rc.5",
-    "supplied": 305,
-    "packages": 1314,
-    "harness": 336,
-    "unseen": 163,
+    "host": "0.2.2-rc.1",
+    "supplied": 329,
+    "packages": 1802,
+    "harness": 459,
+    "unseen": 233,
     "names": [
       {
         "name": "@deepseek-ai/schemastery",
-        "count": 1140
+        "count": 1546
       },
       {
         "name": "@deepseek-ai/dsh-tools",
-        "count": 96
+        "count": 124
       },
       {
         "name": "@deepseek-ai/cordis",
-        "count": 85
+        "count": 114
       },
       {
         "name": "@deepseek-ai/dsh-llm",
-        "count": 58
+        "count": 77
       },
       {
         "name": "@deepseek-ai/dsh-home-paths",
-        "count": 52
-      },
-      {
-        "name": "@deepseek-ai/dsh-settings",
-        "count": 49
-      },
-      {
-        "name": "@deepseek-ai/dsh-session",
-        "count": 44
+        "count": 65
       },
       {
         "name": "@deepseek-ai/dsh-typert-protocol",
-        "count": 38
+        "count": 62
+      },
+      {
+        "name": "@deepseek-ai/dsh-settings",
+        "count": 59
+      },
+      {
+        "name": "@deepseek-ai/dsh-session",
+        "count": 54
       },
       {
         "name": "@deepseek-ai/dsh-agent",
-        "count": 31
+        "count": 42
       },
       {
-        "name": "@deepseek-ai/dsh-atomic-write",
-        "count": 30
+        "name": "@deepseek-ai/dsh-credentials",
+        "count": 39
       }
     ]
   },

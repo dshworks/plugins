@@ -925,13 +925,14 @@ export default async function Home() {
 
       <h2 id="discover">Browse it inside dsh</h2>
       <p>
-        dsh 0.2.1 can read a plugin market from one JSON index, in a <strong>Discover</strong>{" "}
-        tab on the Plugins page. It is experimental and ships with no market of its own. The
+        dsh can read a plugin index from one JSON file, in a <strong>Discover</strong>{" "}
+        tab on the Plugins page. It is experimental and ships with no index of its own. The
         registry publishes one: every entry with a verified npm name whose versions declare{" "}
         <code>dsh.bundle</code>, each version tagged with the dsh range its manifest declares
         (<code>engines.dsh</code>, else its dsh peers), computed the way dsh&rsquo;s own reference
-        generator does. Switch on{" "}
-        <strong>Custom plugin markets</strong> under Plugins &rsaquo; More, open{" "}
+        generator does. Open <strong>Plugins</strong>, switch on{" "}
+        <strong>Custom plugin indexes</strong> under <strong>Experimental plugins</strong> (dsh
+        0.2.1 calls it Custom plugin markets, under Plugins &rsaquo; More), open{" "}
         <strong>Discover</strong>, choose <strong>Add index source</strong>, and enter:
       </p>
       <code className="cmd" style={{ marginBottom: "0.8rem" }}>

@@ -47,17 +47,11 @@ None of the 100 trips on anything rc.1 introduced. Each range stops before it:
   admit nothing but 0.2.1's release candidates.
 - 6 cap at `<=0.2.1`, `<=0.2.1-rc.5` or `<=0.2.1-rc.6`.
 
-These are the five of the 100 that npm counted most downloads for, from
-2026-10-07 to 2026-11-05:
+The five of the 100 with the most npm downloads from 2026-10-07 to
+2026-11-05 had between 5,748 and 15,645 each. Three list exact versions that
+stop at 0.2.1-rc.5, and two cap at `<0.2.2-0`.
 
-- `@anionex/dsh-vision-toolkit` 0.1.49, 15,645 downloads: its list stops at
-  0.2.1-rc.5.
-- `dsh-web-search-pro` 0.2.3, 6,799: capped at `<0.2.2-0`.
-- `@anionex/dsh-turn-rewind` 0.3.12, 6,276: its list stops at 0.2.1-rc.5.
-- `@anweat/dsh-browser` 0.2.2, 5,813: capped at `<0.2.2-0`.
-- `@godv61/dsh-task-engine` 0.40.1, 5,748: lists 0.2.1-rc.3, rc.4 and rc.5.
-
-The packages, the rule each one tripped, and the 134 are in
+Every package, the rule it tripped, its downloads, and the 134 are in
 [/_data/notes/dsh-022-rc1-latest.json](/_data/notes/dsh-022-rc1-latest.json).
 The front page's [refusal census](/#installs) re-measures every night.
 

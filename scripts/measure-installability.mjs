@@ -333,11 +333,15 @@ const next = hosts.find((h) => h.tag === "next");
 const cliffRows = next ? rows.filter((r) => !r.verdicts.latest && r.verdicts.next) : null;
 const cliff = cliffRows ? cliffRows.length : null;
 // Why they fall: an `engines.dsh` the older host never read, or a dsh peer
-// range that stops short of `next` (counted again when it is an exact pin).
+// range that stops short of `next`. `pinned` counts the peer refusals whose
+// range is an exact pin: the page says "N carry a dsh peer range ..., M of
+// those an exact pin". Counting engines pins too broke that once both hosts
+// read engines first (11-16: 21 pins against 19 peer refusals).
+const peerCliff = cliffRows?.filter((r) => r.verdicts.next.by === "peers");
 const cliffCause = cliffRows && {
   engines: cliffRows.filter((r) => r.verdicts.next.by === "engines").length,
-  peers: cliffRows.filter((r) => r.verdicts.next.by === "peers").length,
-  pinned: cliffRows.filter((r) => Object.values(r.verdicts.next.requirements ?? {}).some((x) => semver.valid(x))).length,
+  peers: peerCliff.length,
+  pinned: peerCliff.filter((r) => Object.values(r.verdicts.next.requirements ?? {}).some((x) => semver.valid(x))).length,
   malformed: cliffRows.filter((r) => r.verdicts.next.malformed).length,
 };
 

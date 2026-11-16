@@ -1,0 +1,137 @@
+{
+ "note": "/notes/deepseek-counts-35000-plugins",
+ "measured": "2026-11-16T05:40Z",
+ "dsh": "0.2.2-rc.1 (npm latest); range checks also on 0.2.2-rc.3 (next), semver includePrerelease as dsh's gate",
+ "pnpm": "12.18.0 (dsh runs the pnpm on PATH: packages/boot/plugin-manager/src/operations.ts:34,369 at dsh-v0.2.2-rc.1)",
+ "apiKey": "invalid probe key; no model call was made",
+ "source": "https://mp.weixin.qq.com/s/xqyrRaiBpIcf0jeJzP7W0g",
+ "plugins": [
+  {
+   "package": "dsh-media-desk",
+   "registrySlug": "dsh-media-desk",
+   "repo": "git+https://github.com/woniuniuniu/dsh-media-desk.git",
+   "npmNewest": "2.7.2",
+   "npmNewestPublished": "2026-11-15T17:12:12.533Z",
+   "installed": "2.7.1",
+   "installedPublished": "2026-11-12T16:40:59.740Z",
+   "enginesDsh": ">=0.2.1-rc.5 <0.3.0",
+   "admits": {
+    "0.2.2-rc.1": true,
+    "0.2.2-rc.3": true
+   },
+   "addCommand": "dsh plugin --profile web add dsh-media-desk",
+   "addExit": 0,
+   "addLog": [
+    "dsh: initialized profile web at $SCRATCH/home-web-dsh-media-desk/profiles/web",
+    "Packages: +1",
+    "+",
+    "dependencies:",
+    "+ dsh-media-desk 2.7.1",
+    "Done in 30ms using pnpm v12.18.0"
+   ],
+   "boot": "dsh --profile web --no-open; no 'entry did not activate' warning",
+   "bootLog": []
+  },
+  {
+   "package": "dsh-guizang-design",
+   "registrySlug": "dsh-guizang-design",
+   "repo": "git+https://github.com/op7418/dsh-guizang-design.git",
+   "npmNewest": "0.1.4",
+   "npmNewestPublished": "2026-11-05T08:06:41.964Z",
+   "installed": "0.1.4",
+   "installedPublished": "2026-11-05T08:06:41.964Z",
+   "enginesDsh": ">=0.2.1-rc.2 <0.3.0",
+   "admits": {
+    "0.2.2-rc.1": true,
+    "0.2.2-rc.3": true
+   },
+   "addCommand": "dsh plugin --profile web add dsh-guizang-design",
+   "addExit": 0,
+   "addLog": [
+    "dsh: initialized profile web at $SCRATCH/home-web-dsh-guizang-design/profiles/web",
+    "Packages: +93",
+    "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",
+    "Agent skills awaiting approval: dsh-guizang-design.",
+    "Run \"pnpm approve\" to review them.",
+    "[WARN] Issues with peer dependencies found. Run \"pnpm peers check\" to list them.",
+    "dependencies:",
+    "+ dsh-guizang-design 0.1.4",
+    "Done in 459ms using pnpm v12.18.0"
+   ],
+   "boot": "dsh --profile web --no-open; no 'entry did not activate' warning",
+   "bootLog": []
+  },
+  {
+   "package": "dsh-context",
+   "registrySlug": "dsh-context",
+   "repo": "git+https://github.com/bowenliang123/dsh-context.git",
+   "npmNewest": "0.85.1",
+   "npmNewestPublished": "2026-11-15T18:48:33.990Z",
+   "installed": "0.84.1",
+   "installedPublished": "2026-11-13T03:25:14.002Z",
+   "enginesDsh": ">=0.2.0-rc.2 || >=0.2.1-rc.2 || >=0.2.2-rc.1",
+   "admits": {
+    "0.2.2-rc.1": true,
+    "0.2.2-rc.3": true
+   },
+   "addCommand": "dsh plugin --profile web add dsh-context",
+   "addExit": 0,
+   "addLog": [
+    "dsh: initialized profile web at $SCRATCH/home-web-dsh-context/profiles/web",
+    "Packages: +2",
+    "++",
+    "[WARN] Issues with peer dependencies found. Run \"pnpm peers check\" to list them.",
+    "dependencies:",
+    "+ dsh-context 0.84.1",
+    "Done in 128ms using pnpm v12.18.0"
+   ],
+   "boot": "dsh --profile web --no-open; no 'entry did not activate' warning",
+   "bootLog": []
+  },
+  {
+   "package": "agentero-dsh",
+   "registrySlug": "agentero-dsh-plugin",
+   "repo": "git+https://github.com/poco-ai/agentero-dsh-plugin.git",
+   "npmNewest": "0.1.8",
+   "npmNewestPublished": "2026-11-12T03:01:49.308Z",
+   "installed": "0.1.8",
+   "installedPublished": "2026-11-12T03:01:49.308Z",
+   "enginesDsh": ">=0.2.1-rc.5 <0.3.0",
+   "admits": {
+    "0.2.2-rc.1": true,
+    "0.2.2-rc.3": true
+   },
+   "addCommand": "dsh plugin --profile web add agentero-dsh",
+   "addExit": 0,
+   "addLog": [
+    "dsh: initialized profile web at $SCRATCH/home-web-agentero-dsh/profiles/web",
+    "Packages: +286",
+    "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",
+    "[WARN] Issues with peer dependencies found. Run \"pnpm peers check\" to list them.",
+    "dependencies:",
+    "+ agentero-dsh 0.1.8",
+    "Done in 2s using pnpm v12.18.0"
+   ],
+   "boot": "dsh --profile web --no-open; no 'entry did not activate' warning",
+   "bootLog": [
+    "[agentero] plugin loaded",
+    "[agentero] plugin unloaded"
+   ]
+  }
+ ],
+ "releaseAge": {
+  "command": "dsh plugin --profile web add dsh-context@0.85.1",
+  "result": "installed 0.85.1",
+  "log": [
+   "dsh: initialized profile web at $SCRATCH/home-age/profiles/web",
+   "Added 1 entry to minimumReleaseAgeExclude in pnpm-workspace.yaml (set minimumReleaseAgeStrict to true to gate these updates with a prompt):",
+   "  dsh-context@0.85.1",
+   "Packages: +2",
+   "++",
+   "[WARN] Issues with peer dependencies found. Run \"pnpm peers check\" to list them.",
+   "dependencies:",
+   "+ dsh-context 0.85.1",
+   "Done in 3.9s using pnpm v12.18.0"
+  ]
+ }
+}

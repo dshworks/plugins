@@ -960,8 +960,10 @@ export default async function Home() {
       <h2>Shipping a plugin?</h2>
       <p>
         Tag the repo <a href="https://github.com/topics/dsh-plugin"><code>dsh-plugin</code></a>.
-        There is no official marketplace; that topic is the official discovery surface and it is
-        what the sweep watches — so tagging is enough to be found, no PR required. To land faster
+        There is no official marketplace yet. DeepSeek said on 2026-11-05 that it is{" "}
+        <a href="/notes/deepseek-counts-35000-plugins">building one</a>. Until it ships, that topic is
+        the official discovery surface and it is what the sweep watches — so tagging is enough to be
+        found, no PR required. To land faster
         or fix a wrong row, open a PR against{" "}
         <a href="https://github.com/dshworks/awesome-dsh-plugins/blob/main/data/plugins.json">
           <code>data/plugins.json</code>
